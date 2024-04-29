@@ -1,2 +1,2 @@
 # glitch-effect
-simple command line glitch effect on ncurses
+simple command line glitch effect
