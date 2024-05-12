@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <ctime>
 #include <stdexcept>
+#include <ncurses.h>
 
 using namespace std;
 
@@ -45,6 +46,12 @@ vector<string> getLines(const string& path)
   return lines;
 }
 
+void print_autocenter_warn()
+{
+  cout<<"You can't manually set offset, bacouse autocenter is alredy enabled!"<<endl;
+  printUsage();
+}
+
 int main(int argc, char* argv[])
 {
   srand(time(nullptr));
@@ -57,6 +64,9 @@ int main(int argc, char* argv[])
   unsigned int glitch_intensity = 5;
   unsigned int offsetx = 0;
   unsigned int offsety = 0;
+  unsigned int fileX = 0;
+
+  bool autocenter = false;
 
   //cout<<"argc: "<<argc<<endl;
   for (int i = 1; i < argc; i++)
@@ -112,8 +122,27 @@ int main(int argc, char* argv[])
 
       continue;
     }
+    if(strcmp(argv[i], "--autocenter") == 0)
+    {
+      if(offsetx > 0 || offsety > 0)
+      {
+        cout<<"You can't enable autocenter, becouse manual offset is anabled!"<<endl;
+        printUsage();
+
+	return 1;
+      }
+
+      autocenter = true;
+      continue;
+    }
     if(strcmp(argv[i], "-ox") == 0)
     {
+      if(autocenter == true)
+      {
+	print_autocenter_warn();
+	return 1;
+      }
+
       if(i + 1 < argc)
       {
 	offsetx = stoi(argv[i + 1]);
@@ -131,6 +160,12 @@ int main(int argc, char* argv[])
     } 
     if(strcmp(argv[i], "-oy") == 0)
     {
+      if(autocenter == true)
+      {
+	print_autocenter_warn();
+	return 1;
+      }
+
       if(i + 1 < argc)
       {
 	offsety = stoi(argv[i + 1]);
@@ -154,11 +189,23 @@ int main(int argc, char* argv[])
   }
  
   const vector<string> lines = getLines(filepath);
+ 
+  for(const string& str : lines)
+  {
+    if(str.length() > fileX) fileX = str.length();
+  }
+
+  setlocale(LC_ALL, "C.UTF-8");
+  initscr();
+
+  int maxX, maxY;
 
   while (true)
   {
+    getmaxyx(stdscr, maxY, maxX);
+
+    clear();
     int i = 0;
-    cout<<(string(offsety, '\n'));
     for (const string& str : lines)
     {
       int num = 0;
@@ -169,23 +216,31 @@ int main(int argc, char* argv[])
       }
 
       int rev_effect = rand() % 2;
-      string space = "";
+
+      if(autocenter)
+      {
+	offsetx = 0.5 * (maxX - (fileX + 2 * glitch_strenght));
+	offsety = 0.5 * (maxY - lines.size());
+      }
 
       if(rev_effect == 1)
-	space = string(glitch_strenght - num, spc);
+        move(offsety + i, offsetx - num + glitch_strenght);
       else
-        space = string(glitch_strenght + num, spc);
+        move(offsety + i, offsetx + num + glitch_strenght);
 
-      cout<<string(offsetx, spc) << space << str << endl;
+      printw(str.c_str());
 
       i++;
     }
 
+    refresh();
+
     int sleeptime = rand() % sleeptime_ms + 1;
 
     usleep(sleeptime);
-    system("clear");
+    //system("clear");
   }
 
+  endwin();
   return 0;
 }
