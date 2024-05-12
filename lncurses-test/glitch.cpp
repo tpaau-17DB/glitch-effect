@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
   unsigned int glitch_intensity = 5;
   unsigned int offsetx = 0;
   unsigned int offsety = 0;
+  unsigned int fileX = 0;
 
   bool autocenter = false;
 
@@ -188,7 +189,12 @@ int main(int argc, char* argv[])
   }
  
   const vector<string> lines = getLines(filepath);
-  
+ 
+  for(const string& str : lines)
+  {
+    if(str.length() > fileX) fileX = str.length();
+  }
+
   setlocale(LC_ALL, "C.UTF-8");
   initscr();
 
@@ -211,10 +217,16 @@ int main(int argc, char* argv[])
 
       int rev_effect = rand() % 2;
 
+      if(autocenter)
+      {
+	offsetx = 0.5 * (maxX - (fileX + 2 * glitch_strenght));
+	offsety = 0.5 * (maxY - lines.size());
+      }
+
       if(rev_effect == 1)
-        move(i + offsety, offsetx - num);
+        move(offsety + i, offsetx - num + glitch_strenght);
       else
-        move(i + offsety, offsetx + num);
+        move(offsety + i, offsetx + num + glitch_strenght);
 
       printw(str.c_str());
 
