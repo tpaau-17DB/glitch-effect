@@ -7,6 +7,7 @@
 #include <ctime>
 #include <stdexcept>
 #include <ncurses.h>
+#include <cstring>
 
 using namespace std;
 
