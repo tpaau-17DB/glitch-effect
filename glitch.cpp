@@ -187,18 +187,37 @@ int main(int argc, char* argv[])
     }
     
   }
- 
+
+  setlocale(LC_ALL, "C.UTF-8");
+  initscr();
+  cbreak();
+  noecho();
+  keypad(stdscr, TRUE);
+
   const vector<string> lines = getLines(filepath);
- 
+
+  int maxX, maxY;
+  int response = 0;
+  getmaxyx(stdscr, maxY, maxX);
+
   for(const string& str : lines)
   {
     if(str.length() > fileX) fileX = str.length();
   }
 
-  setlocale(LC_ALL, "C.UTF-8");
-  initscr();
+  if(fileX + (2 * glitch_strenght) > maxX)
+  {
+    printw("Terminal window is too small for this configuration, continue anyway? (y/N)");
+    move(1, 0);
 
-  int maxX, maxY;
+    response = getch();
+
+    if(response != 'y' && response != 'Y')
+    {
+      endwin();
+      return 1;
+    }
+  }
 
   while (true)
   {
