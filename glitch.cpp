@@ -13,7 +13,10 @@ using namespace std;
 
 void printUsage()
 {
-  cout<<"Usage: fuck you"<<endl;
+  cout<<"Usage: glitch -[args] file.txt"<<endl;
+  cout<<"  --help: display this message"<<endl;
+  cout<<"  -t <number>: set max delay in ms (default: 100 ms)"<<endl;
+  cout<<""<<endl;
 }
 
 vector<string> getLines(const string& path)
@@ -60,7 +63,7 @@ int main(int argc, char* argv[])
   string filepath = "text.txt";
   const char spc = ' ';
 
-  unsigned int sleeptime_ms = 30000;
+  unsigned int sleeptime_ms = 100;
   unsigned int glitch_strenght = 3;
   unsigned int glitch_intensity = 5;
   unsigned int offsetx = 0;
@@ -69,11 +72,13 @@ int main(int argc, char* argv[])
 
   bool autocenter = false;
 
-  //cout<<"argc: "<<argc<<endl;
   for (int i = 1; i < argc; i++)
   {
-    //cout<<"arg: "<<argv[i]<<endl;
-
+    if(strcmp(argv[i], "--help") == 0)
+    {
+      printUsage();
+      return 0;
+    }
     if (strcmp(argv[i], "-t") == 0)
     {
       if(i + 1 < argc)
