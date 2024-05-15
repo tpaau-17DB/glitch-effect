@@ -13,10 +13,14 @@ using namespace std;
 
 void printUsage()
 {
-  cout<<"Usage: glitch -[args] file.txt"<<endl;
-  cout<<"  --help: display this message"<<endl;
-  cout<<"  -t <number>: set max delay in ms (default: 100 ms)"<<endl;
-  cout<<""<<endl;
+  cout<<"Usage: glitch [options] file.txt"<<endl;
+  cout<<"  --help: Display help message"<<endl;
+  cout<<"  -t <number>: Set maximum delay in miliseconds (default: 100 )"<<endl;
+  cout<<"  -s <number>: Set effect strenght (default: 10, max line deformation strenght)"<<endl;
+  cout<<"  -i <number>: Set effect intensity (default: 20, one line in <n> gets deformed)"<<endl;
+  cout<<"  --autocenter: Enable autocenter"<<endl;
+  cout<<"  -ox <number>: Manually set X offset"<<endl;
+  cout<<"  -oy <number>: Manually set Y offset"<<endl;
 }
 
 vector<string> getLines(const string& path)
@@ -64,8 +68,8 @@ int main(int argc, char* argv[])
   const char spc = ' ';
 
   unsigned int sleeptime_ms = 100;
-  unsigned int glitch_strenght = 3;
-  unsigned int glitch_intensity = 5;
+  unsigned int glitch_strenght = 8;
+  unsigned int glitch_intensity = 20;
   unsigned int offsetx = 0;
   unsigned int offsety = 0;
   unsigned int fileX = 0;
