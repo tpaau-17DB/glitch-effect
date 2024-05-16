@@ -75,6 +75,7 @@ int main(int argc, char* argv[])
   unsigned int fileX = 0;
 
   bool autocenter = false;
+  bool fileSpecified = false;
 
   for (int i = 1; i < argc; i++)
   {
@@ -193,9 +194,16 @@ int main(int argc, char* argv[])
     }
     else
     {
+      fileSpecified = true;
       filepath = argv[i];
     }
     
+  }
+
+  if(!fileSpecified)
+  {
+    cout<<"error: no input file!"<<endl;
+    return 1;
   }
 
   setlocale(LC_ALL, "C.UTF-8");
