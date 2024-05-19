@@ -23,6 +23,23 @@ void printUsage()
   cout<<"  -oy <number>: Manually set Y offset"<<endl;
 }
 
+void printUnsupported(const char *arg)
+{
+  cout<<"Unsupported use of an argument: "<<arg<<endl;
+  printUsage();
+}
+
+int hashStr(const char *str)
+{
+  unsigned int hash = 0;
+  while(*str)
+  {
+    hash = hash * 31 + *str;
+    str++;
+  }
+  return hash;
+}
+
 vector<string> getLines(const string& path)
 {
   vector<string> lines;
@@ -30,8 +47,8 @@ vector<string> getLines(const string& path)
 
   if(!file.good())
   {
-    throw runtime_error("File not found! File path: '" + path + "'");
-    printUsage();
+    throw runtime_error("File error! File path: '" + path + "'");
+    //printUsage();
   }
 
   if(file.is_open())
@@ -79,125 +96,118 @@ int main(int argc, char* argv[])
 
   for (int i = 1; i < argc; i++)
   {
-    if(strcmp(argv[i], "--help") == 0)
+    unsigned int hash = hashStr(argv[i]);
+
+    //cout<<hash<<endl;
+
+    switch(hash)
     {
-      printUsage();
-      return 0;
-    }
-    if (strcmp(argv[i], "-t") == 0)
-    {
-      if(i + 1 < argc)
-      {
-	sleeptime_ms = 1000 * stoi(argv[i + 1]);
-	i++;
-      }
-      else
-      {
-	cout<<"Unsupported use of an argument: "<<argv[i]<<endl;
+      case 1333069025: //  --help
 	printUsage();
-	return 1;
-      }
+	return 0;
+	break;
 
-      continue;
+      case 1511: //  -t
+        if(i + 1 < argc)
+        {
+	  cout<<"-t set to: "<<argv[i + 1]<<endl;
+  	  sleeptime_ms = 1000 * stoi(argv[i + 1]);
+  	  i++;
+        }
+        else
+        {
+	  printUnsupported(argv[i]);
+	  return 1;
+        }
+	break;
+
+      case 1510: //  -s
+	if(i + 1 < argc)
+        {
+	  cout<<"-s set to: "<<argv[i + 1]<<endl;
+  	  glitch_strenght = stoi(argv[i + 1]);
+  	  i++;
+        }
+        else
+        {
+	  printUnsupported(argv[i]);
+	  return 1;
+        }
+	break;
+
+      case 1500: //  -i
+	if(i + 1 < argc)
+        {
+	  cout<<"-i set to: "<<argv[i + 1]<<endl;
+  	  glitch_intensity = stoi(argv[i + 1]);
+  	  i++;
+        }
+        else
+        {
+	  printUnsupported(argv[i]);
+	  return 1;
+        }
+	break;
+
+      case 2316757092: //  --autocenter
+        if(offsetx > 0 || offsety > 0)
+        {
+          cout<<"You can't enable autocenter, becouse manual offset is anabled!"<<endl;
+          printUsage();
+
+          return 1;
+        }
+        autocenter = true;
+	cout<<"Autocenter enabled"<<endl;
+	break;
+
+      case 46806: //  -ox
+        if(autocenter == true)
+        {
+  	  print_autocenter_warn();
+  	  return 1;
+        }
+
+        if(i + 1 < argc)
+        {
+	  offsetx = stoi(argv[i + 1]);
+	  i++;
+	  break;
+        }
+        else
+        {
+	  cout<<"Unsupported use of an argument: "<<argv[i]<<endl;
+	  printUsage();
+	  return 1;
+        }
+	break;
+
+      case 46807: //  -oy
+        if(autocenter == true)
+        {
+  	  print_autocenter_warn();
+  	  return 1;
+        }
+
+        if(i + 1 < argc)
+        {
+	  offsety = stoi(argv[i + 1]);
+	  i++;
+	  break;
+        }
+        else
+        {
+	  cout<<"Unsupported use of an argument: "<<argv[i]<<endl;
+	  printUsage();
+	  return 1;
+        }
+	break;
+
+      default:
+        fileSpecified = true;
+        filepath = argv[i];
+	break;
     }
-    if(strcmp(argv[i], "-s") == 0)
-    {
-      if(i + 1 < argc)
-      {
-	glitch_strenght = stoi(argv[i + 1]);
-	i++;
-      }
-      else
-      {
-        cout<<"Unsupported use of an argument: "<<argv[i]<<endl;
-        printUsage();
-        return 1;
-      }
-
-      continue;
-    }
-    if(strcmp(argv[i], "-i") == 0)
-    {
-      if(i + 1 < argc)
-      {
-	glitch_intensity = stoi(argv[i + 1]);
-	i++;
-	continue;
-      }
-      else
-      {
-	cout<<"Unsupported use of an argument: "<<argv[i]<<endl;
-	printUsage();
-	return 1;
-      }
-
-      continue;
-    }
-    if(strcmp(argv[i], "--autocenter") == 0)
-    {
-      if(offsetx > 0 || offsety > 0)
-      {
-        cout<<"You can't enable autocenter, becouse manual offset is anabled!"<<endl;
-        printUsage();
-
-	return 1;
-      }
-
-      autocenter = true;
-      continue;
-    }
-    if(strcmp(argv[i], "-ox") == 0)
-    {
-      if(autocenter == true)
-      {
-	print_autocenter_warn();
-	return 1;
-      }
-
-      if(i + 1 < argc)
-      {
-	offsetx = stoi(argv[i + 1]);
-	i++;
-	continue;
-      }
-      else
-      {
-	cout<<"Unsupported use of an argument: "<<argv[i]<<endl;
-	printUsage();
-	return 1;
-      }
-
-      continue;
-    } 
-    if(strcmp(argv[i], "-oy") == 0)
-    {
-      if(autocenter == true)
-      {
-	print_autocenter_warn();
-	return 1;
-      }
-
-      if(i + 1 < argc)
-      {
-	offsety = stoi(argv[i + 1]);
-	i++;
-	continue;
-      }
-      else
-      {
-	cout<<"Unsupported use of an argument: "<<argv[i]<<endl;
-	printUsage();
-	return 1;
-      }
-
-      continue;
-    }
-    else
-    {
-      fileSpecified = true;
-      filepath = argv[i];
-    }
-    
   }
 
   if(!fileSpecified)
