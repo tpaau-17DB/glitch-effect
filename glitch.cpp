@@ -48,7 +48,6 @@ vector<string> getLines(const string& path)
   if(!file.good())
   {
     throw runtime_error("File error! File path: '" + path + "'");
-    //printUsage();
   }
 
   if(file.is_open())
@@ -65,7 +64,6 @@ vector<string> getLines(const string& path)
   else
   {
     cerr<<"Unable to open file: "<<path<<endl;
-    printUsage();
   }
 
   return lines;
@@ -73,7 +71,7 @@ vector<string> getLines(const string& path)
 
 void print_autocenter_warn()
 {
-  cout<<"You can't manually set offset, bacouse autocenter is alredy enabled!"<<endl;
+  cout<<"You can't manually set offset, autocenter is alredy enabled!"<<endl;
   printUsage();
 }
 
@@ -81,7 +79,7 @@ int main(int argc, char* argv[])
 {
   srand(time(nullptr));
 
-  string filepath = "text.txt";
+  string filepath = "";
   const char spc = ' ';
 
   unsigned int sleeptime_ms = 100;
@@ -97,8 +95,6 @@ int main(int argc, char* argv[])
   for (int i = 1; i < argc; i++)
   {
     unsigned int hash = hashStr(argv[i]);
-
-    //cout<<hash<<endl;
 
     switch(hash)
     {
@@ -152,7 +148,7 @@ int main(int argc, char* argv[])
       case 2316757092: //  --autocenter
         if(offsetx > 0 || offsety > 0)
         {
-          cout<<"You can't enable autocenter, becouse manual offset is anabled!"<<endl;
+          cout<<"You can't enable autocenter, manual offset is anabled!"<<endl;
           printUsage();
 
           return 1;
@@ -225,7 +221,6 @@ int main(int argc, char* argv[])
   const vector<string> lines = getLines(filepath);
 
   int maxX, maxY;
-  int response = 0;
   getmaxyx(stdscr, maxY, maxX);
 
   for(const string& str : lines)
@@ -238,7 +233,7 @@ int main(int argc, char* argv[])
     printw("Terminal window is too small for this configuration, continue anyway? (y/N)");
     move(1, 0);
 
-    response = getch();
+    int response = getch();
 
     if(response != 'y' && response != 'Y')
     {
@@ -285,7 +280,6 @@ int main(int argc, char* argv[])
     int sleeptime = rand() % sleeptime_ms + 1;
 
     usleep(sleeptime);
-    //system("clear");
   }
 
   endwin();
