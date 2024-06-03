@@ -2,7 +2,7 @@ CC = g++
 
 SRC = src
 BIN = bin
-CFLAGS = -Wall -g -std=c++11 -lncurses
+CFLAGS = -Wall -g -std=c++17 -lncurses
 
 all: pre-build glitch
 

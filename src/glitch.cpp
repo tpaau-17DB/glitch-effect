@@ -80,14 +80,13 @@ int main(int argc, char *argv[])
     srand(time(nullptr));
 
     string filepath = "";
-    const char spc = ' ';
 
-    unsigned int sleeptime_ms = 100;
-    unsigned int glitch_strenght = 8;
-    unsigned int glitch_intensity = 20;
-    unsigned int offsetx = 0;
-    unsigned int offsety = 0;
-    unsigned int fileX = 0;
+    int sleeptime_ms = 100;
+    int glitch_strenght = 8;
+    int glitch_intensity = 20;
+    int offsetx = 0;
+    int offsety = 0;
+    int fileX = 0;
 
     bool autocenter = false;
     bool fileSpecified = false;
@@ -225,7 +224,7 @@ int main(int argc, char *argv[])
 
     for (const string &str : lines)
     {
-        if (str.length() > fileX)
+        if (static_cast<int>(str.length()) > fileX)
             fileX = str.length();
     }
 
