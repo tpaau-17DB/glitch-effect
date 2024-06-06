@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
     srand(time(nullptr));
 
     string filepath = "";
+    string config_path = "";
 
     int sleeptime_ms = 100;
     int glitch_strenght = 8;
@@ -94,6 +95,7 @@ int main(int argc, char *argv[])
     for (int i = 1; i < argc; i++)
     {
         unsigned int hash = hashStr(argv[i]);
+	//cout<<hash<<endl;
 
         switch (hash)
         {
@@ -197,6 +199,20 @@ int main(int argc, char *argv[])
                 return 1;
             }
             break;
+	
+	case 1494: // -c
+	    if (i + 1 < argc)
+            {
+                cout << "specified config path: " << argv[i + 1] << endl;
+        	config_path = argv[i + 1];
+                i++;
+            }
+            else
+            {
+                printUnsupported(argv[i]);
+                return 1;
+            }
+	    break;
 
         default:
             fileSpecified = true;
