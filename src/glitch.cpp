@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     string filepath = "";
     string config_path = "";
 
-    int sleeptime_ms = 100;
+    int sleeptime_ms = 20;
     int glitch_strenght = 8;
     int glitch_intensity = 20;
     int offsetx = 0;
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
             if (i + 1 < argc)
             {
                 cout << "-t set to: " << argv[i + 1] << endl;
-                sleeptime_ms = 1000 * stoi(argv[i + 1]);
+                sleeptime_ms = stoi(argv[i + 1]);
                 i++;
             }
             else
@@ -293,9 +293,7 @@ int main(int argc, char *argv[])
 
         refresh();
 
-        int sleeptime = rand() % sleeptime_ms + 1;
-
-        usleep(sleeptime);
+        usleep(1000 * sleeptime_ms);
     }
 
     endwin();
