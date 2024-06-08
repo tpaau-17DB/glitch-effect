@@ -7,13 +7,15 @@ You will need ncurses library to compile this program.
 You can install ncurses using your package manager as `ncurses-dev` or `libncurses-dev`.
 
 ## Compiling and running
+<!--
 First compile the c++ script with g++:
 
 ```
 g++ -o glitch glitch.cpp -lncurses
 ```
+-->
 
-or use the makefile provided in the repo:
+To compile project use the makefile provided in the repo:
 
 ```
 make
