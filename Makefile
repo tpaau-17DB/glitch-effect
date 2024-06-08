@@ -4,15 +4,23 @@ SRC = src
 BIN = bin
 CFLAGS = -Wall -g -std=c++17 -lncurses
 
-all: pre-build glitch
+TARGET = glitch
+
+SRCS = $(wildcard $(SRC)/*.cpp)
+OBJS = $(SRCS:$(SRC)/%.cpp=$(BIN)/%.o)
+
+all: pre-build $(TARGET)
 
 pre-build:
 	mkdir -p $(BIN)
 
-glitch: $(SRC)/glitch.cpp
-	$(CC) -o $(BIN)/glitch $(SRC)/glitch.cpp $(CFLAGS)
+$(TARGET): $(OBJS)
+	$(CC) -o $(BIN)/$(TARGET) $(OBJS) $(CFLAGS)
+
+$(BIN)/%.o: $(SRC)/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f glitch
+	rm -f $(BIN)/*.o $(BIN)/$(TARGET)
 
 .PHONY: all clean
