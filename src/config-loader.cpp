@@ -1,9 +1,8 @@
 #include "ConfigLoader.h"
+
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-
-using namespace std;
 
 ConfigLoader::ConfigLoader(const string& filename) {
     loadConfig(filename);

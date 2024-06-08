@@ -1,33 +1,16 @@
+//#include "ConfigLoader.h"
+#include "Logger.h"
+#include "FileLoader.h"
+
 #include <iostream>
 #include <vector>
-#include <fstream>
 #include <string>
 #include <cstdlib>
 #include <unistd.h>
 #include <ctime>
-#include <stdexcept>
 #include <ncurses.h>
-#include <cstring>
 
 using namespace std;
-
-void printUsage()
-{
-    cout << "Usage: glitch [options] file.txt" << endl;
-    cout << "  --help: Display help message" << endl;
-    cout << "  -t <number>: Set maximum delay in miliseconds (default: 100 )" << endl;
-    cout << "  -s <number>: Set effect strenght (default: 10, max line deformation strenght)" << endl;
-    cout << "  -i <number>: Set effect intensity (default: 20, one line in <n> gets deformed)" << endl;
-    cout << "  --autocenter: Enable autocenter" << endl;
-    cout << "  -ox <number>: Manually set X offset" << endl;
-    cout << "  -oy <number>: Manually set Y offset" << endl;
-}
-
-void printUnsupported(const char *arg)
-{
-    cout << "Unsupported use of an argument: " << arg << endl;
-    printUsage();
-}
 
 int hashStr(const char *str)
 {
@@ -40,41 +23,6 @@ int hashStr(const char *str)
     return hash;
 }
 
-vector<string> getLines(const string &path)
-{
-    vector<string> lines;
-    ifstream file(path);
-
-    if (!file.good())
-    {
-        throw runtime_error("File error! File path: '" + path + "'");
-    }
-
-    if (file.is_open())
-    {
-        string line;
-
-        while (getline(file, line))
-        {
-            lines.push_back(line);
-        }
-
-        file.close();
-    }
-    else
-    {
-        cerr << "Unable to open file: " << path << endl;
-    }
-
-    return lines;
-}
-
-void print_autocenter_warn()
-{
-    cout << "You can't manually set offset, autocenter is alredy enabled!" << endl;
-    printUsage();
-}
-
 int main(int argc, char *argv[])
 {
     srand(time(nullptr));
@@ -82,14 +30,14 @@ int main(int argc, char *argv[])
     string filepath = "";
     string config_path = "";
 
-    int sleeptime_ms = 20;
-    int glitch_strenght = 8;
-    int glitch_intensity = 20;
+    int sleeptime_ms = 40;
+    int glitch_strenght = 6;
+    int glitch_intensity = 35;
     int offsetx = 0;
     int offsety = 0;
     int fileX = 0;
 
-    bool autocenter = false;
+    bool autocenter = true;
     bool fileSpecified = false;
 
     for (int i = 1; i < argc; i++)
@@ -100,7 +48,7 @@ int main(int argc, char *argv[])
         switch (hash)
         {
         case 1333069025: //  --help
-            printUsage();
+            Logger::PrintUsage();
             return 0;
             break;
 
@@ -113,7 +61,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printUnsupported(argv[i]);
+                Logger::PrintUnsupported(argv[i]);
                 return 1;
             }
             break;
@@ -127,7 +75,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printUnsupported(argv[i]);
+                Logger::PrintUnsupported(argv[i]);
                 return 1;
             }
             break;
@@ -141,7 +89,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printUnsupported(argv[i]);
+                Logger::PrintUnsupported(argv[i]);
                 return 1;
             }
             break;
@@ -150,7 +98,7 @@ int main(int argc, char *argv[])
             if (offsetx > 0 || offsety > 0)
             {
                 cout << "You can't enable autocenter, manual offset is anabled!" << endl;
-                printUsage();
+                Logger::PrintUsage();
 
                 return 1;
             }
@@ -161,7 +109,7 @@ int main(int argc, char *argv[])
         case 46806: //  -ox
             if (autocenter == true)
             {
-                print_autocenter_warn();
+                Logger::PrintAutocenterWarn();
                 return 1;
             }
 
@@ -174,7 +122,7 @@ int main(int argc, char *argv[])
             else
             {
                 cout << "Unsupported use of an argument: " << argv[i] << endl;
-                printUsage();
+                Logger::PrintUsage();
                 return 1;
             }
             break;
@@ -182,7 +130,7 @@ int main(int argc, char *argv[])
         case 46807: //  -oy
             if (autocenter == true)
             {
-                print_autocenter_warn();
+                Logger::PrintAutocenterWarn();
                 return 1;
             }
 
@@ -195,7 +143,7 @@ int main(int argc, char *argv[])
             else
             {
                 cout << "Unsupported use of an argument: " << argv[i] << endl;
-                printUsage();
+                Logger::PrintUsage();
                 return 1;
             }
             break;
@@ -209,7 +157,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printUnsupported(argv[i]);
+                Logger::PrintUnsupported(argv[i]);
                 return 1;
             }
 	    break;
@@ -233,7 +181,7 @@ int main(int argc, char *argv[])
     noecho();
     keypad(stdscr, TRUE);
 
-    const vector<string> lines = getLines(filepath);
+    const vector<string> lines = FileLoader::GetLines(filepath);
 
     int maxX, maxY;
     getmaxyx(stdscr, maxY, maxX);

@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 
+using namespace std;
+
 class ConfigLoader {
 public:
     ConfigLoader(const string& filename);
