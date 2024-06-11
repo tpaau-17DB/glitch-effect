@@ -1,19 +1,16 @@
 #ifndef CONFIGLOADER_H
 #define CONFIGLOADER_H
 
-#include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <map>
+#include <string>
 
-using namespace std;
-
-class ConfigLoader {
-public:
-    ConfigLoader(const string& filename);
-    string get(const string& key) const;
-
-private:
-    void loadConfig(const string& filename);
-    map<string, string> configMap;
+class ConfigLoader
+{
+    public:
+		static std::map<std::string, int> LoadConf(const std::string &path);
 };
 
-#endif // CONFIGLOADER_H
+#endif

@@ -7,9 +7,22 @@
 class Logger 
 {
 	public:
+		static void SetVerbosity(const int verbosity);
+		static int GetVerbosity();
+
 		static void PrintUsage();
 		static void PrintUnsupported(const char *arg);
-		static void PrintAutocenterWarn();
+
+		static void PrintLog(const std::string message, const int layer);
+		static void PrintWarn(const std::string  message, const int layer);
+		static void PrintErr(const std::string message, const int layer);
+
+    private:
+		static int* verbosity;
+		static const std::string GREEN; 
+		static const std::string YELLOW;
+		static const std::string RED;	
+		static const std::string RESET;
 };
 
 #endif

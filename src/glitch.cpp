@@ -1,7 +1,3 @@
-//#include "ConfigLoader.h"
-#include "Logger.h"
-#include "FileLoader.h"
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,6 +5,11 @@
 #include <unistd.h>
 #include <ctime>
 #include <ncurses.h>
+
+#include "Logger.h"
+#include "FileLoader.h"
+
+int* Logger::verbosity = nullptr;
 
 using namespace std;
 
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
     for (int i = 1; i < argc; i++)
     {
         unsigned int hash = hashStr(argv[i]);
-	//cout<<hash<<endl;
+		//cout<<hash<<endl;
 
         switch (hash)
         {
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
         case 1511: //  -t
             if (i + 1 < argc)
             {
-                cout << "-t set to: " << argv[i + 1] << endl;
+				Logger::PrintLog("sleeptime set to: " + string(argv[i + 1]) + "ms", 0);
                 sleeptime_ms = stoi(argv[i + 1]);
                 i++;
             }
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
         case 1510: //  -s
             if (i + 1 < argc)
             {
-                cout << "-s set to: " << argv[i + 1] << endl;
+				Logger::PrintLog("glitch strenght set to: " +  string(argv[i + 1]), 0);
                 glitch_strenght = stoi(argv[i + 1]);
                 i++;
             }
@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
         case 1500: //  -i
             if (i + 1 < argc)
             {
-                cout << "-i set to: " << argv[i + 1] << endl;
+				Logger::PrintLog("glitch intensity set to: " + string(argv[i + 1]), 0);
                 glitch_intensity = stoi(argv[i + 1]);
                 i++;
             }
@@ -94,73 +95,60 @@ int main(int argc, char *argv[])
             }
             break;
 
-        case 2316757092: //  --autocenter
-            if (offsetx > 0 || offsety > 0)
-            {
-                cout << "You can't enable autocenter, manual offset is anabled!" << endl;
-                Logger::PrintUsage();
-
-                return 1;
-            }
-            autocenter = true;
-            cout << "Autocenter enabled" << endl;
-            break;
-
         case 46806: //  -ox
-            if (autocenter == true)
-            {
-                Logger::PrintAutocenterWarn();
-                return 1;
-            }
-
             if (i + 1 < argc)
             {
                 offsetx = stoi(argv[i + 1]);
+
+				Logger::PrintLog("offset x set to: " + string(argv[i + 1]), 0);
+
+				if(autocenter) Logger::PrintLog("autocenter disabled", 0);
+				autocenter = false;
+
                 i++;
                 break;
             }
             else
             {
-                cout << "Unsupported use of an argument: " << argv[i] << endl;
-                Logger::PrintUsage();
+				Logger::PrintUnsupported(argv[i]);
                 return 1;
             }
             break;
 
         case 46807: //  -oy
-            if (autocenter == true)
-            {
-                Logger::PrintAutocenterWarn();
-                return 1;
-            }
-
             if (i + 1 < argc)
             {
                 offsety = stoi(argv[i + 1]);
+
+				Logger::PrintLog("offset y set to: " + string(argv[i + 1]), 0);
+
+				if(autocenter) Logger::PrintLog("autocenter disabled", 0);
+				autocenter = false;
+
                 i++;
                 break;
-            }
-            else
-            {
-                cout << "Unsupported use of an argument: " << argv[i] << endl;
-                Logger::PrintUsage();
-                return 1;
-            }
-            break;
-	
-	case 1494: // -c
-	    if (i + 1 < argc)
-            {
-                cout << "specified config path: " << argv[i + 1] << endl;
-        	config_path = argv[i + 1];
-                i++;
             }
             else
             {
                 Logger::PrintUnsupported(argv[i]);
                 return 1;
             }
-	    break;
+            break;
+	
+		case 1494: // -c
+		    if (i + 1 < argc)
+            {
+				config_path = argv[i + 1];
+				Logger::PrintLog("specified config path: " + string(argv[i + 1]), 0);
+                i++;
+				break;
+            }
+            else
+            {
+                Logger::PrintUnsupported(argv[i]);
+                return 1;
+            }
+		    break;
 
         default:
             fileSpecified = true;
@@ -171,7 +159,7 @@ int main(int argc, char *argv[])
 
     if (!fileSpecified)
     {
-        cout << "error: no input file!" << endl;
+		Logger::PrintErr("error: no input file!", 0);
         return 1;
     }
 

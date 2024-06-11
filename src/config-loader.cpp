@@ -1,37 +1,50 @@
-#include "ConfigLoader.h"
-
+#include <iostream>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
+#include <map>
+#include <string>
 
-ConfigLoader::ConfigLoader(const string& filename) {
-    loadConfig(filename);
-}
+#include "ConfigLoader.h"
 
-void ConfigLoader::loadConfig(const string& filename) {
+using namespace std;
+
+map<string, int> ConfigLoader::LoadConf(const string& filename) {
+    map<string, int> config;
     ifstream file(filename);
-    if (!file) {
-        throw runtime_error("Unable to open config file: " + filename);
+
+    if (!file.is_open()) {
+        throw runtime_error("Could not open config file");
     }
 
     string line;
-    while (getline(file, line)) {
+    while (getline(file, line)) 
+	{
         istringstream iss(line);
         string key;
-        if (getline(iss, key, '=')) {
-            string value;
-            if (getline(iss, value)) {
-                configMap[key] = value;
+
+        if (getline(iss, key, '=')) 
+		{
+            string valueStr;
+
+            if (getline(iss, valueStr)) 
+			{
+                try 
+				{
+                    int value = stoi(valueStr);
+                    config[key] = value;
+                } 
+				catch (const invalid_argument& e) 
+				{
+                    cerr << "Invalid value for key " << key << ": " << valueStr << endl;
+                } 
+				catch (const out_of_range& e) 
+				{
+                    cerr << "Value out of range for key " << key << ": " << valueStr << endl;
+                }
             }
         }
     }
-}
 
-string ConfigLoader::get(const string& key) const {
-    auto it = configMap.find(key);
-    if (it != configMap.end()) {
-        return it->second;
-    } else {
-        throw runtime_error("Key not found in config: " + key);
-    }
+    file.close();
+    return config;
 }

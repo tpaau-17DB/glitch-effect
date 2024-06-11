@@ -1,22 +1,24 @@
-#include "FileLoader.h"
-
-#include <iostream>
 #include <vector>
 #include <fstream>
 
-std::vector<std::string> FileLoader::GetLines(const std::string &path)
+#include "FileLoader.h"
+#include "Logger.h"
+
+using namespace std;
+
+vector<string> FileLoader::GetLines(const string &path)
 {
-    std::vector<std::string> lines;
-	std::ifstream file(path);
+    vector<string> lines;
+	ifstream file(path);
 
     if (!file.good())
     {
-        throw std::runtime_error("File error! File path: '" + path + "'");
+        throw runtime_error("File error! File path: '" + path + "'");
     }
 
     if (file.is_open())
     {
-        std::string line;
+        string line;
 
         while (getline(file, line))
         {
@@ -27,7 +29,7 @@ std::vector<std::string> FileLoader::GetLines(const std::string &path)
     }
     else
     {
-		std::cerr << "Unable to open file: " << path << std::endl;
+			Logger::PrintLog("Unable to open file: " + path, 0);
     }
 
     return lines;
