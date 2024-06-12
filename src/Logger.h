@@ -14,8 +14,11 @@ class Logger
 		static void PrintUnsupported(const char *arg);
 
 		static void PrintLog(const std::string message, const int layer);
+		static void PrintLog(const std::string message);
 		static void PrintWarn(const std::string  message, const int layer);
+		static void PrintWarn(const std::string  message);
 		static void PrintErr(const std::string message, const int layer);
+		static void PrintErr(const std::string message);
 
     private:
 		static int* verbosity;

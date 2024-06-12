@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 #include <string>
 #include <cstdlib>
@@ -8,8 +7,9 @@
 
 #include "Logger.h"
 #include "FileLoader.h"
+#include "ConfigLoader.h"
 
-int* Logger::verbosity = nullptr;
+int* Logger::verbosity = new int(1);
 
 using namespace std;
 
@@ -53,10 +53,10 @@ int main(int argc, char *argv[])
             return 0;
             break;
 
-        case 1511: //  -t
+        case 1511: //  -t, time
             if (i + 1 < argc)
             {
-				Logger::PrintLog("sleeptime set to: " + string(argv[i + 1]) + "ms", 0);
+				Logger::PrintLog("sleeptime set to: " + string(argv[i + 1]) + "ms");
                 sleeptime_ms = stoi(argv[i + 1]);
                 i++;
             }
@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
             }
             break;
 
-        case 1510: //  -s
+        case 1510: //  -s, strenght
             if (i + 1 < argc)
             {
-				Logger::PrintLog("glitch strenght set to: " +  string(argv[i + 1]), 0);
+				Logger::PrintLog("glitch strenght set to: " +  string(argv[i + 1]));
                 glitch_strenght = stoi(argv[i + 1]);
                 i++;
             }
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
         case 1500: //  -i
             if (i + 1 < argc)
             {
-				Logger::PrintLog("glitch intensity set to: " + string(argv[i + 1]), 0);
+				Logger::PrintLog("glitch intensity set to: " + string(argv[i + 1]));
                 glitch_intensity = stoi(argv[i + 1]);
                 i++;
             }
@@ -95,14 +95,14 @@ int main(int argc, char *argv[])
             }
             break;
 
-        case 46806: //  -ox
+        case 46806: //  -ox, offset X
             if (i + 1 < argc)
             {
                 offsetx = stoi(argv[i + 1]);
 
-				Logger::PrintLog("offset x set to: " + string(argv[i + 1]), 0);
+				Logger::PrintLog("offset x set to: " + string(argv[i + 1]));
 
-				if(autocenter) Logger::PrintLog("autocenter disabled", 0);
+				if(autocenter) Logger::PrintLog("autocenter disabled");
 				autocenter = false;
 
                 i++;
@@ -115,14 +115,14 @@ int main(int argc, char *argv[])
             }
             break;
 
-        case 46807: //  -oy
+        case 46807: //  -oy, offset Y
             if (i + 1 < argc)
             {
                 offsety = stoi(argv[i + 1]);
 
-				Logger::PrintLog("offset y set to: " + string(argv[i + 1]), 0);
+				Logger::PrintLog("offset y set to: " + string(argv[i + 1]));
 
-				if(autocenter) Logger::PrintLog("autocenter disabled", 0);
+				if(autocenter) Logger::PrintLog("autocenter disabled");
 				autocenter = false;
 
                 i++;
@@ -135,15 +135,30 @@ int main(int argc, char *argv[])
             }
             break;
 	
-		case 1494: // -c
+		case 1494: // -c, config
 		    if (i + 1 < argc)
             {
 				config_path = argv[i + 1];
-				Logger::PrintLog("specified config path: " + string(argv[i + 1]), 0);
+				Logger::PrintLog("specified config path: " + string(argv[i + 1]));
                 i++;
 				break;
             }
-            else
+		    else
+            {
+                Logger::PrintUnsupported(argv[i]);
+                return 1;
+            }
+		    break;
+
+		case 1513: // -v, verbosity
+		    if (i + 1 < argc)
+            {
+				Logger::SetVerbosity(stoi(argv[i + 1]));
+				Logger::PrintLog("verbosity set to: " + string(argv[i + 1]));
+                i++;
+				break;
+            }
+		    else
             {
                 Logger::PrintUnsupported(argv[i]);
                 return 1;
@@ -159,9 +174,12 @@ int main(int argc, char *argv[])
 
     if (!fileSpecified)
     {
-		Logger::PrintErr("error: no input file!", 0);
+		Logger::PrintErr("error: no input file!");
         return 1;
     }
+
+	//Logger::PrintLog("Attempting to load a config file at '" + config_path + "'");
+	//map<string, int> config = ConfigLoader::LoadConf(config_path);
 
     setlocale(LC_ALL, "C.UTF-8");
     initscr();
@@ -182,7 +200,7 @@ int main(int argc, char *argv[])
 
     if (fileX + (2 * glitch_strenght) > maxX)
     {
-        printw("Terminal window is too small for this configuration, continue anyway? (y/N)");
+        printw("Terminal window is too small! Continue anyway? (y/N)");
         move(1, 0);
 
         int response = getch();

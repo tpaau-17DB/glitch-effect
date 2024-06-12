@@ -5,6 +5,7 @@
 #include <string>
 
 #include "ConfigLoader.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ map<string, int> ConfigLoader::LoadConf(const string& filename) {
     ifstream file(filename);
 
     if (!file.is_open()) {
-        throw runtime_error("Could not open config file");
+		Logger::PrintErr("Failed to open a config file!", 0);
     }
 
     string line;
@@ -35,11 +36,11 @@ map<string, int> ConfigLoader::LoadConf(const string& filename) {
                 } 
 				catch (const invalid_argument& e) 
 				{
-                    cerr << "Invalid value for key " << key << ": " << valueStr << endl;
+				    Logger::PrintErr("Invalid value for key " + key + ": " + valueStr, 0);
                 } 
 				catch (const out_of_range& e) 
 				{
-                    cerr << "Value out of range for key " << key << ": " << valueStr << endl;
+						Logger::PrintErr("Value out of range for key " + key + ": " + valueStr, 0);
                 }
             }
         }

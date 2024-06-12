@@ -29,7 +29,7 @@ vector<string> FileLoader::GetLines(const string &path)
     }
     else
     {
-			Logger::PrintLog("Unable to open file: " + path, 0);
+		Logger::PrintLog("Unable to open file: " + path);
     }
 
     return lines;
