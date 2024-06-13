@@ -9,7 +9,7 @@ using namespace std;
 vector<string> FileLoader::GetLines(const string &path)
 {
     vector<string> lines;
-	ifstream file(path);
+    ifstream file(path);
 
     if (!file.good())
     {
@@ -29,7 +29,7 @@ vector<string> FileLoader::GetLines(const string &path)
     }
     else
     {
-		Logger::PrintLog("Unable to open file: " + path);
+	Logger::PrintLog("Unable to open file: " + path);
     }
 
     return lines;

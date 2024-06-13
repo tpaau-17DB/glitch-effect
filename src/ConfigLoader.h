@@ -10,7 +10,7 @@
 class ConfigLoader
 {
     public:
-		static std::map<std::string, int> LoadConf(const std::string &path);
+	static std::map<std::string, int> LoadConf(const std::string &path);
 };
 
 #endif

@@ -9,7 +9,7 @@
 class FileLoader
 {
     public:
-		static std::vector<std::string> GetLines(const std::string &path);
+	static std::vector<std::string> GetLines(const std::string &path);
 };
 
 #endif

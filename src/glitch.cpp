@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         case 1511: //  -t, time
             if (i + 1 < argc)
             {
-				Logger::PrintLog("sleeptime set to: " + string(argv[i + 1]) + "ms");
+		Logger::PrintLog("sleeptime set to: " + string(argv[i + 1]) + "ms");
                 sleeptime_ms = stoi(argv[i + 1]);
                 i++;
             }
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         case 1510: //  -s, strenght
             if (i + 1 < argc)
             {
-				Logger::PrintLog("glitch strenght set to: " +  string(argv[i + 1]));
+		Logger::PrintLog("glitch strenght set to: " +  string(argv[i + 1]));
                 glitch_strenght = stoi(argv[i + 1]);
                 i++;
             }
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
         case 1500: //  -i
             if (i + 1 < argc)
             {
-				Logger::PrintLog("glitch intensity set to: " + string(argv[i + 1]));
+		Logger::PrintLog("glitch intensity set to: " + string(argv[i + 1]));
                 glitch_intensity = stoi(argv[i + 1]);
                 i++;
             }
@@ -100,17 +100,17 @@ int main(int argc, char *argv[])
             {
                 offsetx = stoi(argv[i + 1]);
 
-				Logger::PrintLog("offset x set to: " + string(argv[i + 1]));
+		Logger::PrintLog("offset x set to: " + string(argv[i + 1]));
 
-				if(autocenter) Logger::PrintLog("autocenter disabled");
-				autocenter = false;
+		if(autocenter) Logger::PrintLog("autocenter disabled");
+		autocenter = false;
 
                 i++;
                 break;
             }
             else
             {
-				Logger::PrintUnsupported(argv[i]);
+		Logger::PrintUnsupported(argv[i]);
                 return 1;
             }
             break;
@@ -120,10 +120,10 @@ int main(int argc, char *argv[])
             {
                 offsety = stoi(argv[i + 1]);
 
-				Logger::PrintLog("offset y set to: " + string(argv[i + 1]));
+		Logger::PrintLog("offset y set to: " + string(argv[i + 1]));
 
-				if(autocenter) Logger::PrintLog("autocenter disabled");
-				autocenter = false;
+		if(autocenter) Logger::PrintLog("autocenter disabled");
+		autocenter = false;
 
                 i++;
                 break;
@@ -137,32 +137,32 @@ int main(int argc, char *argv[])
 	
 		case 1494: // -c, config
 		    if (i + 1 < argc)
-            {
-				config_path = argv[i + 1];
-				Logger::PrintLog("specified config path: " + string(argv[i + 1]));
-                i++;
-				break;
-            }
+            	    {
+			config_path = argv[i + 1];
+			Logger::PrintLog("specified config path: " + string(argv[i + 1]));
+                	i++;
+			break;
+            	    }
 		    else
-            {
-                Logger::PrintUnsupported(argv[i]);
-                return 1;
-            }
+            	    {
+                	Logger::PrintUnsupported(argv[i]);
+                	return 1;
+            	    }
 		    break;
 
 		case 1513: // -v, verbosity
 		    if (i + 1 < argc)
-            {
-				Logger::SetVerbosity(stoi(argv[i + 1]));
-				Logger::PrintLog("verbosity set to: " + string(argv[i + 1]));
-                i++;
-				break;
-            }
+            	    {
+			Logger::SetVerbosity(stoi(argv[i + 1]));
+			Logger::PrintLog("verbosity set to: " + string(argv[i + 1]));
+                	i++;
+			break;
+            	    }
 		    else
-            {
-                Logger::PrintUnsupported(argv[i]);
-                return 1;
-            }
+            	    {
+                	Logger::PrintUnsupported(argv[i]);
+                	return 1;
+            	    }
 		    break;
 
         default:
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
 
     if (!fileSpecified)
     {
-		Logger::PrintErr("error: no input file!");
+	Logger::PrintErr("error: no input file!");
         return 1;
     }
 
