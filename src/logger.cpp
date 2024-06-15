@@ -23,9 +23,6 @@ void Logger::PrintUsage()
 {
     cout << "Usage: glitch [options] file.txt" << endl;
     cout << "  --help: Display this help message" << endl;
-    cout << "  -t <int>: Set delay in miliseconds (default: 100 )" << endl;
-    cout << "  -s <int>: Set effect strenght (default: 10, max line deformation strenght)" << endl;
-    cout << "  -i <int>: Set effect intensity (default: 20, one line in <n> gets deformed)" << endl;
     cout << "  -ox <int>: Manually set X offset, disables autocenter" << endl;
     cout << "  -oy <int>: Manually set Y offset, disables autocenter" << endl;
     cout << "  -c <path>: specify config path" << endl;
