@@ -12,9 +12,12 @@ using namespace std;
 map<string, int> ConfigLoader::LoadConf(const string& filename) {
     map<string, int> config;
     ifstream file(filename);
+    config["exit-code"] = 0;
 
-    if (!file.is_open()) {
+    if (!file.is_open()) 
+    {
 	Logger::PrintErr("Failed to open a config file!", 0);
+	config["exit-code"] = 1;
     }
 
     string line;
@@ -37,10 +40,12 @@ map<string, int> ConfigLoader::LoadConf(const string& filename) {
 		catch (const invalid_argument& e) 
 		{
 		    Logger::PrintErr("Invalid value for key " + key + ": " + valueStr, 0);
+		    config["exit-code"] = 1;
                 } 
 		catch (const out_of_range& e) 
 		{
 		    Logger::PrintErr("Value out of range for key " + key + ": " + valueStr, 0);
+		    config["exit-code"] = 1;
                 }
             }
         }

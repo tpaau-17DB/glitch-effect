@@ -69,6 +69,48 @@ int main(int argc, char *argv[])
             return 0;
             break;
 
+        case 1511: //  -t, time
+            if (i + 1 < argc)
+            {
+		Logger::PrintLog("sleeptime set to: " + string(argv[i + 1]) + "ms");
+                sleeptime_ms = stoi(argv[i + 1]);
+                i++;
+            }
+            else
+            {
+                Logger::PrintUnsupported(argv[i]);
+                return 1;
+            }
+            break;
+
+        case 1510: //  -s, strenght
+            if (i + 1 < argc)
+            {
+		Logger::PrintLog("glitch strenght set to: " +  string(argv[i + 1]));
+                glitch_strenght = stoi(argv[i + 1]);
+                i++;
+            }
+            else
+            {
+                Logger::PrintUnsupported(argv[i]);
+                return 1;
+            }
+            break;
+
+        case 1500: //  -i
+            if (i + 1 < argc)
+            {
+		Logger::PrintLog("glitch intensity set to: " + string(argv[i + 1]));
+                glitch_intensity = stoi(argv[i + 1]);
+                i++;
+            }
+            else
+            {
+                Logger::PrintUnsupported(argv[i]);
+                return 1;
+            }
+            break;
+
         case 46806: //  -ox, offset X
             if (i + 1 < argc)
             {
@@ -157,36 +199,22 @@ int main(int argc, char *argv[])
 
     int conf_exit_code = getParamFromConf(&config, "exit-code");
 
+    if (conf_exit_code != 0)
+	Logger::PrintErr("Failed to load config file! Function returned '" + to_string(conf_exit_code) + "'!");
+    else
+	Logger::PrintLog("Config loaded succesfully.");
+	
     int* output_tmp;
 
-    if (conf_exit_code == 0)
-    {
-	Logger::PrintLog("Config loaded succesfully.");
+    output_tmp = new int(getParamFromConf(&config, "glitch_strenght"));
+    if (*output_tmp != -1)
+	glitch_strenght = *output_tmp;
 
-	output_tmp = new int(getParamFromConf(&config, "verbosity"));
-    	if (*output_tmp != -1)
-    	    Logger::SetVerbosity(*output_tmp);
-    	delete output_tmp;
+    output_tmp = new int(getParamFromConf(&config, "glitch_intensity"));
+    if (*output_tmp != -1)
+	glitch_intensity = *output_tmp;
 
-    	output_tmp = new int(getParamFromConf(&config, "strenght"));
-    	if (*output_tmp != -1)
-    	    glitch_strenght = *output_tmp;
-    	delete output_tmp;
-
-    	output_tmp = new int(getParamFromConf(&config, "intensity"));
-    	if (*output_tmp != -1)
-    	    glitch_intensity = *output_tmp;
-    	delete output_tmp;
-
-	output_tmp = new int(getParamFromConf(&config, "sleeptime"));
-    	if (*output_tmp != -1)
-    	    sleeptime_ms = *output_tmp;
-    	delete output_tmp;
-    }
-    else
-    {
-	Logger::PrintErr("Failed to load config file! Function returned '" + to_string(conf_exit_code) + "'!");
-    }
+    delete output_tmp;
 
     setlocale(LC_ALL, "C.UTF-8");
     initscr();
