@@ -109,35 +109,35 @@ int main(int argc, char *argv[])
             }
             break;
 	
-		case 1494: // -c, config
-		    if (i + 1 < argc)
-            	    {
-			config_path = argv[i + 1];
-			Logger::PrintLog("specified config path: " + string(argv[i + 1]));
-                	i++;
-			break;
-            	    }
-		    else
-            	    {
-                	Logger::PrintUnsupported(argv[i]);
-                	return 1;
-            	    }
-		    break;
+	case 1494: // -c, config
+	    if (i + 1 < argc)
+            {
+		config_path = argv[i + 1];
+		Logger::PrintLog("specified config path: " + string(argv[i + 1]));
+                i++;
+		break;
+            }
+	    else
+            {
+                Logger::PrintUnsupported(argv[i]);
+                return 1;
+            }
+	    break;
 
-		case 1513: // -v, verbosity
-		    if (i + 1 < argc)
-            	    {
-			Logger::SetVerbosity(stoi(argv[i + 1]));
-			Logger::PrintLog("verbosity set to: " + string(argv[i + 1]));
-                	i++;
-			break;
-            	    }
-		    else
-            	    {
-                	Logger::PrintUnsupported(argv[i]);
-                	return 1;
-            	    }
-		    break;
+	case 1513: // -v, verbosity
+	    if (i + 1 < argc)
+            {
+		Logger::SetVerbosity(stoi(argv[i + 1]));
+		Logger::PrintLog("verbosity set to: " + string(argv[i + 1]));
+                i++;
+		break;
+            }
+	    else
+            {
+                Logger::PrintUnsupported(argv[i]);
+                return 1;
+            }
+	    break;
 
         default:
             fileSpecified = true;
@@ -192,12 +192,10 @@ int main(int argc, char *argv[])
     initscr();
     cbreak();
     noecho();
+    nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
 
     const vector<string> lines = FileLoader::GetLines(filepath);
-
-    int maxX, maxY;
-    getmaxyx(stdscr, maxY, maxX);
 
     for (const string &str : lines)
     {
@@ -205,23 +203,23 @@ int main(int argc, char *argv[])
             fileX = str.length();
     }
 
-    if (fileX + (2 * glitch_strenght) > maxX)
-    {
-        printw("Terminal window is too small! Continue anyway? (y/N)");
-        move(1, 0);
-
-        int response = getch();
-
-        if (response != 'y' && response != 'Y')
-        {
-            endwin();
-            return 1;
-        }
-    }
+    int maxX, maxY;
 
     while (true)
     {
         getmaxyx(stdscr, maxY, maxX);
+
+        if (fileX + (2 * glitch_strenght) > maxX)
+        {
+            clear();
+            move(1, 0);
+            printw("Terminal window is too small. I'll just wait...");
+	    refresh();
+	    usleep(200000);
+	    continue;
+        }
+
+
 
         clear();
         int i = 0;
@@ -247,10 +245,14 @@ int main(int argc, char *argv[])
             else
                 move(offsety + i, offsetx + num + glitch_strenght);
 
-            printw(str.c_str());
+            printw("%s", str.c_str());
 
             i++;
         }
+
+	int ch = getch();
+	if (ch == 'q')
+            break; 
 
         refresh();
 
