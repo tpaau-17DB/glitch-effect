@@ -1,5 +1,5 @@
 # glitch-effect
-git repo: https://github.com/NicholasNDev/glitch-effect
+git repo: https://github.com/mikolajArchUser/glitch-effect
 simple command line glitch effect based on ncurses
 
 ## Dependencieis

@@ -219,8 +219,6 @@ int main(int argc, char *argv[])
 	    continue;
         }
 
-
-
         clear();
         int i = 0;
         for (const string &str : lines)
