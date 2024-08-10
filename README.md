@@ -23,4 +23,4 @@ For options run `./glitch --help`.
 ## Where to start?
 You can move or copy your executable to `/usr/bin` where it is more accessible.
 
-Program requires an input file. You can start with example files provided in the repo.
+The program requires an input file. You can start with example files provided in the repo.
