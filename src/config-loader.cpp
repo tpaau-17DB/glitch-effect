@@ -1,4 +1,3 @@
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <map>
@@ -16,7 +15,7 @@ map<string, int> ConfigLoader::LoadConf(const string& filename) {
 
     if (!file.is_open()) 
     {
-	Logger::PrintErr("Failed to open a config file!", 0);
+	Logger::PrintErr("Failed to open the config file at '" + filename + "'!", 0);
 	config["exit-code"] = 1;
     }
 
@@ -34,6 +33,7 @@ map<string, int> ConfigLoader::LoadConf(const string& filename) {
 	    {
                 try 
 		{
+                    cout<<"config-loader.cpp line 37!"<<endl;
                     int value = stoi(valueStr);
                     config[key] = value;
                 } 

@@ -21,11 +21,12 @@ int Logger::GetVerbosity()
 
 void Logger::PrintUsage()
 {
-    cout << "Usage: glitch [options] file.txt" << endl;
-    cout << "  --help: Display this help message" << endl;
-    cout << "  -ox <int>: Manually set X offset, disables autocenter" << endl;
-    cout << "  -oy <int>: Manually set Y offset, disables autocenter" << endl;
-    cout << "  -c <path>: specify config path" << endl;
+    cout << "Usage: glitch [options]" << endl;
+    cout << "  --help, -h: Display this help message" << endl;
+    cout << "  -x <int>: Manually set X offset, disables autocenter" << endl;
+    cout << "  -y <int>: Manually set Y offset, disables autocenter" << endl;
+    cout << "  -c <path>: specify config file path" << endl;
+    cout << "  -i <path>: specify the ascii file to display" << endl;
     cout << "  -v <int>: Set log verbosity" << endl;
 }
 

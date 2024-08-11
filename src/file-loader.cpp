@@ -13,7 +13,7 @@ vector<string> FileLoader::GetLines(const string &path)
 
     if (!file.good())
     {
-        throw runtime_error("File error! File path: '" + path + "'");
+        Logger::PrintErr("File error! File path: '" + path + "'");
     }
 
     if (file.is_open())
@@ -29,7 +29,7 @@ vector<string> FileLoader::GetLines(const string &path)
     }
     else
     {
-	Logger::PrintLog("Unable to open file: " + path);
+	Logger::PrintErr("Unable to open file: '" + path + "'");
     }
 
     return lines;
