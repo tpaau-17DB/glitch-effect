@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <string>
 #include <unistd.h>
 #include <getopt.h>
@@ -6,6 +7,23 @@
 #include "Logger.h"
 
 using namespace std;
+
+int ArgInterpreter::strToInt(string str)
+{
+    int result;
+
+    try
+    {
+        result = stoi(str);
+    }
+    catch (const invalid_argument& e)
+    {
+        result = -1;
+        Logger::PrintErr(string("Failed to convert '") + str + string("' to an int. (") + e.what() + string(")"));
+    }
+
+    return result;
+}
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 {
@@ -45,7 +63,15 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 {
                     if (verb_set) break;
                     verb_set = true;
-                    Logger::SetVerbosity(stoi(optarg));
+                    int val = strToInt(optarg);
+
+                    if (val == -1)
+                    {
+                        args.exit = true;
+                        return args;
+                    }
+
+                    Logger::SetVerbosity(val);
                     Logger::PrintLog(string("Verbosity set to: ") + optarg);
                 }
                 break;
@@ -62,7 +88,15 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case 'x':
                 if (optarg)
                 {
-                    args.ox = stoi(optarg);
+                    int val = strToInt(optarg);
+
+                    if (val == -1)
+                    {
+                        args.exit = true;
+                        return args;
+                    }
+
+                    args.ox = val;
                     Logger::PrintLog(string("Offset X set to: ") + optarg);
                 }
                 break;
@@ -70,7 +104,15 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case 'y':
                 if (optarg)
                 {
-                    args.oy = stoi(optarg);
+                    int val = strToInt(optarg);
+
+                    if (val == -1)
+                    {
+                        args.exit = true;
+                        return args;
+                    }
+
+                    args.oy = val;
                     Logger::PrintLog(string("Offset Y set to: ") + optarg);
                 }
                 break;

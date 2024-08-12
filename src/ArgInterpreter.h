@@ -21,6 +21,9 @@ class ArgInterpreter
 {
     public:
         static argstruct GetArgs(int argc, char* argv[]);
+
+    private:
+        static int strToInt(std::string str);
 };
 
 #endif
