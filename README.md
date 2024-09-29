@@ -3,7 +3,7 @@ git repo: https://github.com/tpaau-17DB/glitch-effect
 
 Simple command line glitch effect based on ncurses.
 
-## Dependencieis
+## Dependencies
 You will need ncurses library to compile this program. 
 
 You can install ncurses as `ncurses-dev` or `libncurses-dev` with your package manager.
