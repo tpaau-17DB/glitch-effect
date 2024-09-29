@@ -10,8 +10,6 @@
 #include "ConfigLoader.h"
 #include "ArgInterpreter.h"
 
-int* Logger::verbosity = new int(1);
-
 using namespace std;
 
 int getParamFromConf(map<string, int>* conf, const string& param)
@@ -48,12 +46,12 @@ int main(int argc, char *argv[])
     args = ArgInterpreter::GetArgs(argc, argv);
     if (args.help_requested)
     {
-        Logger::PrintLog("Help requested by user. Exiting...");
+        Logger::PrintDebug("Help requested by user. Exiting...");
         return 0;
     }
     else if (args.exit)
     {
-        Logger::PrintLog("Told to exit by the arginterpreter. Exiting now...");
+        Logger::PrintDebug("Told to exit by the arginterpreter. Exiting now...");
         return 0;
     }
 
@@ -70,7 +68,7 @@ int main(int argc, char *argv[])
 
     if (conf_exit_code == 0)
     {
-	Logger::PrintLog("Config loaded succesfully.");
+	Logger::PrintDebug("Config loaded succesfully.");
 
     	output_tmp = new int(getParamFromConf(&config, "strenght"));
     	if (*output_tmp != -1)
@@ -92,7 +90,7 @@ int main(int argc, char *argv[])
     if (lines.size() == 0)
     {
         Logger::PrintErr("Ascii file was empty!");
-        Logger::PrintLog("Nothing to display. Quitting...");
+        Logger::PrintWarn("Nothing to display. Quitting...");
         return 0;
     }
 

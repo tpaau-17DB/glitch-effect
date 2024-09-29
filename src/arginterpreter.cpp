@@ -2,6 +2,7 @@
 #include <string>
 #include <unistd.h>
 #include <getopt.h>
+#include <iostream>
 
 #include "ArgInterpreter.h"
 #include "Logger.h"
@@ -23,6 +24,17 @@ int ArgInterpreter::strToInt(string str)
     }
 
     return result;
+}
+
+void PrintUsage()
+{
+    cout << "Usage: glitch [options]" << endl;
+    cout << "  --help, -h: Display this help message" << endl;
+    cout << "  -x <int>: Manually set X offset, disables autocenter" << endl;
+    cout << "  -y <int>: Manually set Y offset, disables autocenter" << endl;
+    cout << "  -c <path>: specify config file path" << endl;
+    cout << "  -i <path>: specify the ascii file to display" << endl;
+    cout << "  -v <int>: Set log verbosity" << endl;
 }
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
@@ -47,7 +59,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
         {
             case 'h':
                 args.help_requested = true;
-                Logger::PrintUsage();
+                PrintUsage();
                 return args;
 
             case 'c':
@@ -55,7 +67,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 {
                     config_specified = true;
                     args.config_path = optarg;
-                    Logger::PrintLog(string("Config file path set to: '") + optarg + string("'"));
+                    Logger::PrintDebug(string("Config file path set to: '") + optarg + string("'"));
                 }
 
             case 'v':
@@ -72,7 +84,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     Logger::SetVerbosity(val);
-                    Logger::PrintLog(string("Verbosity set to: ") + optarg);
+                    Logger::PrintDebug(string("Verbosity set to: ") + optarg);
                 }
                 break;
 
@@ -81,7 +93,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 {
                     args.ascii_path = optarg;
                     ascii_specified = true;
-                    Logger::PrintLog(string("Ascii file path set to: '") + args.ascii_path + string("'"));
+                    Logger::PrintDebug(string("Ascii file path set to: '") + args.ascii_path + string("'"));
                 }
                 break;
 
@@ -97,7 +109,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.ox = val;
-                    Logger::PrintLog(string("Offset X set to: ") + optarg);
+                    Logger::PrintDebug(string("Offset X set to: ") + optarg);
                 }
                 break;
 
@@ -113,13 +125,13 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.oy = val;
-                    Logger::PrintLog(string("Offset Y set to: ") + optarg);
+                    Logger::PrintDebug(string("Offset Y set to: ") + optarg);
                 }
                 break;
 
             case 'n':
                 args.help_requested = true;
-                Logger::PrintUsage();
+                PrintUsage();
                 return args;
         }
     }

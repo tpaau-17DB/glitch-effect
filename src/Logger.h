@@ -10,9 +10,11 @@ class Logger
 	static void SetVerbosity(const int verbosity);
 	static int GetVerbosity();
 
-	static void PrintUsage();
-	static void PrintUnsupported(const char *arg);
+        static void SetOverrideFiltering(const bool overrideFiltering);
+        static bool GetOverrideFiltering();
 
+        static void PrintDebug(const std::string message, const int layer);
+	static void PrintDebug(const std::string message);
 	static void PrintLog(const std::string message, const int layer);
 	static void PrintLog(const std::string message);
 	static void PrintWarn(const std::string  message, const int layer);
@@ -21,7 +23,10 @@ class Logger
 	static void PrintErr(const std::string message);
 
     private:
-	static int* verbosity;
+	static int verbosity;
+        static bool overrideFiltering;
+
+        static const std::string BLUE;
 	static const std::string GREEN; 
 	static const std::string YELLOW;
 	static const std::string RED;	
