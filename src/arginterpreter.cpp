@@ -51,12 +51,11 @@ int ArgInterpreter::strToColorID(const string colorStr)
 
 void PrintUsage()
 {
-    cout << "Usage: glitch [options]" << endl;
+    cout << "Usage: glitch [options] [ascii path]" << endl;
     cout << "  --help, -h: Display this help message" << endl;
     cout << "  -x <int>: Manually set X offset, disables autocenter" << endl;
     cout << "  -y <int>: Manually set Y offset, disables autocenter" << endl;
     cout << "  -c <path>: specify config file path" << endl;
-    cout << "  -i <path>: specify the ascii file to display" << endl;
     cout << "  -v <int>: Set log verbosity" << endl;
     cout << "  --foreground <color>: Set foreground color" << endl;
     cout << "  --background <color>: Set background color" << endl;
@@ -81,7 +80,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     bool ascii_specified = false;
     bool verb_set = false;
 
-    while ((arg = getopt_long(argc, argv, "x:y:v:i:c:h", long_options, &option_index)) != -1)
+    while ((arg = getopt_long(argc, argv, "x:y:v:c:h", long_options, &option_index)) != -1)
     {
         switch (arg)
         {
@@ -113,15 +112,6 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
                     Logger::SetVerbosity(Logger::LogLevel(val));
                     Logger::PrintDebug(string("Verbosity set to: ") + optarg);
-                }
-                break;
-
-            case 'i':
-                if (optarg)
-                {
-                    args.ascii_path = optarg;
-                    ascii_specified = true;
-                    Logger::PrintDebug(string("Ascii file path set to: '") + args.ascii_path + string("'"));
                 }
                 break;
 
@@ -193,7 +183,16 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     Logger::PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;
+
+            
         }
+    }
+
+    if (optind < argc)
+    {
+        args.ascii_path = argv[optind];
+        ascii_specified = true;
+        Logger::PrintDebug(string("Ascii file path set to '") + args.ascii_path + string("'."));
     }
 
     if (!config_specified)
