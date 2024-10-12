@@ -80,7 +80,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     bool ascii_specified = false;
     bool verb_set = false;
 
-    while ((arg = getopt_long(argc, argv, "x:y:v:c:h", long_options, &option_index)) != -1)
+    while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
     {
         switch (arg)
         {
@@ -96,6 +96,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     args.config_path = optarg;
                     Logger::PrintDebug(string("Config file path set to: '") + optarg + string("'"));
                 }
+                break;
 
             case 'v':
                 if (optarg)
