@@ -47,6 +47,16 @@ int main(int argc, char *argv[])
         config = ConfigLoader::LoadConf(args.config_path);
         conf_exit_code = ConfigLoader::GetParamFromConf(&config, "exit-code");
     }
+    else
+    {
+        string path = FileLoader::CheckForConfigFiles();
+
+        if (path != "none")
+        {
+            config = ConfigLoader::LoadConf(args.config_path);
+            conf_exit_code = ConfigLoader::GetParamFromConf(&config, "exit-code");
+        }
+    }
 
     int output_tmp;
 
@@ -70,7 +80,6 @@ int main(int argc, char *argv[])
     const vector<string> lines = FileLoader::GetLines(args.ascii_path);
     if (lines.size() == 0)
     {
-        Logger::PrintErr("Ascii file was empty!");
         Logger::PrintWarn("Nothing to display. Quitting...");
         return 0;
     }

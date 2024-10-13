@@ -14,24 +14,25 @@ int ConfigLoader::GetParamFromConf(map<string, int>* conf, const string &param)
 
     if (it != conf->end())
     {
-        Logger::PrintLog("Param '" + param + "' = " + to_string(it->second));
+        Logger::PrintDebug("Found param '" + param + "' = " + to_string(it->second));
         return it->second;
     } 
     else
     {
-        Logger::PrintWarn("Param '" + param + "' not found in config file.");
+        Logger::PrintLog("Param '" + param + "' not found in config file.");
         return -1;
     }
 }
 
-map<string, int> ConfigLoader::LoadConf(const string& filename) {
+map<string, int> ConfigLoader::LoadConf(const string& filename) 
+{
     map<string, int> config;
     ifstream file(filename);
     config["exit-code"] = 0;
 
     if (!file.is_open()) 
     {
-	Logger::PrintErr("Failed to open the config file at '" + filename + "'!", 0);
+	Logger::PrintErr("Failed to open the config file at '" + filename + "'!");
 	config["exit-code"] = 1;
     }
 
@@ -49,7 +50,6 @@ map<string, int> ConfigLoader::LoadConf(const string& filename) {
 	    {
                 try 
 		{
-                    cout<<"config-loader.cpp line 37!"<<endl;
                     int value = stoi(valueStr);
                     config[key] = value;
                 } 

@@ -76,7 +76,6 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
     int arg;
     int option_index = 0;
-    bool config_specified = false;
     bool ascii_specified = false;
     bool verb_set = false;
 
@@ -92,7 +91,6 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case 'c':
                 if (optarg)
                 {
-                    config_specified = true;
                     args.config_path = optarg;
                     Logger::PrintDebug(string("Config file path set to: '") + optarg + string("'"));
                 }
@@ -194,11 +192,6 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
         args.ascii_path = argv[optind];
         ascii_specified = true;
         Logger::PrintDebug(string("Ascii file path set to '") + args.ascii_path + string("'."));
-    }
-
-    if (!config_specified)
-    {
-        Logger::PrintWarn("Config file was not specified!");
     }
 
     if (!ascii_specified)
