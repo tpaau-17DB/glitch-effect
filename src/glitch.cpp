@@ -92,22 +92,21 @@ int main(int argc, char *argv[])
     while (true)
     {
         buffer.VerticalDistort(effectIntensity, effectStrength);
-         
         Printer::print(buffer, effectStrength);
-
         buffer.ResetDistorted();
         
-        Logger::SetNCursesMode(true);
-
 	int ch = getch();
 	if (ch == 'q')
-            break; 
+        {
+            Logger::PrintDebug("Exit requested by user.");
+            break;
+        }
 
         refresh();
 
         usleep(1000 * sleeptime_ms);
     }
     
-    endwin();
+    Printer::stop();
     return 0;
 }

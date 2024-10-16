@@ -23,6 +23,7 @@ class Printer
         };
 
         static void init(const int sleeptimeMS, const int offsetX, const int offsetY);
+        static void stop();
 
         static void SetColors(const Color fg, const Color bg);
 

@@ -39,6 +39,18 @@ void Printer::init(const int sleeptimeMS, const int offsetX, const int offsetY)
 }
 
 
+// STOP
+void Printer::stop()
+{
+    Logger::PrintDebug("Stopping ncurses.");
+    clear();
+    curs_set(1);
+    reset_prog_mode();
+    endwin();
+
+    Logger::SetNCursesMode(false);
+}
+
 // SETTERS
 void Printer::SetColors(const Printer::Color fg, const Printer::Color bg)
 {
