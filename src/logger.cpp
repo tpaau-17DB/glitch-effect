@@ -20,6 +20,7 @@ const string Logger::RESET = "\033[0m";
 Logger::LogLevel Logger::logLevel = Logger::Standard;
 bool Logger::overrideFiltering = false;
 bool Logger::ncursesMode = false;
+bool Logger::nocolor = false;
 
 
 // Setters
@@ -38,16 +39,16 @@ void Logger::SetNCursesMode(const bool mode)
     Logger::ncursesMode = mode;
 }
 
+void Logger::SetNoColor(const bool nocolor)
+{
+    Logger::nocolor = nocolor;
+}
+
 
 // Getters
 Logger::LogLevel Logger::GetVerbosity()
 {
     return Logger::logLevel;
-}
-
-bool Logger::GetOverrideFiltering()
-{
-    return Logger::overrideFiltering;
 }
 
 
@@ -94,32 +95,62 @@ void Logger::PrintErr(const string message)
 
 
 // Internal methods
+string Logger::getHeader(const int id)
+{
+    string header;
+
+    if (!nocolor)
+    {
+        switch(id)
+        {
+            case 0:
+                header = BLUE + "[DEB] " + RESET;
+                break;
+
+            case 1:
+                header = GREEN + "[LOG] " + RESET;
+                break;
+
+            case 2:
+                header = YELLOW + "[WAR] " + RESET;
+                break;
+
+            case 3:
+                header = RED + "[ERR] " + RESET;
+                break;
+        };
+    }
+    else
+    {
+        switch(id)
+        {
+            case 0:
+                header = "[DEB] ";
+                break;
+
+            case 1:
+                header = "[LOG] ";
+                break;
+
+            case 2:
+                header = "[WAR] ";
+                break;
+
+            case 3:
+                header = "[ERR] ";
+                break;
+        };
+    }
+
+    return header;
+}
 
 void Logger::print(const string &message, const int prior, const int layer)
 {   
     if (logLevel > prior && !overrideFiltering) return;
     
-    string header;
     string spaces = string(layer * 2, ' ');
-
-    switch(prior)
-    {
-        case 0:
-            header = BLUE + "[DEB] " + RESET;
-            break;
-
-        case 1:
-            header = GREEN + "[LOG] " + RESET;
-            break;
-
-        case 2:
-            header = YELLOW + "[WAR] " + RESET;
-            break;
-
-        case 3:
-            header = RED + "[ERR] " + RESET;
-            break;
-    };
+    string header = getHeader(prior);
 
     if (ncursesMode)
     {
