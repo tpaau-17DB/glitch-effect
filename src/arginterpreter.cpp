@@ -59,6 +59,7 @@ void PrintUsage()
     cout << "  -v <int>: Set log verbosity" << endl;
     cout << "  --foreground <color>: Set foreground color" << endl;
     cout << "  --background <color>: Set background color" << endl;
+    cout << "  --nocolor: enables nocolor option in Logger"<<endl;
 }
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
@@ -70,6 +71,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
         {"help", no_argument, nullptr, '1'},
         {"foreground", required_argument, nullptr, '2'},
         {"background", required_argument, nullptr, '3'},
+        {"nocolor", no_argument, nullptr, '4'},
         {0, 0, 0, 0}
 
     };
@@ -182,7 +184,11 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     Logger::PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;
-
+            
+            case '4':
+                Logger::SetNoColor(true);
+                Logger::PrintDebug("Disabled color in Logger.");
+                break;
             
         }
     }
