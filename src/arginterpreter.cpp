@@ -1,3 +1,4 @@
+#include <string>
 #include <unistd.h>
 #include <getopt.h>
 #include <iostream>
@@ -80,6 +81,39 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     int option_index = 0;
     bool ascii_specified = false;
     bool verb_set = false;
+    bool nocolor_set = false;
+
+    while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
+    {
+        switch(arg)
+        {
+            case 'v':
+                if (optarg)
+                {
+                    int val = strToInt(optarg);
+
+                    if (val == -1)
+                    {
+                        args.exit = true;
+                        return args;
+                    }
+
+                    Logger::SetVerbosity(Logger::LogLevel(val));
+                    verb_set = true;
+                }
+                break;
+
+            case '4':
+                Logger::SetNoColor(true);
+                nocolor_set = true;
+                break;
+        }
+    }
+
+    if (verb_set)
+        Logger::PrintDebug(string("Verbosity set to: ") + to_string(Logger::GetVerbosity()));
+    if (nocolor_set)
+        Logger::PrintDebug("Disabled color in Logger.");
 
     while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
     {
@@ -95,24 +129,6 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 {
                     args.config_path = optarg;
                     Logger::PrintDebug(string("Config file path set to: '") + optarg + string("'"));
-                }
-                break;
-
-            case 'v':
-                if (optarg)
-                {
-                    if (verb_set) break;
-                    verb_set = true;
-                    int val = strToInt(optarg);
-
-                    if (val == -1)
-                    {
-                        args.exit = true;
-                        return args;
-                    }
-
-                    Logger::SetVerbosity(Logger::LogLevel(val));
-                    Logger::PrintDebug(string("Verbosity set to: ") + optarg);
                 }
                 break;
 
@@ -184,12 +200,9 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     Logger::PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;
-            
-            case '4':
-                Logger::SetNoColor(true);
-                Logger::PrintDebug("Disabled color in Logger.");
+
+            default:
                 break;
-            
         }
     }
 
