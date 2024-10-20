@@ -3,7 +3,8 @@
 #include <iostream>
 #include <ncurses.h>
 #include <cstdio>
-#include <ostream>
+#include <ctime>
+#include <string>
 
 using namespace std;
 
@@ -17,10 +18,14 @@ const string Logger::RESET = "\033[0m";
 
 
 // Init
+string Logger::dateTimeFormat = "%H:%M:%S";
+
 Logger::LogLevel Logger::logLevel = Logger::Standard;
+
 bool Logger::overrideFiltering = false;
 bool Logger::ncursesMode = false;
 bool Logger::nocolor = false;
+bool Logger::dateTimeEnabled = false;
 
 
 // Setters
@@ -42,6 +47,19 @@ void Logger::SetNCursesMode(const bool mode)
 void Logger::SetNoColor(const bool nocolor)
 {
     Logger::nocolor = nocolor;
+}
+
+void Logger::SetShowDateTime(const bool enabled)
+{
+    dateTimeEnabled = enabled;
+}
+
+void Logger::SetDatetimeFormat(const string format)
+{
+    if (isValidDateTimeFormat(format))
+        dateTimeFormat = format;
+    else
+        Logger::PrintErr("Invalid datetime format specified: '" + format + "'.");
 }
 
 
@@ -142,6 +160,9 @@ string Logger::getHeader(const int id)
         };
     }
 
+    if (dateTimeEnabled)
+        header += getDateTime();
+
     return header;
 }
 
@@ -157,10 +178,54 @@ void Logger::print(const string &message, const int prior, const int layer)
         endwin();
         printf("%s\n", (spaces + header + message).c_str());
         fflush(stdout);
-        refresh();
     }
     else
     {
         cout<<spaces<<header<<message<<endl;
     }
+}
+
+string Logger::getDateTime()
+{
+    time_t t = time(0);
+    tm* now = localtime(&t);
+
+    if (!now)
+    {
+        if (!nocolor)
+            return RED + "[error: null pointer] " + RESET;
+        else
+            return "[error: null pointer] ";
+    }
+
+    char buffer[80];
+
+    if (strftime(buffer, sizeof(buffer), dateTimeFormat.c_str(), now) == 0) 
+    {
+        if (!nocolor)
+            return RED + "[format error] " + RESET;
+        else
+            return RED + "[format error] " + RESET;
+    }
+
+    return "[" + string(buffer) + "] ";
+}
+
+bool Logger::isValidDateTimeFormat(const std::string& format) 
+{
+    time_t t = time(0);
+    tm* now = localtime(&t);
+    
+    if (!now) 
+    {
+        return false;
+    }
+
+    char buffer[80];
+    if (strftime(buffer, sizeof(buffer), format.c_str(), now) == 0) 
+    {
+        return false;
+    }
+
+    return true;
 }
