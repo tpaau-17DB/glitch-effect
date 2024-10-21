@@ -1,10 +1,13 @@
 #include "Logger.h"
 
+#include <cmath>
 #include <iostream>
 #include <ncurses.h>
 #include <cstdio>
 #include <ctime>
 #include <string>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -18,6 +21,8 @@ const string Logger::RESET = "\033[0m";
 
 
 // Init
+vector<string> Logger::logBuffer = vector<string>();
+
 string Logger::dateTimeFormat = "%H:%M:%S";
 
 Logger::LogLevel Logger::logLevel = Logger::Standard;
@@ -26,6 +31,7 @@ bool Logger::overrideFiltering = false;
 bool Logger::ncursesMode = false;
 bool Logger::nocolor = false;
 bool Logger::dateTimeEnabled = false;
+bool Logger::useLogAccumulation = false;
 
 
 // Setters
@@ -60,6 +66,11 @@ void Logger::SetDatetimeFormat(const string format)
         dateTimeFormat = format;
     else
         Logger::PrintErr("Invalid datetime format specified: '" + format + "'.");
+}
+
+void Logger::SetUseLogAccumulation(const bool useLogAccumulation)
+{
+    Logger::useLogAccumulation = useLogAccumulation;
 }
 
 
@@ -109,6 +120,53 @@ void Logger::PrintErr(const string message, const int layer)
 void Logger::PrintErr(const string message)
 {
     Logger::print(message, 3, 0);
+}
+
+
+// Other public methods
+void Logger::ClearLogBufer()
+{
+    logBuffer = vector<string>();
+    if (!nocolor)
+    {
+        logBuffer.push_back(BLUE + "[CLEARED]" + RESET + "\n");
+    }
+    else
+    {
+        logBuffer.push_back("[CLEARED]\n");
+    }
+}
+
+void Logger::ReleaseLogBuffer()
+{
+    if (logBuffer.size() == 0)
+        return;
+
+    if (ncursesMode)
+    {
+        endwin();
+        ostringstream stream;
+        for (const string& log : logBuffer)
+        {
+            stream<<log;
+        }
+        printf("%s", stream.str().c_str());
+        fflush(stdout);
+    }
+    else
+    {
+        ostringstream stream;
+        for (const string& log : logBuffer)
+        {
+            stream<<log;
+        }
+        cout<<stream.str();
+    }
+}
+
+void Logger::WriteToBuffer(const string& str)
+{
+    logBuffer.push_back(str);
 }
 
 
@@ -173,15 +231,22 @@ void Logger::print(const string &message, const int prior, const int layer)
     string spaces = string(layer * 2, ' ');
     string header = getHeader(prior);
 
-    if (ncursesMode)
+    if (useLogAccumulation)
     {
-        endwin();
-        printf("%s\n", (spaces + header + message).c_str());
-        fflush(stdout);
+        logBuffer.push_back(spaces + header + message + "\n");
     }
     else
     {
-        cout<<spaces<<header<<message<<endl;
+        if (ncursesMode)
+        {
+            endwin();
+            printf("%s\n", (spaces + header + message).c_str());
+            fflush(stdout);
+        }
+        else
+        {
+            cout<<spaces<<header<<message<<endl;
+        }
     }
 }
 
@@ -193,9 +258,9 @@ string Logger::getDateTime()
     if (!now)
     {
         if (!nocolor)
-            return RED + "[error: null pointer] " + RESET;
+            return RED + "[ERROR: NULL POINTER] " + RESET;
         else
-            return "[error: null pointer] ";
+            return "[ERROR: NULL POINTER] ";
     }
 
     char buffer[80];
@@ -203,9 +268,9 @@ string Logger::getDateTime()
     if (strftime(buffer, sizeof(buffer), dateTimeFormat.c_str(), now) == 0) 
     {
         if (!nocolor)
-            return RED + "[format error] " + RESET;
+            return RED + "[FORMAT ERROR] " + RESET;
         else
-            return RED + "[format error] " + RESET;
+            return "[FORMAT ERROR] ";
     }
 
     return "[" + string(buffer) + "] ";

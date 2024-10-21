@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <ctime>
+#include <csignal>
 #include <ncurses.h>
 
 #include "Logger.h"
@@ -14,8 +15,22 @@
 
 using namespace std;
 
+bool exitRequested = false;
+
+void handleSignal(int signal) 
+{
+    if (signal == SIGINT) 
+    {
+        Logger::PrintDebug("Exit requested by user.");
+        exitRequested = true;
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    signal(SIGINT, handleSignal);
+    Logger::SetUseLogAccumulation(true);
+
     srand(time(nullptr));
 
     argstruct args;
@@ -89,7 +104,7 @@ int main(int argc, char *argv[])
 
     AsciiBuffer buffer = AsciiBuffer(lines);
     
-    while (true)
+    while (!exitRequested)
     {
         buffer.VerticalDistort(effectIntensity, effectStrength);
         Printer::print(buffer, effectStrength);
@@ -108,5 +123,6 @@ int main(int argc, char *argv[])
     }
     
     Printer::stop();
+    Logger::ReleaseLogBuffer();
     return 0;
 }
