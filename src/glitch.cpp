@@ -46,11 +46,13 @@ int main(int argc, char *argv[])
     if (args.help_requested)
     {
         Logger::PrintDebug("Help requested by user. Exiting...");
+        Logger::ReleaseLogBuffer();
         return 0;
     }
     else if (args.exit)
     {
         Logger::PrintDebug("Told to exit by the arginterpreter. Exiting now...");
+        Logger::ReleaseLogBuffer();
         return 0;
     }
 
@@ -96,6 +98,7 @@ int main(int argc, char *argv[])
     if (lines.size() == 0)
     {
         Logger::PrintWarn("Nothing to display. Quitting...");
+        Logger::ReleaseLogBuffer();
         return 0;
     }
     
