@@ -17,3 +17,10 @@ make
 ## Where to start?
 Move or copy your executable to `/usr/bin` where it is more accessible.
 Run `glitch -h` for options.
+
+## Usage
+<section>
+
+lorem ipsum dolor sit amet
+
+</section>
