@@ -21,6 +21,8 @@ Run `glitch -h` for options.
 ## Usage
 <section>
 
+<summary>Test section</summary>
+
 lorem ipsum dolor sit amet
 
 </section>
