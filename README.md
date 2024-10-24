@@ -19,10 +19,10 @@ Move or copy your executable to `/usr/bin` where it is more accessible.
 Run `glitch -h` for options.
 
 ## Usage
-<section>
+<details>
 
 <summary>Test section</summary>
 
 lorem ipsum dolor sit amet
 
-</section>
+</details>
