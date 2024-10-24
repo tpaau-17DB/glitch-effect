@@ -21,8 +21,12 @@ Run `glitch -h` for options.
 ## Usage
 <details>
 
-<summary>Test section</summary>
+<summary>Command Line Options</summary>
 
-lorem ipsum dolor sit amet
+    <details>
+
+    <summary>--foreground</summary>
+
+    </details>
 
 </details>
