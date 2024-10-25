@@ -52,15 +52,15 @@ int ArgInterpreter::strToColorID(const string colorStr)
 
 void PrintUsage()
 {
-    cout << "Usage: glitch [options] [ascii path]" << endl;
-    cout << "  --help, -h: Display this help message" << endl;
-    cout << "  -x <int>: Manually set X offset, disables autocenter" << endl;
-    cout << "  -y <int>: Manually set Y offset, disables autocenter" << endl;
-    cout << "  -c <path>: specify config file path" << endl;
-    cout << "  -v <int>: Set log verbosity" << endl;
-    cout << "  --foreground <color>: Set foreground color" << endl;
-    cout << "  --background <color>: Set background color" << endl;
-    cout << "  --nocolor: enables nocolor option in Logger"<<endl;
+    cout<<"Usage: glitch [options] [ascii path]"<<endl;
+    cout<<"  --help, -h: Display this help message"<<endl;
+    cout<<"  -x <int>: Manually set X offset, disables autocenter"<<endl;
+    cout<<"  -y <int>: Manually set Y offset, disables autocenter"<<endl;
+    cout<<"  -c <path>: specify config file path"<<endl;
+    cout<<"  -v <int>: Set log verbosity"<<endl;
+    cout<<"  --foreground <color>: Set foreground color"<<endl;
+    cout<<"  --background <color>: Set background color"<<endl;
+    cout<<"  --nocolor: enables nocolor option in Logger"<<endl;
 }
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
@@ -80,40 +80,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     int arg;
     int option_index = 0;
     bool ascii_specified = false;
-    bool verb_set = false;
-    bool nocolor_set = false;
-
-    while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
-    {
-        switch(arg)
-        {
-            case 'v':
-                if (optarg)
-                {
-                    int val = strToInt(optarg);
-
-                    if (val == -1)
-                    {
-                        args.exit = true;
-                        return args;
-                    }
-
-                    Logger::SetVerbosity(Logger::LogLevel(val));
-                    verb_set = true;
-                }
-                break;
-
-            case '4':
-                Logger::SetNoColor(true);
-                nocolor_set = true;
-                break;
-        }
-    }
-
-    if (verb_set)
-        Logger::PrintDebug(string("Verbosity set to: ") + to_string(Logger::GetVerbosity()));
-    if (nocolor_set)
-        Logger::PrintDebug("Disabled color in Logger.");
+    vector<string> logs;
 
     while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
     {
@@ -128,7 +95,8 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 if (optarg)
                 {
                     args.config_path = optarg;
-                    Logger::PrintDebug(string("Config file path set to: '") + optarg + string("'"));
+
+                    logs.push_back(string("Config file path set to: '") + optarg + string("'"));
                 }
                 break;
 
@@ -144,7 +112,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.ox = val;
-                    Logger::PrintDebug(string("Offset X set to: ") + optarg);
+                    logs.push_back(string("Offset X set to: ") + optarg);
                 }
                 break;
 
@@ -160,7 +128,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.oy = val;
-                    Logger::PrintDebug(string("Offset Y set to: ") + optarg);
+                    logs.push_back(string("Offset Y set to: ") + optarg);
                 }
                 break;
 
@@ -181,7 +149,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.foreground = val;
-                    Logger::PrintDebug(string("Foreground color set to: ") + optarg);
+                    logs.push_back(string("Foreground color set to: ") + optarg);
                 }
                 break;
 
@@ -197,11 +165,29 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.background = val;
-                    Logger::PrintDebug(string("Background color set to: ") + optarg);
+                    logs.push_back(string("Background color set to: ") + optarg);
                 }
                 break;
 
-            default:
+                case 'v':
+                if (optarg)
+                {
+                    int val = strToInt(optarg);
+
+                    if (val == -1)
+                    {
+                        args.exit = true;
+                        return args;
+                    }
+
+                    Logger::SetVerbosity(Logger::LogLevel(val));
+                    logs.push_back(string("Verbosity set to: ") + to_string(Logger::GetVerbosity()));
+                }
+                break;
+
+            case '4':
+                Logger::SetNoColor(true);
+                logs.push_back("Disabled color in Logger.");
                 break;
         }
     }
@@ -210,13 +196,21 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     {
         args.ascii_path = argv[optind];
         ascii_specified = true;
-        Logger::PrintDebug(string("Ascii file path set to '") + args.ascii_path + string("'."));
+        logs.push_back(string("Ascii file path set to '") + args.ascii_path + string("'."));
     }
 
     if (!ascii_specified)
     {
-        Logger::PrintErr("Ascii file was not specified!");
+        logs.push_back("Ascii file was not specified!");
         args.exit = true;
+    }
+
+    // This is like a secondary log accumulating,
+    // the apperance of logs may change throughout the 
+    // arginterpreting process, this is a workaround to fix that
+    for (string& log : logs)
+    {
+        Logger::PrintDebug(log);
     }
 
     return args;
