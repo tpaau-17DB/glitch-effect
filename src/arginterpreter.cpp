@@ -81,6 +81,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     int option_index = 0;
     bool ascii_specified = false;
     vector<string> logs;
+    vector<string> error_logs;
 
     while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
     {
@@ -201,7 +202,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
     if (!ascii_specified)
     {
-        logs.push_back("Ascii file was not specified!");
+        error_logs.push_back("Ascii file was not specified!");
         args.exit = true;
     }
 
@@ -212,6 +213,13 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     {
         Logger::PrintDebug(log);
     }
+
+    // And also for error priority:
+    for (string& log : error_logs)
+    {
+        Logger::PrintErr(log);
+    }
+
 
     return args;
 }
