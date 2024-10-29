@@ -9,11 +9,14 @@ You can install ncurses with your package manager.
 
 ## Compiling
 To compile the source code use the makefile provided in the repo:
-
 ```
 make
 ```
 
+To compile and install run:
+```
+make install
+```
+
 ## Where to start?
-Move or copy your executable to `/usr/bin` where it is more accessible.
 Run `glitch -h` for options.
