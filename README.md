@@ -8,7 +8,7 @@ Ncurses library is required to compile the program.
 You can install ncurses with your package manager.
 
 ## Compiling
-To compile the source code use the makefile provided in the repo:
+To compile the source code, use the makefile provided in the repo:
 ```
 make
 ```

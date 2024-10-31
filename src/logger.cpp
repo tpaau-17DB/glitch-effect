@@ -1,6 +1,5 @@
 #include "Logger.h"
 
-#include <cmath>
 #include <iostream>
 #include <ncurses.h>
 #include <cstdio>
@@ -38,6 +37,17 @@ bool Logger::useLogAccumulation = false;
 void Logger::SetVerbosity(const Logger::LogLevel logLevel) 
 {
     Logger::logLevel = logLevel;
+}
+
+void Logger::SetVerbosity(const int verbosity)
+{
+    bool cond = verbosity >= 0 && verbosity <= 3;
+    if (!cond)
+    {
+        Logger::PrintErr("Verbosity value must be between 0 and 3!");
+        return;
+    }
+    Logger::logLevel = Logger::LogLevel(verbosity);
 }
 
 void Logger::SetOverrideFiltering(const bool overrideFiltering)
@@ -82,46 +92,45 @@ Logger::LogLevel Logger::GetVerbosity()
 
 
 // Log methods
-void Logger::PrintDebug(const string message, const int layer)
+void Logger::PrintDebug(const string& message)
 {
-    Logger::print(message, 0, layer);
+    Logger::print(message, 0, false);
 }
 
-void Logger::PrintDebug(const string message)
+void Logger::PrintDebug(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 0, 0);
+    Logger::print(message, 0, overrideFiltering);
 }
 
-void Logger::PrintLog(const string message, const int layer)
+void Logger::PrintLog(const string& message)
 {
-    Logger::print(message, 1, layer);
+    Logger::print(message, 1, false);
 }
 
-void Logger::PrintLog(const string message)
+void Logger::PrintLog(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 1, 0);
+    Logger::print(message, 1, overrideFiltering);
 }
 
-void Logger::PrintWarn(const string message, const int layer)
+void Logger::PrintWarn(const string& message)
 {
-    Logger::print(message, 2, layer);
+    Logger::print(message, 2, false);
 }
 
-void Logger::PrintWarn(const string message)
+void Logger::PrintWarn(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 2, 0);
+    Logger::print(message, 2, overrideFiltering);
 }
 
-void Logger::PrintErr(const string message, const int layer)
+void Logger::PrintErr(const string& message)
 {
-    Logger::print(message, 3, layer);
+    Logger::print(message, 3, false);
 }
 
-void Logger::PrintErr(const string message)
+void Logger::PrintErr(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 3, 0);
+    Logger::print(message, 3, overrideFiltering);
 }
-
 
 // Other public methods
 void Logger::ClearLogBufer()
@@ -224,28 +233,27 @@ string Logger::getHeader(const int id)
     return header;
 }
 
-void Logger::print(const string &message, const int prior, const int layer)
+void Logger::print(const string &message, const int prior, const bool overrideFiltering)
 {   
-    if (logLevel > prior && !overrideFiltering) return;
+    if (logLevel > prior && !overrideFiltering && !Logger::overrideFiltering) return;
     
-    string spaces = string(layer * 2, ' ');
     string header = getHeader(prior);
 
     if (useLogAccumulation)
     {
-        logBuffer.push_back(spaces + header + message + "\n");
+        logBuffer.push_back(header + message + "\n");
     }
     else
     {
         if (ncursesMode)
         {
             endwin();
-            printf("%s\n", (spaces + header + message).c_str());
+            printf("%s\n", (header + message).c_str());
             fflush(stdout);
         }
         else
         {
-            cout<<spaces<<header<<message<<endl;
+            cout<<header<<message<<endl;
         }
     }
 }
