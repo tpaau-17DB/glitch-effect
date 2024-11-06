@@ -12,6 +12,7 @@
 #include "ArgInterpreter.h"
 #include "AsciiBuffer.h"
 #include "Printer.h"
+#include "PassLoader.h"
 
 using namespace std;
 
@@ -42,6 +43,20 @@ int main(int argc, char *argv[])
     int effectStrength = 8;
     int effectIntensity = 35;
 
+    // TESTING SECTION
+    
+    vector<PassLoader::pass> passes;
+    int exitCode = PassLoader::GetPassesFromJSON("LOL", passes);
+
+    if (exitCode != 0)
+    {
+        Logger::PrintErr("Errors occured while loading a JSON file.");
+        Logger::ReleaseLogBuffer();
+        return 1;
+    }
+
+    // END
+
     args = ArgInterpreter::GetArgs(argc, argv);
     if (args.help_requested)
     {
@@ -53,7 +68,7 @@ int main(int argc, char *argv[])
     {
         Logger::PrintDebug("Told to exit by the arginterpreter. Exiting now...");
         Logger::ReleaseLogBuffer();
-        return 0;
+        return 1;
     }
 
     int conf_exit_code = 1;
@@ -99,7 +114,7 @@ int main(int argc, char *argv[])
     {
         Logger::PrintWarn("Nothing to display. Quitting...");
         Logger::ReleaseLogBuffer();
-        return 0;
+        return 1;
     }
     
     Printer::init(sleeptime_ms, args.ox, args.oy);
