@@ -8,7 +8,6 @@
 
 #include "Logger.h"
 #include "FileLoader.h"
-#include "ConfigLoader.h"
 #include "ArgInterpreter.h"
 #include "AsciiBuffer.h"
 #include "Printer.h"
@@ -36,96 +35,82 @@ int main(int argc, char *argv[])
 
     argstruct args;
 
-    args.ascii_path = "";
-    args.config_path = "";
-
     int sleeptime_ms = 40;
-    int effectStrength = 8;
-    int effectIntensity = 35;
-
-    // TESTING SECTION
-    
-    vector<PassLoader::pass> passes;
-    int exitCode = PassLoader::GetPassesFromJSON("LOL", passes);
-
-    if (exitCode != 0)
-    {
-        Logger::PrintErr("Errors occured while loading a JSON file.");
-        Logger::ReleaseLogBuffer();
-        return 1;
-    }
-
-    // END
 
     args = ArgInterpreter::GetArgs(argc, argv);
     if (args.help_requested)
     {
-        Logger::PrintDebug("Help requested by user. Exiting...");
+        Logger::PrintDebug("Help requested by user.");
         Logger::ReleaseLogBuffer();
         return 0;
     }
     else if (args.exit)
     {
-        Logger::PrintDebug("Told to exit by the arginterpreter. Exiting now...");
+        Logger::PrintDebug("ArgInterpreter requested exit.");
         Logger::ReleaseLogBuffer();
         return 1;
     }
 
-    int conf_exit_code = 1;
-    map<string, int> config;
+    vector<PassLoader::pass> passes;
 
+    bool configOK = false;
     if (args.config_specified)
     {
-        config = ConfigLoader::LoadConf(args.config_path);
-        conf_exit_code = ConfigLoader::GetParamFromConf(&config, "exit-code");
+        passes = PassLoader::GetPassesFromJSON(args.config_path);
+        configOK = true;
     }
     else
     {
-        string path = FileLoader::CheckForConfigFiles();
+        Logger::PrintDebug("Config file not specified.");
+        string confPath = FileLoader::LookForConfigFiles();
 
-        if (path != "none")
+        if (confPath != "none")
         {
-            config = ConfigLoader::LoadConf(args.config_path);
-            conf_exit_code = ConfigLoader::GetParamFromConf(&config, "exit-code");
+            passes = PassLoader::GetPassesFromJSON(confPath);
+            configOK = true;
+        }
+        else
+        {
+            configOK = false;
         }
     }
 
-    int output_tmp;
-
-    if (conf_exit_code == 0)
+    if (passes.size() == 0 || !configOK)
     {
-	Logger::PrintDebug("Config loaded succesfully.");
-
-    	output_tmp = ConfigLoader::GetParamFromConf(&config, "strength");
-    	if (output_tmp != -1)
-    	    effectStrength = output_tmp;
-
-    	output_tmp = ConfigLoader::GetParamFromConf(&config, "intensity");
-    	if (output_tmp != -1)
-    	    effectIntensity = output_tmp;
-
-	output_tmp = ConfigLoader::GetParamFromConf(&config, "sleeptime");
-    	if (output_tmp != -1)
-    	    sleeptime_ms = output_tmp;
+        if (configOK)
+        {
+            Logger::PrintErr("Errors occured while loading config file. Proceeding with default config.");
+        }
+        
+        PassLoader::pass pass = PassLoader::pass();
+        pass.PT = PassLoader::VerticalDistort;
+        pass.PP.Intensity = 35;
+        pass.PP.Strength = 7;
+        passes.push_back(pass);
+    }
+    else
+    {
+        Logger::PrintDebug(to_string(passes.size()) + " passes loaded.");
     }
 
     const vector<string> lines = FileLoader::GetLines(args.ascii_path);
     if (lines.size() == 0)
     {
-        Logger::PrintWarn("Nothing to display. Quitting...");
+        Logger::PrintDebug("Nothing to display. Quitting...");
         Logger::ReleaseLogBuffer();
         return 1;
     }
+
     
     Printer::init(sleeptime_ms, args.ox, args.oy);
     Printer::SetColors(Printer::Color(args.foreground), Printer::Color(args.background));
 
     AsciiBuffer buffer = AsciiBuffer(lines);
-    
+   
     while (!exitRequested)
     {
-        buffer.VerticalDistort(effectIntensity, effectStrength);
-        Printer::print(buffer, effectStrength);
+        buffer.ApplyPasses(passes);
+        Printer::print(buffer, false);
         buffer.ResetDistorted();
         
 	int ch = getch();

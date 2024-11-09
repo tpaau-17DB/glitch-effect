@@ -1,0 +1,9 @@
+{
+    "pass1": 
+    {
+        "name": "vertical distort",
+        "strength": 7,
+        "intensity": 35,
+        "invert": true
+    }
+}

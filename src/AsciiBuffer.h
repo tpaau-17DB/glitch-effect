@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "PassLoader.h"
+
 class AsciiBuffer
 {
     public:
@@ -21,6 +23,7 @@ class AsciiBuffer
         // Getters
         int GetLineCount();
         int GetMaxLength();
+        int GetMaxDistortedLength();
         std::vector<std::string> GetLines();
         std::vector<std::string> GetDistortedLines();
         std::vector<std::string>* GetDistortedLinesPtr();
@@ -28,7 +31,13 @@ class AsciiBuffer
         // Filters
         void VerticalDistort(const int intensity, const int strength);
 
+        // Other
+        void ApplyPasses(std::vector<PassLoader::pass> passes);
+
     private:
+        int maxDistortedLineLength;
+        int maxLineLength;
+
         std::vector<std::string> lines;
         std::vector<std::string> distortedLines;
         static const std::string ESCAPE;

@@ -1,4 +1,3 @@
-#include <string>
 #include <unistd.h>
 #include <getopt.h>
 #include <iostream>
@@ -56,7 +55,7 @@ void PrintUsage()
     cout<<"  --help, -h: Display this help message"<<endl;
     cout<<"  -x <int>: Manually set X offset, disables autocenter"<<endl;
     cout<<"  -y <int>: Manually set Y offset, disables autocenter"<<endl;
-    cout<<"  -c <path>: specify config file path"<<endl;
+    cout<<"  -c <path> Set the config file"<<endl;
     cout<<"  -v <int>: Set log verbosity"<<endl;
     cout<<"  --foreground <color>: Set foreground color"<<endl;
     cout<<"  --background <color>: Set background color"<<endl;
@@ -97,7 +96,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 {
                     args.config_path = optarg;
 
-                    logs.push_back(string("Config file path set to: '") + optarg + string("'"));
+                    logs.push_back(string("Config path set to '") + optarg + string("'."));
                 }
                 break;
 

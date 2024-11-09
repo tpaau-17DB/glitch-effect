@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Logger.h"
+#include "PassLoader.h"
 #include "AsciiBuffer.h"
 
 using namespace std;
@@ -23,6 +24,17 @@ AsciiBuffer::AsciiBuffer(const vector<string> lines)
     this->lines = lines;
     distortedLines = vector<string>();
     Logger::PrintDebug("AsciiBuffer: Instance created.");
+
+    int max_length = 0;
+
+    for (const string &str : lines)
+    {
+        if (static_cast<int>(str.length()) > max_length)
+            max_length = str.length();
+    }
+
+    maxLineLength = max_length;
+    maxDistortedLineLength = max_length;
 }
 
 
@@ -54,29 +66,7 @@ void AsciiBuffer::AddLines(const vector<string> lines)
 void AsciiBuffer::OverwriteLines(const vector<string> lines)
 {
     this->lines = lines;
-}
 
-void AsciiBuffer::ClearAll()
-{
-    this->lines = vector<string>();
-}
-
-void AsciiBuffer::ResetDistorted()
-{
-    distortedLines = lines;
-}
-
-
-//Getters
-
-int AsciiBuffer::GetLineCount()
-{
-    return this->lines.size();
-}
-
-int AsciiBuffer::GetMaxLength()
-{
-    
     int max_length = 0;
 
     for (const string &str : lines)
@@ -85,7 +75,38 @@ int AsciiBuffer::GetMaxLength()
             max_length = str.length();
     }
 
-    return max_length;
+    maxLineLength = max_length;
+    maxDistortedLineLength = max_length;
+}
+
+void AsciiBuffer::ClearAll()
+{
+    this->lines = vector<string>();
+    this->distortedLines = vector<string>();
+}
+
+void AsciiBuffer::ResetDistorted()
+{
+    distortedLines = lines;
+    maxDistortedLineLength = maxLineLength;
+}
+
+
+//Getters
+
+int AsciiBuffer::GetMaxDistortedLength()
+{
+    return maxDistortedLineLength;
+}
+
+int AsciiBuffer::GetLineCount()
+{
+    return this->lines.size();
+}
+
+int AsciiBuffer::GetMaxLength()
+{
+    return maxLineLength;
 }
 
 vector<string> AsciiBuffer::GetLines()
@@ -105,13 +126,13 @@ vector<string> AsciiBuffer::GetDistortedLines()
 
 
 // Filters
-
 void AsciiBuffer::VerticalDistort(const int intensity, const int strength)
 {
     ensureDistortedLinesNotEmpty();
     
-    string spaces;
     int num;
+    string spaces;
+
     for (string &str : distortedLines)
     {
         num = strength;
@@ -133,52 +154,41 @@ void AsciiBuffer::VerticalDistort(const int intensity, const int strength)
         spaces = string(num, ' ');
         str = spaces + str + spaces;
     }
+
+    maxDistortedLineLength += (2 * strength);
 }
 
-// Do not delete
-/*void AsciiBuffer::ChromaticAberration(const int intensity, const string colorLeftANSI, const string colorRightANSI)*/
-/*{*/
-/*    ensureDistortedLinesNotEmpty();*/
-/**/
-/*    for (string &str : distortedLines)*/
-/*    {*/
-/*        string modified = "";*/
-/**/
-/*        for (size_t i = 0; i < str.length(); ++i)*/
-/*        {*/
-/*            if (str[i] == ' ') */
-/*            {*/
-/*                if (i > 0 && i < str.length() - 1 && (str[i - 1] != ' ' || str[i + 1] != ' ')) */
-/*                {*/
-/*                    if (str[i + 1] != ' ')*/
-/*                    {*/
-/*                        modified += colorLeftANSI + str[i + 1] + ESCAPE;*/
-/*                    }*/
-/*                    else*/
-/*                    {*/
-/*                        modified += colorRightANSI + str[i - 1] + ESCAPE;*/
-/*                    }*/
-/*                }*/
-/*                else*/
-/*                {*/
-/*                    modified += str[i];*/
-/*                }*/
-/*            }*/
-/*            else*/
-/*            {*/
-/*                modified += str[i];*/
-/*            }*/
-/*        }*/
-/**/
-/*        modified += ".";*/
-/*        str = modified;*/
-/**/
-/*    }*/
-/*}*/
+
+// Others
+void AsciiBuffer::ApplyPasses(std::vector<PassLoader::pass> passes)
+{
+    if (passes.size() == 0)
+    {
+        Logger::PrintErr("Passes list was empty!");
+        return;
+    }
+
+    for (PassLoader::pass& pass : passes)
+    {
+        switch(pass.PT)
+        {
+            case PassLoader::VerticalDistort:
+                this->VerticalDistort(pass.PP.Intensity, pass.PP.Strength);
+                break;
+
+            case PassLoader::Undefined:
+                Logger::PrintErr("Undefined pass type!");
+                break;
+
+            default:
+                Logger::PrintErr("Undefined pass type!");
+                break;
+        }
+    }
+}
 
 
 // Internals
-
 void AsciiBuffer::ensureDistortedLinesNotEmpty()
 {
     if (distortedLines.size() == 0)

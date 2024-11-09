@@ -59,16 +59,15 @@ void Printer::SetColors(const Printer::Color fg, const Printer::Color bg)
 
 
 // PRINTING FUNCTIONS
-void Printer::print(AsciiBuffer &buffer, const int maxVerticalDistortion)
+void Printer::print(AsciiBuffer &buffer, const bool chromaticAberration)
 {
     int maxX, maxY;
     vector<string>* lines = buffer.GetDistortedLinesPtr();
-    int max_size = buffer.GetMaxLength();
 
     getmaxyx(stdscr, maxY, maxX);
 
     string message = "It's a little bit claustrophobic in here...";
-    if (max_size + (2 * maxVerticalDistortion) > maxX || int(lines->size()) > maxY)
+    if (2 * buffer.GetMaxDistortedLength() > maxX || int(lines->size()) > maxY)
     {
         clear();
         move(maxY / 2, maxX / 2 - message.length() / 2);
@@ -85,17 +84,42 @@ void Printer::print(AsciiBuffer &buffer, const int maxVerticalDistortion)
     int i = 0;
     int x = 0;
     int y = 0;
-    for (const string &line : *lines)
+    if (!chromaticAberration)
     {
-        if (autocenter)
+        for (const string &line : *lines)
         {
-            x = 0.5 * (maxX - (max_size + 2 * maxVerticalDistortion));
-            y = 0.5 * (maxY - lines->size());
-        }
+            if (autocenter)
+            {
+                x = 0.5 * (maxX - buffer.GetMaxDistortedLength());
+                y = 0.5 * (maxY - lines->size());
+            }
 
-        move(y + i, x);
-        printw("%s", line.c_str());
-        i++;
+            move(y + i, x);
+            printw("%s", line.c_str());
+            i++;
+        }
+    }
+    else
+    {
+        for (const string &line : *lines)
+        {
+            if (autocenter)
+            {
+                x = 0.5 * (maxX - buffer.GetMaxDistortedLength());
+                y = 0.5 * (maxY - lines->size());
+            }
+
+            move(y + i, x -1);
+            printw("%s", line.c_str());
+
+            move(y + i, x +1);
+            printw("%s", line.c_str());
+
+            move(y + i, x);
+            printw("%s", line.c_str());
+
+            i++;
+        }
     }
 
     attroff(COLOR_PAIR(1));

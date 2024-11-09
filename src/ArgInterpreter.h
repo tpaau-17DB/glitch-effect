@@ -8,7 +8,7 @@
 
 struct argstruct
 {
-    std::string config_path = "../conf/config.conf";
+    std::string config_path = "";
     std::string ascii_path;
 
     int ox;

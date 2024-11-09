@@ -11,10 +11,10 @@ using namespace filesystem;
 
 const string FileLoader::configPaths[] = 
 {
-    "~/.config/glitch-effect/config.conf",
     "~/.config/glitch-effect/config",
-    "~/.config/glitch/config.conf",
-    "~/.config/glitch/config"
+    "~/.config/glitch-effect/config.json",
+    "./config",
+    "./config.json",
 };
 
 vector<string> FileLoader::GetLines(const string &path)
@@ -54,11 +54,11 @@ bool FileLoader::CheckIfFileExists(const string &path)
     return filesystem::exists(fullPath);
 }
 
-string FileLoader::CheckForConfigFiles()
+string FileLoader::LookForConfigFiles()
 {
-    Logger::PrintDebug("Checking for config file in common directories.");
+    Logger::PrintDebug("Looking for config files in common directories.");
 
-    for (const string &path : configPaths)
+    for (const string &path : FileLoader::configPaths)
     {
         if (CheckIfFileExists(path))
         {

@@ -27,7 +27,7 @@ class Printer
 
         static void SetColors(const Color fg, const Color bg);
 
-        static void print(AsciiBuffer &buffer, const int maxVerticalDistortion);
+        static void print(AsciiBuffer &buffer, const bool chromaticAberration);
 
     private:
         static int sleeptimeMS;

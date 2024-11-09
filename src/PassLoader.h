@@ -5,17 +5,16 @@
 
 #include "Logger.h"
 
-
-
 class PassLoader
 {
     public:
-        enum passType
+        enum PassType
         {
             VerticalDistort,
+            Undefined,
         };
 
-        struct passParams
+        struct PassParams
         {
             int Strength = 8;
             int Intensity = 30;
@@ -25,11 +24,11 @@ class PassLoader
 
         struct pass
         {
-            passType PassType;
-            passParams PassParams;
+            PassType PT;
+            PassParams PP;
         };
 
-        static int GetPassesFromJSON(const std::string& path, std::vector<PassLoader::pass>&);
+        static std::vector<PassLoader::pass> GetPassesFromJSON(const std::string& path);
 };
 
 #endif
