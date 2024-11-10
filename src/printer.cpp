@@ -67,7 +67,7 @@ void Printer::print(AsciiBuffer &buffer, const bool chromaticAberration)
     getmaxyx(stdscr, maxY, maxX);
 
     string message = "It's a little bit claustrophobic in here...";
-    if (2 * buffer.GetMaxDistortedLength() > maxX || int(lines->size()) > maxY)
+    if (buffer.GetMaxDistortedLength() > maxX || int(lines->size()) > maxY)
     {
         clear();
         move(maxY / 2, maxX / 2 - message.length() / 2);
