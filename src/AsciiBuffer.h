@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "PassLoader.h"
+#include "ConfigLoader.h"
 
 class AsciiBuffer
 {
@@ -32,7 +32,7 @@ class AsciiBuffer
         void VerticalDistort(const int intensity, const int strength);
 
         // Other
-        void ApplyPasses(std::vector<PassLoader::pass> passes);
+        void ApplyPasses(std::vector<ConfigLoader::pass> passes);
 
     private:
         int maxDistortedLineLength;

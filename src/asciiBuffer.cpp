@@ -4,7 +4,7 @@
 #include <string>
 
 #include "Logger.h"
-#include "PassLoader.h"
+#include "ConfigLoader.h"
 #include "AsciiBuffer.h"
 
 using namespace std;
@@ -160,7 +160,7 @@ void AsciiBuffer::VerticalDistort(const int intensity, const int strength)
 
 
 // Others
-void AsciiBuffer::ApplyPasses(std::vector<PassLoader::pass> passes)
+void AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
 {
     if (passes.size() == 0)
     {
@@ -168,15 +168,15 @@ void AsciiBuffer::ApplyPasses(std::vector<PassLoader::pass> passes)
         return;
     }
 
-    for (PassLoader::pass& pass : passes)
+    for (ConfigLoader::pass& pass : passes)
     {
         switch(pass.PT)
         {
-            case PassLoader::VerticalDistort:
+            case ConfigLoader::VerticalDistort:
                 this->VerticalDistort(pass.PP.Intensity, pass.PP.Strength);
                 break;
 
-            case PassLoader::Undefined:
+            case ConfigLoader::Undefined:
                 Logger::PrintErr("Undefined pass type!");
                 break;
 

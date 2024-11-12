@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 
 #include "Logger.h"
-#include "PassLoader.h"
+#include "ConfigLoader.h"
 
 using namespace std;
 
@@ -21,9 +21,9 @@ unsigned long hashString(const string& str)
     return hash;
 }
 
-PassLoader::PassType getPassTypeFromName(const string& name)
+ConfigLoader::PassType getPassTypeFromName(const string& name)
 {
-    PassLoader::PassType type = PassLoader::Undefined;
+    ConfigLoader::PassType type = ConfigLoader::Undefined;
 
     unsigned long hash = hashString(name);
 
@@ -32,7 +32,7 @@ PassLoader::PassType getPassTypeFromName(const string& name)
     switch(hash)
     {
         case 3059108212:  // 'vertical distort'
-            type = PassLoader::VerticalDistort;
+            type = ConfigLoader::VerticalDistort;
             break;
 
         default:
@@ -43,9 +43,9 @@ PassLoader::PassType getPassTypeFromName(const string& name)
     return type;
 }
 
-vector<PassLoader::pass> PassLoader::GetPassesFromJSON(const string& path)
+vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
 {
-    vector<PassLoader::pass> passes = vector<PassLoader::pass>();
+    vector<ConfigLoader::pass> passes = vector<ConfigLoader::pass>();
 
     Logger::PrintDebug("Loading a JSON file '" + path + "'.");
 
@@ -69,7 +69,7 @@ vector<PassLoader::pass> PassLoader::GetPassesFromJSON(const string& path)
             int intensity = value["intensity"];
             bool invert = value["invert"];
             
-            PassLoader::pass pass;
+            ConfigLoader::pass pass;
             pass.PT = getPassTypeFromName(name);
             pass.PP.Strength = strength;
             pass.PP.Intensity = intensity;

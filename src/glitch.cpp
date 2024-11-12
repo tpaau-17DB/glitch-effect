@@ -11,7 +11,7 @@
 #include "ArgInterpreter.h"
 #include "AsciiBuffer.h"
 #include "Printer.h"
-#include "PassLoader.h"
+#include "ConfigLoader.h"
 
 using namespace std;
 
@@ -51,12 +51,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    vector<PassLoader::pass> passes;
+    vector<ConfigLoader::pass> passes;
 
     bool configOK = false;
     if (args.config_specified)
     {
-        passes = PassLoader::GetPassesFromJSON(args.config_path);
+        passes = ConfigLoader::GetPassesFromJSON(args.config_path);
         configOK = true;
     }
     else
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
         if (confPath != "none")
         {
-            passes = PassLoader::GetPassesFromJSON(confPath);
+            passes = ConfigLoader::GetPassesFromJSON(confPath);
             configOK = true;
         }
         else
@@ -82,8 +82,8 @@ int main(int argc, char *argv[])
             Logger::PrintErr("Errors occured while loading config file. Proceeding with default config.");
         }
         
-        PassLoader::pass pass = PassLoader::pass();
-        pass.PT = PassLoader::VerticalDistort;
+        ConfigLoader::pass pass = ConfigLoader::pass();
+        pass.PT = ConfigLoader::VerticalDistort;
         pass.PP.Intensity = 35;
         pass.PP.Strength = 7;
         passes.push_back(pass);

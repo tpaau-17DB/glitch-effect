@@ -5,7 +5,7 @@
 
 #include "Logger.h"
 
-class PassLoader
+class ConfigLoader
 {
     public:
         enum PassType
@@ -28,7 +28,7 @@ class PassLoader
             PassParams PP;
         };
 
-        static std::vector<PassLoader::pass> GetPassesFromJSON(const std::string& path);
+        static std::vector<ConfigLoader::pass> GetPassesFromJSON(const std::string& path);
 };
 
 #endif

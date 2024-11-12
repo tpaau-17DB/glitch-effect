@@ -95,7 +95,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 if (optarg)
                 {
                     args.config_path = optarg;
-
+                    args.config_specified = true;
                     logs.push_back(string("Config path set to '") + optarg + string("'."));
                 }
                 break;
