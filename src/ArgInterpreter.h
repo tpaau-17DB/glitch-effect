@@ -26,9 +26,9 @@ class ArgInterpreter
 {
     public:
         static argstruct GetArgs(int argc, char* argv[]);
+        static int StrToInt(std::string str);
 
     private:
-        static int strToInt(std::string str);
         static int strToColorID(const std::string colorStr);
 };
 

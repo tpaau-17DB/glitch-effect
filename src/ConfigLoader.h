@@ -1,5 +1,5 @@
-#ifndef PASS_LOADER_H
-#define PASS_LOADER_H
+#ifndef CONFIG_LOADER_H
+#define CONFIG_LOADER_H
 
 #include <vector>
 
@@ -28,7 +28,18 @@ class ConfigLoader
             PassParams PP;
         };
 
+        struct GlobalConfig
+        {
+            // METADATA
+            bool loadedCorrectly = false;
+
+            // VARIABLES
+            int SleeptimeMS = 40;
+            int LoggerVerbosity = 1;
+        };
+
         static std::vector<ConfigLoader::pass> GetPassesFromJSON(const std::string& path);
+        static ConfigLoader::GlobalConfig GetGlobalConfig(const std::string& path);
 };
 
 #endif

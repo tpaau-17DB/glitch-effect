@@ -51,45 +51,41 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    ConfigLoader::GlobalConfig globalConfig; 
     vector<ConfigLoader::pass> passes;
-
-    bool configOK = false;
+    bool proceedWithConf = false;
     if (args.config_specified)
     {
         passes = ConfigLoader::GetPassesFromJSON(args.config_path);
-        configOK = true;
+        globalConfig = ConfigLoader::GetGlobalConfig(args.config_path);
     }
     else
     {
-        Logger::PrintDebug("Config file not specified.");
+        Logger::PrintWarn("Config file not specified.");
         string confPath = FileLoader::LookForConfigFiles();
 
         if (confPath != "none")
         {
             passes = ConfigLoader::GetPassesFromJSON(confPath);
-            configOK = true;
-        }
-        else
-        {
-            configOK = false;
+            globalConfig = ConfigLoader::GetGlobalConfig(confPath);
+            if (globalConfig.loadedCorrectly && passes.size() > 0) proceedWithConf = true;
         }
     }
 
-    if (passes.size() == 0 || !configOK)
+    if (!proceedWithConf)
     {
-        if (configOK)
-        {
-            Logger::PrintErr("Errors occured while loading config file. Proceeding with default config.");
-        }
-        
+        Logger::PrintWarn("Proceeding without a config file.");
+
         ConfigLoader::pass pass = ConfigLoader::pass();
         pass.PT = ConfigLoader::VerticalDistort;
         pass.PP.Intensity = 35;
         pass.PP.Strength = 7;
         passes.push_back(pass);
+
     }
     else
     {
+        Logger::SetVerbosity(globalConfig.LoggerVerbosity);
         Logger::PrintDebug(to_string(passes.size()) + " passes loaded.");
     }
 
@@ -100,7 +96,6 @@ int main(int argc, char *argv[])
         Logger::ReleaseLogBuffer();
         return 1;
     }
-
     
     Printer::init(sleeptime_ms, args.ox, args.oy);
     Printer::SetColors(Printer::Color(args.foreground), Printer::Color(args.background));

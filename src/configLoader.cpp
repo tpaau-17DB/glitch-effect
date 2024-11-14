@@ -1,5 +1,6 @@
 #include <exception>
 #include <fstream>
+#include <string>
 #include <vector>
 
 #include <nlohmann/json.hpp>
@@ -60,7 +61,6 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
         }
 
         json data = json::parse(f);
-        Logger::PrintDebug("Parsed JSON data:");
 
         for (auto& [key, value] : data.items()) 
         {
@@ -87,4 +87,39 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
     }
 
     return passes;
+}
+
+ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(const string& path)
+{
+    ConfigLoader::GlobalConfig globalConfig;
+
+    Logger::PrintDebug("Loading a JSON file '" + path + "'.");
+
+    try
+    {
+        ifstream f(path);
+        if (!f.is_open()) 
+        {
+            Logger::PrintErr("Could not open the file!");
+            return globalConfig;
+        }
+        json data = json::parse(f);
+
+
+        int sleeptime_ms = data["sleeptime_ms"];
+        int logger_verbosity = data["logger_verbosity"];
+
+        globalConfig.LoggerVerbosity = logger_verbosity;
+        globalConfig.SleeptimeMS = sleeptime_ms;
+
+        Logger::PrintDebug("Finished processing JSON file.");
+    }
+    catch(exception& e)
+    {
+        Logger::PrintErr("Error occured while loading a file: '" + path + "': " + e.what());
+        return globalConfig;
+    }
+
+    globalConfig.loadedCorrectly = true;
+    return globalConfig;
 }

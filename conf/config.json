@@ -1,4 +1,9 @@
 {
+    "global_config":
+    {
+        "sleeptime_ms": 200,
+        "logger_verbosity": 1
+    },
     "pass1": 
     {
         "name": "vertical distort",

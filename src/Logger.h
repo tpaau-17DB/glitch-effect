@@ -3,10 +3,12 @@
 
 #include <string>
 #include <vector>
+#include <ctime>
 
 class Logger 
 {
     public:
+        // PUBLIC STRUCTS
         enum LogLevel
         {
             All = 0,
@@ -18,6 +20,7 @@ class Logger
 
         // GETTERS
 	static Logger::LogLevel GetVerbosity();
+        static bool GetLogBufferingEnabled();
 
 
         // SETTERS
@@ -26,7 +29,7 @@ class Logger
         static void SetOverrideFiltering(const bool overrideFiltering);
         static void SetNCursesMode(const bool mode);
         static void SetNoColor(const bool nocolor);
-        static void SetShowDateTime(const bool enabled);
+        static void SetShowDatetime(const bool enabled);
         static void SetDatetimeFormat(const std::string format);
         static void SetUseLogAccumulation(const bool useLogAccumulation);
 
@@ -45,15 +48,26 @@ class Logger
         // OTHER PUBLIC FUNCTIONS
         static void ClearLogBufer();
         static void ReleaseLogBuffer();
-        static void WriteToBuffer(const std::string& str);
 
 
     private:
+        // PRIVATE STRUCTS
+        struct BufferedLog
+        {
+            std::string Message;
+            time_t Date;
+            short LogLevel;
+            bool OverrideFiltering;
+        };
+
+
         // INTERNAL FUNCTIONS
         static void print(const std::string &message, const int prior, const bool overrideFiltering);
         static std::string getHeader(const int id);
-        static std::string getDateTime();
-        static bool isValidDateTimeFormat(const std::string& format);
+        static std::string getDatetimeHeader(time_t time);
+        static bool isValidDatetimeFormat(const std::string& format);
+        static std::string colorify(const std::string& color, const std::string& toColorify);
+        static std::string logLevelToColor(const unsigned short logLevel);
 
 
         // CONSTS
@@ -65,7 +79,7 @@ class Logger
 
 
         // DYNAMIC PRIVATE VARIABLES
-        static std::vector<std::string> logBuffer;
+        static std::vector<BufferedLog> logBuffer;
         static std::string dateTimeFormat;
 	static Logger::LogLevel logLevel;
         static bool overrideFiltering;

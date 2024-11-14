@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int ArgInterpreter::strToInt(string str)
+int ArgInterpreter::StrToInt(string str)
 {
     int result;
 
@@ -79,8 +79,6 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     int arg;
     int option_index = 0;
     bool ascii_specified = false;
-    vector<string> logs;
-    vector<string> error_logs;
 
     while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
     {
@@ -96,14 +94,14 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 {
                     args.config_path = optarg;
                     args.config_specified = true;
-                    logs.push_back(string("Config path set to '") + optarg + string("'."));
+                    Logger::PrintDebug(string("Config path set to '") + optarg + string("'."));
                 }
                 break;
 
             case 'x':
                 if (optarg)
                 {
-                    int val = strToInt(optarg);
+                    int val = StrToInt(optarg);
 
                     if (val == -1)
                     {
@@ -112,14 +110,14 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.ox = val;
-                    logs.push_back(string("Offset X set to: ") + optarg);
+                    Logger::PrintDebug(string("Offset X set to: ") + optarg);
                 }
                 break;
 
             case 'y':
                 if (optarg)
                 {
-                    int val = strToInt(optarg);
+                    int val = StrToInt(optarg);
 
                     if (val == -1)
                     {
@@ -128,7 +126,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.oy = val;
-                    logs.push_back(string("Offset Y set to: ") + optarg);
+                    Logger::PrintDebug(string("Offset Y set to: ") + optarg);
                 }
                 break;
 
@@ -149,7 +147,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.foreground = val;
-                    logs.push_back(string("Foreground color set to: ") + optarg);
+                    Logger::PrintDebug(string("Foreground color set to: ") + optarg);
                 }
                 break;
 
@@ -165,14 +163,14 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.background = val;
-                    logs.push_back(string("Background color set to: ") + optarg);
+                    Logger::PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;
 
                 case 'v':
                 if (optarg)
                 {
-                    int val = strToInt(optarg);
+                    int val = StrToInt(optarg);
 
                     if (val == -1)
                     {
@@ -181,13 +179,13 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     Logger::SetVerbosity(Logger::LogLevel(val));
-                    logs.push_back(string("Verbosity set to: ") + to_string(Logger::GetVerbosity()));
+                    Logger::PrintDebug(string("Verbosity set to: ") + to_string(Logger::GetVerbosity()));
                 }
                 break;
 
             case '4':
                 Logger::SetNoColor(true);
-                logs.push_back("Disabled color in Logger.");
+                Logger::PrintDebug("Disabled color in Logger.");
                 break;
         }
     }
@@ -196,29 +194,14 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     {
         args.ascii_path = argv[optind];
         ascii_specified = true;
-        logs.push_back(string("Ascii file path set to '") + args.ascii_path + string("'."));
+        Logger::PrintDebug(string("Ascii file path set to '") + args.ascii_path + string("'."));
     }
 
     if (!ascii_specified)
     {
-        error_logs.push_back("Ascii file was not specified!");
+        Logger::PrintErr("Ascii file was not specified!");
         args.exit = true;
     }
-
-    // This is like a secondary log accumulating,
-    // the apperance of logs may change throughout the 
-    // arginterpreting process, this is a workaround to fix that
-    for (string& log : logs)
-    {
-        Logger::PrintDebug(log);
-    }
-
-    // And also for error priority:
-    for (string& log : error_logs)
-    {
-        Logger::PrintErr(log);
-    }
-
 
     return args;
 }
