@@ -179,6 +179,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     Logger::SetVerbosity(Logger::LogLevel(val));
+                    args.VerbositySet = true;
                     Logger::PrintDebug(string("Verbosity set to: ") + to_string(Logger::GetVerbosity()));
                 }
                 break;

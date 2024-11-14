@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
 
     ConfigLoader::GlobalConfig globalConfig; 
     vector<ConfigLoader::pass> passes;
-    bool proceedWithConf = false;
     if (args.config_specified)
     {
         passes = ConfigLoader::GetPassesFromJSON(args.config_path);
@@ -68,25 +67,35 @@ int main(int argc, char *argv[])
         {
             passes = ConfigLoader::GetPassesFromJSON(confPath);
             globalConfig = ConfigLoader::GetGlobalConfig(confPath);
-            if (globalConfig.loadedCorrectly && passes.size() > 0) proceedWithConf = true;
         }
     }
 
-    if (!proceedWithConf)
+    if (passes.size() == 0)
     {
-        Logger::PrintWarn("Proceeding without a config file.");
+        Logger::PrintWarn("Falling back to default pass.");
 
         ConfigLoader::pass pass = ConfigLoader::pass();
         pass.PT = ConfigLoader::VerticalDistort;
         pass.PP.Intensity = 35;
         pass.PP.Strength = 7;
         passes.push_back(pass);
-
     }
     else
     {
-        Logger::SetVerbosity(globalConfig.LoggerVerbosity);
         Logger::PrintDebug(to_string(passes.size()) + " passes loaded.");
+    }
+
+    if (globalConfig.loadedCorrectly)
+    {
+        if (!args.VerbositySet)
+        {
+            Logger::SetVerbosity((int)globalConfig.LoggerVerbosity);
+            Logger::PrintDebug("Verbosity set to: " + to_string(globalConfig.LoggerVerbosity));
+        }
+    }
+    else
+    {
+        Logger::PrintWarn("Using default config.");
     }
 
     const vector<string> lines = FileLoader::GetLines(args.ascii_path);

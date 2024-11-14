@@ -164,20 +164,16 @@ void Logger::ReleaseLogBuffer()
     {
         for (const Logger::BufferedLog& log : logBuffer)
         {
-            if (log.LogLevel >= logLevel || Logger::overrideFiltering || log.OverrideFiltering)
-            {
-                stream<<getHeader(log.LogLevel)<<getDatetimeHeader(log.Date)<<log.Message<<"\n";
-            }
+            if (logLevel > log.LogLevel && !Logger::overrideFiltering && !log.OverrideFiltering) continue;
+            stream<<getHeader(log.LogLevel)<<getDatetimeHeader(log.Date)<<log.Message<<"\n";
         }
     }
     else
     {
         for (const Logger::BufferedLog& log : logBuffer)
         {
-            if (log.LogLevel >= logLevel || Logger::overrideFiltering || log.OverrideFiltering)
-            {
-                stream<<getHeader(log.LogLevel)<<log.Message<<"\n";
-            }
+            if (logLevel > log.LogLevel && !Logger::overrideFiltering && !log.OverrideFiltering) continue;
+            stream<<getHeader(log.LogLevel)<<log.Message<<"\n";
         }
     }
 

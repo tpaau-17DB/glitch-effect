@@ -20,6 +20,7 @@ struct argstruct
     bool exit = false;
     bool config_specified = false;
     bool help_requested = false;
+    bool VerbositySet = false;
 };
 
 class ArgInterpreter

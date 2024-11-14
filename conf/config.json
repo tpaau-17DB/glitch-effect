@@ -2,7 +2,7 @@
     "global_config":
     {
         "sleeptime_ms": 200,
-        "logger_verbosity": 1
+        "logger_verbosity": 3
     },
     "pass1": 
     {

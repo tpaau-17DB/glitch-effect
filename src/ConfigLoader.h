@@ -35,7 +35,7 @@ class ConfigLoader
 
             // VARIABLES
             int SleeptimeMS = 40;
-            int LoggerVerbosity = 1;
+            unsigned short LoggerVerbosity = 1;
         };
 
         static std::vector<ConfigLoader::pass> GetPassesFromJSON(const std::string& path);

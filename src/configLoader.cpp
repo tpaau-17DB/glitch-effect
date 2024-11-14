@@ -64,21 +64,17 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
 
         for (auto& [key, value] : data.items()) 
         {
-            string name = value["name"];
-            int strength = value["strength"];
-            int intensity = value["intensity"];
-            bool invert = value["invert"];
-            
-            ConfigLoader::pass pass;
-            pass.PT = getPassTypeFromName(name);
-            pass.PP.Strength = strength;
-            pass.PP.Intensity = intensity;
-            pass.PP.RevCol = invert;
+            if (key == "global_config") continue;
 
+            ConfigLoader::pass pass;
+            pass.PT = getPassTypeFromName(value["name"]);
+            pass.PP.Strength = value["strength"];
+            pass.PP.Intensity = value["intensity"];
+            pass.PP.RevCol = value["invert"];
             passes.push_back(pass);
         }
 
-        Logger::PrintDebug("Finished processing JSON file.");
+        Logger::PrintDebug("Finished loading passes.");
     }
     catch(exception& e)
     {
@@ -105,14 +101,18 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(const string& path)
         }
         json data = json::parse(f);
 
+        if (data.contains("global_config"))
+        {
+            json globalData = data["global_config"];
+            globalConfig.SleeptimeMS = globalData["sleeptime_ms"];
+            globalConfig.LoggerVerbosity = globalData["logger_verbosity"];
+        }
+        else
+        {
+            Logger::PrintLog("No 'global_config' object in JSON file '" + path + "'.");        
+        }
 
-        int sleeptime_ms = data["sleeptime_ms"];
-        int logger_verbosity = data["logger_verbosity"];
-
-        globalConfig.LoggerVerbosity = logger_verbosity;
-        globalConfig.SleeptimeMS = sleeptime_ms;
-
-        Logger::PrintDebug("Finished processing JSON file.");
+        Logger::PrintDebug("Finished loading config.");
     }
     catch(exception& e)
     {
