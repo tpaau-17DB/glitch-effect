@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
             Logger::SetVerbosity((int)globalConfig.LoggerVerbosity);
             Logger::PrintDebug("Verbosity set to: " + to_string(globalConfig.LoggerVerbosity));
         }
+        sleeptime_ms = globalConfig.SleeptimeMS;
     }
     else
     {
