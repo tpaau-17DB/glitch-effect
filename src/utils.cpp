@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Logger.h"
 #include "Utils.h"
 #include "Printer.h"
