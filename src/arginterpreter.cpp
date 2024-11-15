@@ -4,50 +4,9 @@
 
 #include "ArgInterpreter.h"
 #include "Logger.h"
-#include "Printer.h"
+#include "Utils.h"
 
 using namespace std;
-
-int ArgInterpreter::StrToInt(string str)
-{
-    int result;
-
-    try
-    {
-        result = stoi(str);
-    }
-    catch (const invalid_argument& e)
-    {
-        result = -1;
-        Logger::PrintErr(string("Failed to convert '") + str + string("' to an int. (") + e.what() + string(")"));
-    }
-
-    return result;
-}
-
-int ArgInterpreter::strToColorID(const string colorStr)
-{
-    if (colorStr == "NONE")
-        return Printer::NONE;
-    else if (colorStr == "BLACK")
-        return Printer::BLACK;
-    else if (colorStr == "RED")
-        return Printer::RED;
-    else if (colorStr == "GREEN")
-        return Printer::GREEN;
-    else if (colorStr == "YELLOW")
-        return Printer::YELLOW;
-    else if (colorStr == "BLUE")
-        return Printer::BLUE;
-    else if (colorStr == "MAGENTA")
-        return Printer::MAGENTA;
-    else if (colorStr == "CYAN")
-        return Printer::CYAN;
-    else if (colorStr == "WHITE")
-        return Printer::WHITE;
-    Logger::PrintErr("Unknown color. Possible choices: NONE, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE.");
-    return -2;
-}
 
 void PrintUsage()
 {
@@ -101,7 +60,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case 'x':
                 if (optarg)
                 {
-                    int val = StrToInt(optarg);
+                    int val = Utils::StrToInt(optarg);
 
                     if (val == -1)
                     {
@@ -117,7 +76,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case 'y':
                 if (optarg)
                 {
-                    int val = StrToInt(optarg);
+                    int val = Utils::StrToInt(optarg);
 
                     if (val == -1)
                     {
@@ -138,7 +97,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case '2':
                 if (optarg)
                 {
-                    int val = strToColorID(optarg);
+                    int val = Utils::StrToColorID(optarg);
 
                     if (val == -2)
                     {
@@ -154,7 +113,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case '3':
                 if (optarg)
                 {
-                    int val = strToColorID(optarg);
+                    int val = Utils::StrToColorID(optarg);
 
                     if (val == -2)
                     {
@@ -170,7 +129,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 case 'v':
                 if (optarg)
                 {
-                    int val = StrToInt(optarg);
+                    int val = Utils::StrToInt(optarg);
 
                     if (val == -1)
                     {

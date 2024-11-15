@@ -7,29 +7,20 @@
 
 #include "Logger.h"
 #include "ConfigLoader.h"
+#include "Utils.h"
 
 using namespace std;
 
 using json = nlohmann::json;
 
-unsigned long hashString(const string& str) 
-{
-    unsigned int hash = 5381;
-    for (char c : str) 
-    {
-        hash = (hash * 33) ^ c;
-    }
-    return hash;
-}
 
 ConfigLoader::PassType getPassTypeFromName(const string& name)
 {
     ConfigLoader::PassType type = ConfigLoader::Undefined;
 
-    unsigned long hash = hashString(name);
+    unsigned long hash = Utils::HashString(name);
 
-    //Logger::PrintDebug(to_string(hash));
-
+    Logger::PrintDebug(to_string(Utils::HashString("CYAN")));
     switch(hash)
     {
         case 3059108212:  // 'vertical distort'
@@ -74,7 +65,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
             passes.push_back(pass);
         }
 
-        Logger::PrintDebug("Finished loading passes.");
+        Logger::PrintDebug(to_string(passes.size()) + string(" passes loaded."));
     }
     catch(exception& e)
     {

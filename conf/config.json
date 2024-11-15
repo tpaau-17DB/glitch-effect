@@ -1,7 +1,7 @@
 {
     "global_config":
     {
-        "sleeptime_ms": 200,
+        "sleeptime_ms": 40,
         "logger_verbosity": 3
     },
     "pass1": 
@@ -9,6 +9,13 @@
         "name": "vertical distort",
         "strength": 7,
         "intensity": 35,
+        "invert": true
+    },
+    "pass1": 
+    {
+        "name": "vertical distort",
+        "strength": 14,
+        "intensity": 60,
         "invert": true
     }
 }

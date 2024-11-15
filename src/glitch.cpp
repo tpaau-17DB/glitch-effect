@@ -80,10 +80,6 @@ int main(int argc, char *argv[])
         pass.PP.Strength = 7;
         passes.push_back(pass);
     }
-    else
-    {
-        Logger::PrintDebug(to_string(passes.size()) + " passes loaded.");
-    }
 
     if (globalConfig.loadedCorrectly)
     {
