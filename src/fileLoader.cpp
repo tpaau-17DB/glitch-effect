@@ -22,7 +22,7 @@ vector<string> FileLoader::GetLines(const string &path)
     vector<string> lines;
     ifstream file(path);
 
-    if (!file.good())
+    if (!file.good())  // u good?
     {
         Logger::PrintErr("File error! File path: '" + path + "'");
     }
@@ -35,7 +35,6 @@ vector<string> FileLoader::GetLines(const string &path)
         {
             lines.push_back(line);
         }
-
         file.close();
     }
     else

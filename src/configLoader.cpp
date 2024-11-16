@@ -58,10 +58,10 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
             if (key == "global_config") continue;
 
             ConfigLoader::pass pass;
-            pass.PT = getPassTypeFromName(value["name"]);
-            pass.PP.Strength = value["strength"];
-            pass.PP.Intensity = value["intensity"];
-            pass.PP.RevCol = value["invert"];
+            pass.Type = getPassTypeFromName(value["name"]);
+            pass.Strength = value["strength"];
+            pass.Intensity = value["intensity"];
+            pass.RevCol = value["invert"];
             passes.push_back(pass);
         }
 
@@ -111,6 +111,6 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(const string& path)
         return globalConfig;
     }
 
-    globalConfig.loadedCorrectly = true;
+    globalConfig.LoadedCorrectly = true;
     return globalConfig;
 }

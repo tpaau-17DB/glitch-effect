@@ -30,21 +30,18 @@ int main(int argc, char *argv[])
 {
     signal(SIGINT, handleSignal);
     Logger::SetUseLogAccumulation(true);
-
     srand(time(nullptr));
 
-    argstruct args;
+    int sleeptimeMS = 40;
 
-    int sleeptime_ms = 40;
-
-    args = ArgInterpreter::GetArgs(argc, argv);
-    if (args.help_requested)
+    argstruct args = ArgInterpreter::GetArgs(argc, argv);
+    if (args.HelpRequested)
     {
         Logger::PrintDebug("Help requested by user.");
         Logger::ReleaseLogBuffer();
         return 0;
     }
-    else if (args.exit)
+    else if (args.ExitRequested)
     {
         Logger::PrintDebug("ArgInterpreter requested exit.");
         Logger::ReleaseLogBuffer();
@@ -53,10 +50,10 @@ int main(int argc, char *argv[])
 
     ConfigLoader::GlobalConfig globalConfig; 
     vector<ConfigLoader::pass> passes;
-    if (args.config_specified)
+    if (args.ConfigSpecified)
     {
-        passes = ConfigLoader::GetPassesFromJSON(args.config_path);
-        globalConfig = ConfigLoader::GetGlobalConfig(args.config_path);
+        passes = ConfigLoader::GetPassesFromJSON(args.ConfigPath);
+        globalConfig = ConfigLoader::GetGlobalConfig(args.ConfigPath);
     }
     else
     {
@@ -72,30 +69,30 @@ int main(int argc, char *argv[])
 
     if (passes.size() == 0)
     {
-        Logger::PrintWarn("Falling back to default pass.");
+        Logger::PrintLog("Falling back to default pass.");
 
         ConfigLoader::pass pass = ConfigLoader::pass();
-        pass.PT = ConfigLoader::VerticalDistort;
-        pass.PP.Intensity = 35;
-        pass.PP.Strength = 7;
+        pass.Type = ConfigLoader::VerticalDistort;
+        pass.Intensity = 35;
+        pass.Strength = 7;
         passes.push_back(pass);
     }
 
-    if (globalConfig.loadedCorrectly)
+    if (globalConfig.LoadedCorrectly)
     {
         if (!args.VerbositySet)
         {
             Logger::SetVerbosity((int)globalConfig.LoggerVerbosity);
             Logger::PrintDebug("Verbosity set to: " + to_string(globalConfig.LoggerVerbosity));
         }
-        sleeptime_ms = globalConfig.SleeptimeMS;
+        sleeptimeMS = globalConfig.SleeptimeMS;
     }
     else
     {
         Logger::PrintWarn("Using default config.");
     }
 
-    const vector<string> lines = FileLoader::GetLines(args.ascii_path);
+    const vector<string> lines = FileLoader::GetLines(args.AsciiPath);
     if (lines.size() == 0)
     {
         Logger::PrintDebug("Nothing to display. Quitting...");
@@ -103,15 +100,22 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-    Printer::init(sleeptime_ms, args.ox, args.oy);
-    Printer::SetColors(Printer::Color(args.foreground), Printer::Color(args.background));
+    Printer::Init(sleeptimeMS, args.OffsetX, args.OffsetY);
+    Printer::SetColors(Printer::Color(args.ForegroundColor), Printer::Color(args.BackgroundColor));
 
     AsciiBuffer buffer = AsciiBuffer(lines);
-   
+  
+    int exitCode;
     while (!exitRequested)
     {
-        buffer.ApplyPasses(passes);
-        Printer::print(buffer, false);
+        exitCode = buffer.ApplyPasses(passes);
+
+        if (exitCode != 0)
+        {
+            Logger::PrintErr("Errors occured while applying passes. See errors above.");
+        }
+
+        Printer::Print(buffer, false);
         buffer.ResetDistorted();
         
 	int ch = getch();
@@ -123,10 +127,10 @@ int main(int argc, char *argv[])
 
         refresh();
 
-        usleep(1000 * sleeptime_ms);
+        usleep(1000 * sleeptimeMS);
     }
     
-    Printer::stop();
+    Printer::Stop();
     Logger::ReleaseLogBuffer();
     return 0;
 }

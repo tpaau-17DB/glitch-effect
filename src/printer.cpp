@@ -10,14 +10,16 @@
 
 using namespace std;
 
+
+string Printer::windowTooSmallMessage = "It's a little bit claustrophobic in here...";
+
 int Printer::sleeptimeMS = 40;
 int Printer::offsetX = 0;
 int Printer::offsetY = 0;
 
 bool Printer::autocenter = true;
 
-// INIT FUNCTION
-void Printer::init(const int sleeptimeMS, const int offsetX, const int offsetY)
+void Printer::Init(const int sleeptimeMS, const int offsetX, const int offsetY)
 {
     Printer::sleeptimeMS = sleeptimeMS;
     Printer::offsetX = offsetX;
@@ -38,9 +40,7 @@ void Printer::init(const int sleeptimeMS, const int offsetX, const int offsetY)
     Logger::SetNCursesMode(true);
 }
 
-
-// STOP
-void Printer::stop()
+void Printer::Stop()
 {
     Logger::PrintDebug("Stopping ncurses.");
     clear();
@@ -59,19 +59,24 @@ void Printer::SetColors(const Printer::Color fg, const Printer::Color bg)
 
 
 // PRINTING FUNCTIONS
-void Printer::print(AsciiBuffer &buffer, const bool chromaticAberration)
+void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
 {
     int maxX, maxY;
     vector<string>* lines = buffer.GetDistortedLinesPtr();
 
     getmaxyx(stdscr, maxY, maxX);
 
-    string message = "It's a little bit claustrophobic in here...";
-    if (buffer.GetMaxDistortedLength() > maxX || int(lines->size()) > maxY)
+    if (autocenter)
+    {
+        offsetX = 0;
+        offsetY = 0;
+    }
+
+    if (buffer.GetMaxDistortedLineLength() > maxX - offsetX || int(lines->size()) > maxY - offsetY)
     {
         clear();
-        move(maxY / 2, maxX / 2 - message.length() / 2);
-        printw("%s" , message.c_str());
+        move(maxY / 2, maxX / 2 - windowTooSmallMessage.length() / 2);
+        printw("%s" , windowTooSmallMessage.c_str());
 	refresh();
 	usleep(100000);
         return;
@@ -82,15 +87,15 @@ void Printer::print(AsciiBuffer &buffer, const bool chromaticAberration)
     bkgd(COLOR_PAIR(1));
 
     int i = 0;
-    int x = 0;
-    int y = 0;
+    int x = offsetX;
+    int y = offsetY;
     if (!chromaticAberration)
     {
         for (const string &line : *lines)
         {
             if (autocenter)
             {
-                x = 0.5 * (maxX - buffer.GetMaxDistortedLength());
+                x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
                 y = 0.5 * (maxY - lines->size());
             }
 
@@ -101,11 +106,14 @@ void Printer::print(AsciiBuffer &buffer, const bool chromaticAberration)
     }
     else
     {
+        Logger::PrintErr("Currenntly no support for chromatic aberration effect!");
+        return;
+
         for (const string &line : *lines)
         {
             if (autocenter)
             {
-                x = 0.5 * (maxX - buffer.GetMaxDistortedLength());
+                x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
                 y = 0.5 * (maxY - lines->size());
             }
 

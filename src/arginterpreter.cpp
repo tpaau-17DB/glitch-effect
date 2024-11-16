@@ -44,15 +44,15 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
         switch (arg)
         {
             case 'h':
-                args.help_requested = true;
+                args.HelpRequested = true;
                 PrintUsage();
                 return args;
 
             case 'c':
                 if (optarg)
                 {
-                    args.config_path = optarg;
-                    args.config_specified = true;
+                    args.ConfigPath = optarg;
+                    args.ConfigSpecified = true;
                     Logger::PrintDebug(string("Config path set to '") + optarg + string("'."));
                 }
                 break;
@@ -64,11 +64,11 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
                     if (val == -1)
                     {
-                        args.exit = true;
+                        args.ExitRequested = true;
                         return args;
                     }
 
-                    args.ox = val;
+                    args.OffsetX = val;
                     Logger::PrintDebug(string("Offset X set to: ") + optarg);
                 }
                 break;
@@ -80,17 +80,17 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
                     if (val == -1)
                     {
-                        args.exit = true;
+                        args.ExitRequested = true;
                         return args;
                     }
 
-                    args.oy = val;
+                    args.OffsetY = val;
                     Logger::PrintDebug(string("Offset Y set to: ") + optarg);
                 }
                 break;
 
             case '1':
-                args.help_requested = true;
+                args.HelpRequested = true;
                 PrintUsage();
                 return args;
 
@@ -101,11 +101,11 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
                     if (val == -2)
                     {
-                        args.exit = true;
+                        args.ExitRequested = true;
                         return args;
                     }
 
-                    args.foreground = val;
+                    args.ForegroundColor = val;
                     Logger::PrintDebug(string("Foreground color set to: ") + optarg);
                 }
                 break;
@@ -117,11 +117,11 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
                     if (val == -2)
                     {
-                        args.exit = true;
+                        args.ExitRequested = true;
                         return args;
                     }
 
-                    args.background = val;
+                    args.BackgroundColor = val;
                     Logger::PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;
@@ -133,7 +133,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
                     if (val == -1)
                     {
-                        args.exit = true;
+                        args.ExitRequested = true;
                         return args;
                     }
 
@@ -152,15 +152,15 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
     if (optind < argc)
     {
-        args.ascii_path = argv[optind];
+        args.AsciiPath = argv[optind];
         ascii_specified = true;
-        Logger::PrintDebug(string("Ascii file path set to '") + args.ascii_path + string("'."));
+        Logger::PrintDebug(string("Ascii file path set to '") + args.AsciiPath + string("'."));
     }
 
     if (!ascii_specified)
     {
         Logger::PrintErr("Ascii file was not specified!");
-        args.exit = true;
+        args.ExitRequested = true;
     }
 
     return args;

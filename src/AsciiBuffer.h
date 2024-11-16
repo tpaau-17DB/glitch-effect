@@ -22,8 +22,8 @@ class AsciiBuffer
 
         // Getters
         int GetLineCount();
-        int GetMaxLength();
-        int GetMaxDistortedLength();
+        int GetMaxLineLength();
+        int GetMaxDistortedLineLength();
         std::vector<std::string> GetLines();
         std::vector<std::string> GetDistortedLines();
         std::vector<std::string>* GetDistortedLinesPtr();
@@ -32,7 +32,7 @@ class AsciiBuffer
         void VerticalDistort(const int intensity, const int strength);
 
         // Other
-        void ApplyPasses(std::vector<ConfigLoader::pass> passes);
+        int ApplyPasses(std::vector<ConfigLoader::pass> passes);
 
     private:
         int maxDistortedLineLength;
@@ -43,6 +43,7 @@ class AsciiBuffer
         static const std::string ESCAPE;
 
         void ensureDistortedLinesNotEmpty();
+        int getMaxLineLengthFromVector(std::vector<std::string>& lines);
 };
 
 #endif

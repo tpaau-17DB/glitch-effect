@@ -22,14 +22,16 @@ class Printer
             WHITE = 7
         };
 
-        static void init(const int sleeptimeMS, const int offsetX, const int offsetY);
-        static void stop();
+        static void Init(const int sleeptimeMS, const int offsetX, const int offsetY);
+        static void Stop();
 
         static void SetColors(const Color fg, const Color bg);
 
-        static void print(AsciiBuffer &buffer, const bool chromaticAberration);
+        static void Print(AsciiBuffer &buffer, const bool chromaticAberration);
 
     private:
+        static std::string windowTooSmallMessage;
+
         static int sleeptimeMS;
         static int offsetX;
         static int offsetY;

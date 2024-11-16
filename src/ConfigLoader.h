@@ -14,24 +14,19 @@ class ConfigLoader
             Undefined,
         };
 
-        struct PassParams
-        {
-            int Strength = 8;
-            int Intensity = 30;
-
-            bool RevCol = false;
-        };
-
         struct pass
         {
-            PassType PT;
-            PassParams PP;
+             PassType Type;
+             int Strength = 8;
+             int Intensity = 30;
+
+             bool RevCol = false;
         };
 
         struct GlobalConfig
         {
             // METADATA
-            bool loadedCorrectly = false;
+            bool LoadedCorrectly = false;
 
             // VARIABLES
             int SleeptimeMS = 40;
