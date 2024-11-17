@@ -33,8 +33,8 @@ class ConfigLoader
             unsigned short LoggerVerbosity = 1;
         };
 
-        static std::vector<ConfigLoader::pass> GetPassesFromJSON(const std::string& path);
-        static ConfigLoader::GlobalConfig GetGlobalConfig(const std::string& path);
+        static std::vector<ConfigLoader::pass> GetPassesFromJSON(std::string& path);
+        static ConfigLoader::GlobalConfig GetGlobalConfig(std::string& path);
 };
 
 #endif

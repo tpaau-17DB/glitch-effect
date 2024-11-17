@@ -42,9 +42,12 @@ clean:
 install: $(BIN)/$(TARGET)
 	@echo "Installing $(TARGET) to $(TARGET_DIR)"
 	sudo cp $(BIN)/$(TARGET) $(TARGET_DIR)
+	mkdir -p ~/.config/glitch-effect/
+	cp conf/config.json ~/.config/glitch-effect/
 
 uninstall:
 	@echo "Removing $(TARGET) from $(TARGET_DIR)"
 	sudo rm -f $(TARGET_DIR)/$(TARGET)
+	rm -rf ~/.config/glitch-effect/
 
 .PHONY: all clean install uninstall pre-build build

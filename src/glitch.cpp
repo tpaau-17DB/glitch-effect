@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        Logger::PrintWarn("Config file not specified.");
+        Logger::PrintDebug("Config file not specified.");
         string confPath = FileLoader::LookForConfigFiles();
 
         if (confPath != "none")
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        Logger::PrintWarn("Using default config.");
+        Logger::PrintLog("Using default config.");
     }
 
     const vector<string> lines = FileLoader::GetLines(args.AsciiPath);

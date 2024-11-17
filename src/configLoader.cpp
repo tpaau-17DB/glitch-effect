@@ -20,7 +20,6 @@ ConfigLoader::PassType getPassTypeFromName(const string& name)
 
     unsigned long hash = Utils::HashString(name);
 
-    Logger::PrintDebug(to_string(Utils::HashString("CYAN")));
     switch(hash)
     {
         case 3059108212:  // 'vertical distort'
@@ -35,9 +34,12 @@ ConfigLoader::PassType getPassTypeFromName(const string& name)
     return type;
 }
 
-vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
+vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 {
     vector<ConfigLoader::pass> passes = vector<ConfigLoader::pass>();
+
+    string homeDir = getenv("HOME");
+    path = homeDir + "/" + path.substr(2);
 
     Logger::PrintDebug("Loading a JSON file '" + path + "'.");
 
@@ -76,7 +78,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(const string& path)
     return passes;
 }
 
-ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(const string& path)
+ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
 {
     ConfigLoader::GlobalConfig globalConfig;
 
