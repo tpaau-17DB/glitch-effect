@@ -164,7 +164,7 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
         {
             case ConfigLoader::VerticalDistort:
                 this->VerticalDistort(pass.Intensity, pass.Strength);
-                return 0;
+                break;
 
             case ConfigLoader::Undefined:
                 Logger::PrintErr("Undefined pass type!");
@@ -175,7 +175,7 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
                 return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 

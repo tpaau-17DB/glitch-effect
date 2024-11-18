@@ -1,5 +1,6 @@
 #include <exception>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -61,6 +62,8 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 
         json data = json::parse(content);
 
+        //std::cout<<data.dump()<<endl;
+        int tmp;
         for (auto& [key, value] : data.items()) 
         {
             if (key == "global_config") continue;
@@ -68,7 +71,18 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
             ConfigLoader::pass pass;
             pass.Type = getPassTypeFromName(value["name"]);
             pass.Strength = value["strength"];
-            pass.Intensity = value["intensity"];
+            tmp = value["intensity"];
+    
+            if (tmp <= 0 || tmp > 100)
+            {
+                Logger::PrintErr("Intensity value be in range 1-100!");
+                return passes;
+            }
+            else
+            {
+                pass.Intensity = 100 / tmp;
+            }
+
             pass.RevCol = value["invert"];
             passes.push_back(pass);
         }

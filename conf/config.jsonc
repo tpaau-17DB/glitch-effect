@@ -1,22 +1,47 @@
 {
-    /*comment*/
+    /*
+    Global program configuration.
+    Options defined here modify the behavior of the entire program
+    */
     "global_config":
     {
+        // Pause between screen refresh in milliseconds.
         "sleeptime_ms": 40,
-        "logger_verbosity": 3
+
+        // Sets the verbosity of logger
+        // This setting is overridden if you use the '-v' flag.
+        "logger_verbosity": 1
     },
+
+    /*
+    Passes modify the way your ASCII file is distorted.
+    They can be stacked one each other to create unique effects.
+    You can name the passes however you want, just keep in mind
+    that duplicates will be ignored.
+    */
     "pass1": 
     {
+        // The name of the pass, currently there is only one option.
         "name": "vertical distort",
-        "strength": 7,
-        "intensity": 35,
+
+        // Higher values cause stronger distortion.
+        "strength": 1,
+
+        /*
+        The chance of distortion occurring in percent.
+        For example, one in five lines will get distorted
+        if intensity is set to 20.
+        */
+        "intensity": 25,
+
+        // Currently unused.
         "invert": true
     },
-    "pass1": 
+    "pass2": 
     {
         "name": "vertical distort",
         "strength": 14,
-        "intensity": 60,
+        "intensity": 5,
         "invert": true
     }
 }
