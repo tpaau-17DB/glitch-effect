@@ -21,6 +21,8 @@ NCURSES_OBJS = $(NCURSES_SRCS:$(SRC)/%.cpp=$(BIN)/%.o)
 # All object files except those that need ncurses
 OTHER_OBJS = $(filter-out $(NCURSES_OBJS), $(OBJS))
 
+MAKEFLAGS += -j
+
 all: pre-build $(BIN)/$(TARGET)
 
 pre-build:
@@ -32,10 +34,6 @@ $(BIN)/$(TARGET): $(OBJS)
 $(BIN)/%.o: $(SRC)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# New build target to compile without linking
-build: pre-build $(OBJS)
-	@echo "Build completed. Run 'make install' to install."
-
 clean:
 	rm -f $(BIN)/*.o $(BIN)/$(TARGET)
 
@@ -43,7 +41,7 @@ install: $(BIN)/$(TARGET)
 	@echo "Installing $(TARGET) to $(TARGET_DIR)"
 	sudo cp $(BIN)/$(TARGET) $(TARGET_DIR)
 	mkdir -p ~/.config/glitch-effect/
-	cp conf/config.json ~/.config/glitch-effect/
+	cp conf/config.jsonc ~/.config/glitch-effect/
 
 uninstall:
 	@echo "Removing $(TARGET) from $(TARGET_DIR)"
@@ -51,3 +49,4 @@ uninstall:
 	rm -rf ~/.config/glitch-effect/
 
 .PHONY: all clean install uninstall pre-build build
+

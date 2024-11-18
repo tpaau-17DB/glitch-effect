@@ -12,10 +12,26 @@ using namespace filesystem;
 const string FileLoader::configPaths[] = 
 {
     "~/.config/glitch-effect/config",
-    "~/.config/glitch-effect/config.json",
+    "~/.config/glitch-effect/config.jsonc",
     "./config",
-    "./config.json",
+    "./config.jsonc",
 };
+
+
+string FileLoader::ExpandPath(const string& path)
+{
+    string fullPath = path;
+
+    if (!fullPath.empty() && fullPath[0] == '~') 
+    {
+        string homeDir = getenv("HOME");
+        return homeDir + fullPath.substr(1);
+    } 
+    else 
+    {
+        return fullPath;
+    }
+}
 
 vector<string> FileLoader::GetLines(const string &path)
 {
@@ -47,9 +63,7 @@ vector<string> FileLoader::GetLines(const string &path)
 
 bool FileLoader::CheckIfFileExists(const string &path)
 {
-    string homeDir = getenv("HOME");
-    string fullPath = homeDir + "/" + path.substr(2);
-
+    string fullPath = FileLoader::ExpandPath(path); 
     return filesystem::exists(fullPath);
 }
 

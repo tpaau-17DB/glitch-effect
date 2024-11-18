@@ -1,10 +1,21 @@
 #include <stdexcept>
+#include <regex>
 
 #include "Logger.h"
 #include "Utils.h"
 #include "Printer.h"
 
 using namespace std;
+
+string Utils::RemoveComments(const string& str)
+{
+    string result = str;
+
+    result = regex_replace(result, std::regex("//[^\n]*"), "");
+    result = regex_replace(result, std::regex("/\\*[\\s\\S]*?\\*/"), "");
+
+    return result;
+}
 
 unsigned long Utils::HashString(const string& str)
 {

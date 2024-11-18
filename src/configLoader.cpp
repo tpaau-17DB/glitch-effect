@@ -5,6 +5,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include "FileLoader.h"
 #include "Logger.h"
 #include "ConfigLoader.h"
 #include "Utils.h"
@@ -38,8 +39,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 {
     vector<ConfigLoader::pass> passes = vector<ConfigLoader::pass>();
 
-    string homeDir = getenv("HOME");
-    path = homeDir + "/" + path.substr(2);
+    path = FileLoader::ExpandPath(path);
 
     Logger::PrintDebug("Loading a JSON file '" + path + "'.");
 
@@ -53,7 +53,13 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
             return passes;
         }
 
-        json data = json::parse(f);
+        stringstream buffer;
+        buffer << f.rdbuf();
+        string content = buffer.str();
+
+        content = Utils::RemoveComments(content);
+
+        json data = json::parse(content);
 
         for (auto& [key, value] : data.items()) 
         {
@@ -92,7 +98,14 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
             Logger::PrintErr("Could not open the file!");
             return globalConfig;
         }
-        json data = json::parse(f);
+
+        stringstream buffer;
+        buffer << f.rdbuf();
+        string content = buffer.str();
+
+        content = Utils::RemoveComments(content);
+
+        json data = json::parse(content);
 
         if (data.contains("global_config"))
         {
