@@ -32,7 +32,7 @@
         For example, one in five lines will get distorted
         if intensity is set to 20.
         */
-        "intensity": 25,
+        "intensity": 20, //%
 
         // Currently unused.
         "invert": true

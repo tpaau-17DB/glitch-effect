@@ -76,7 +76,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
             if (tmp <= 0 || tmp > 100)
             {
                 Logger::PrintErr("Intensity value be in range 1-100!");
-                return passes;
+                pass.Intensity = 0;
             }
             else
             {
