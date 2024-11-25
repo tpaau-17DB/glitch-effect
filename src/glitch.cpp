@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         Logger::PrintLog("Falling back to default pass.");
 
         ConfigLoader::pass pass = ConfigLoader::pass();
-        pass.Type = ConfigLoader::VerticalDistort;
+        pass.Type = ConfigLoader::HorizontalDistort;
         pass.Intensity = 35;
         pass.Strength = 7;
         passes.push_back(pass);
@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
         if (exitCode != 0)
         {
             Logger::PrintErr("Errors occured while applying passes. See errors above.");
+            break;
         }
 
         Printer::Print(buffer, false);

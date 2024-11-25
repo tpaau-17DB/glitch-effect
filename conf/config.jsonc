@@ -21,8 +21,13 @@
     */
     "pass1": 
     {
-        // The name of the pass, currently there is only one option.
-        "name": "vertical distort",
+        // The name of the pass, basically defines how pass will behave
+        //
+        // Possible options are:
+        //      * 'horizontal distort' - distort lines horizontally
+        //      * 'discard' - discards the lines (empty screen)
+        //
+        "name": "horizontal distort",
 
         // Higher values cause stronger distortion.
         "strength": 1,
@@ -37,11 +42,17 @@
         // Currently unused.
         "invert": true
     },
-    "pass2": 
+    "another-pass": 
     {
-        "name": "vertical distort",
-        "strength": 14,
-        "intensity": 5,
-        "invert": true
+        // In every pass only required parameters are listed
+        "name": "horizontal distort",
+        "strength": 16,
+        "intensity": 3
+    },
+    "yet-another-pass": 
+    {
+        // This pass for example does not need strength, bacause is just clears the screen
+        "name": "discard",
+        "intensity": 10
     }
 }

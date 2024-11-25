@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "ConfigLoader.h"
 #include "AsciiBuffer.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -116,7 +117,7 @@ vector<string>* AsciiBuffer::GetDistortedLinesPtr()
 
 
 // Filters
-void AsciiBuffer::VerticalDistort(const int intensity, const int strength)
+void AsciiBuffer::HorizontalDistort(const int intensity, const int strength)
 {
     ensureDistortedLinesNotEmpty();
     
@@ -129,7 +130,7 @@ void AsciiBuffer::VerticalDistort(const int intensity, const int strength)
 
         int reverseEffect = rand() % 2;
 
-        if ((rand() % intensity + 1) == 1)
+        if (Utils::GetRandomFloat(0, 100) < intensity)
         {
             if (!reverseEffect)
             {
@@ -162,8 +163,16 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
     {
         switch(pass.Type)
         {
-            case ConfigLoader::VerticalDistort:
-                this->VerticalDistort(pass.Intensity, pass.Strength);
+            case ConfigLoader::HorizontalDistort:
+                this->HorizontalDistort(pass.Intensity, pass.Strength);
+                break;
+
+            case ConfigLoader::Discard:
+                if (Utils::GetRandomFloat(0, 100) < pass.Intensity)
+                {
+                    distortedLines = vector<string>();
+                    return 0;
+                }
                 break;
 
             case ConfigLoader::Undefined:

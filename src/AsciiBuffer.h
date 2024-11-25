@@ -29,7 +29,7 @@ class AsciiBuffer
         std::vector<std::string>* GetDistortedLinesPtr();
 
         // Filters
-        void VerticalDistort(const int intensity, const int strength);
+        void HorizontalDistort(const int intensity, const int strength);
 
         // Other
         int ApplyPasses(std::vector<ConfigLoader::pass> passes);

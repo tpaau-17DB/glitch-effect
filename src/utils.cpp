@@ -1,11 +1,24 @@
 #include <stdexcept>
 #include <regex>
+#include <string>
+#include <random>
 
 #include "Logger.h"
 #include "Utils.h"
 #include "Printer.h"
 
 using namespace std;
+
+random_device Utils::rd;
+
+float Utils::GetRandomFloat(const float min, const float max)
+{
+    mt19937 gen(rd());
+
+    uniform_real_distribution<float> dist(min, max);
+
+    return dist(gen);
+}
 
 string Utils::RemoveComments(const string& str)
 {

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cctype>
 
 #include <nlohmann/json.hpp>
 
@@ -24,8 +25,12 @@ ConfigLoader::PassType getPassTypeFromName(const string& name)
 
     switch(hash)
     {
-        case 3059108212:  // 'vertical distort'
-            type = ConfigLoader::VerticalDistort;
+        case 3091456344:  // 'horizontal distort'
+            type = ConfigLoader::HorizontalDistort;
+            break;
+
+        case 2811326735:  // 'discard'
+            type = ConfigLoader::Discard;
             break;
 
         default:
@@ -63,27 +68,23 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
         json data = json::parse(content);
 
         //std::cout<<data.dump()<<endl;
-        int tmp;
         for (auto& [key, value] : data.items()) 
         {
             if (key == "global_config") continue;
 
             ConfigLoader::pass pass;
-            pass.Type = getPassTypeFromName(value["name"]);
-            pass.Strength = value["strength"];
-            tmp = value["intensity"];
-    
-            if (tmp <= 0 || tmp > 100)
-            {
-                Logger::PrintErr("Intensity value be in range 1-100!");
-                pass.Intensity = 0;
-            }
-            else
-            {
-                pass.Intensity = 100 / tmp;
-            }
+            if (value.contains("name"))
+                pass.Type = getPassTypeFromName(value["name"]);
+            
+            if (value.contains("strength"))
+                pass.Strength = value["strength"];
 
-            pass.RevCol = value["invert"];
+            if (value.contains("intensity"))
+                pass.Intensity = value["intensity"];
+            
+            if (value.contains("invert"))
+                pass.RevCol = value["invert"];
+
             passes.push_back(pass);
         }
 
