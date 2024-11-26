@@ -40,6 +40,7 @@ clean:
 install: $(BIN)/$(TARGET)
 	@echo "Installing $(TARGET) to $(TARGET_DIR)"
 	sudo cp $(BIN)/$(TARGET) $(TARGET_DIR)
+	@echo "Finished installation."
 
 uninstall:
 	@echo "Removing $(TARGET) from $(TARGET_DIR)"

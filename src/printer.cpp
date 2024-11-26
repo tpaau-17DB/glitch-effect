@@ -108,26 +108,6 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
     {
         Logger::PrintErr("Currenntly no support for chromatic aberration effect!");
         return;
-
-        for (const string &line : *lines)
-        {
-            if (autocenter)
-            {
-                x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
-                y = 0.5 * (maxY - lines->size());
-            }
-
-            move(y + i, x -1);
-            printw("%s", line.c_str());
-
-            move(y + i, x +1);
-            printw("%s", line.c_str());
-
-            move(y + i, x);
-            printw("%s", line.c_str());
-
-            i++;
-        }
     }
 
     attroff(COLOR_PAIR(1));

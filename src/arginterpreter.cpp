@@ -10,15 +10,15 @@ using namespace std;
 
 void PrintUsage()
 {
-    cout<<"Usage: glitch [options] [ascii path]"<<endl;
-    cout<<"  --help, -h: Display this help message"<<endl;
-    cout<<"  -x <int>: Manually set X offset, disables autocenter"<<endl;
-    cout<<"  -y <int>: Manually set Y offset, disables autocenter"<<endl;
-    cout<<"  -c <path> Set the config file"<<endl;
-    cout<<"  -v <int>: Set log verbosity"<<endl;
-    cout<<"  --foreground <color>: Set foreground color"<<endl;
-    cout<<"  --background <color>: Set background color"<<endl;
-    cout<<"  --nocolor: enables nocolor option in Logger"<<endl;
+    cout<<"Usage: glitch [options] [ascii path]\n";
+    cout<<"  --help, -h: Display this help message\n";
+    cout<<"  -x <int>: Manually set X offset, disables autocenter\n";
+    cout<<"  -y <int>: Manually set Y offset, disables autocenter\n";
+    cout<<"  -c <path> Set the config file\n";
+    cout<<"  -v <int>: Set log verbosity\n";
+    cout<<"  --foreground <color>: Set foreground color\n";
+    cout<<"  --background <color>: Set background color\n";
+    cout<<"  --nocolor: enables nocolor option in Logger\n";
 }
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])

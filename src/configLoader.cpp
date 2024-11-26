@@ -16,31 +16,6 @@ using namespace std;
 
 using json = nlohmann::json;
 
-
-ConfigLoader::PassType getPassTypeFromName(const string& name)
-{
-    ConfigLoader::PassType type = ConfigLoader::Undefined;
-
-    unsigned long hash = Utils::HashString(name);
-
-    switch(hash)
-    {
-        case 3091456344:  // 'horizontal distort'
-            type = ConfigLoader::HorizontalDistort;
-            break;
-
-        case 2811326735:  // 'discard'
-            type = ConfigLoader::Discard;
-            break;
-
-        default:
-            Logger::PrintErr("Unknown pass type: '" + name + "'.");
-            break;
-    }
-
-    return type;
-}
-
 vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 {
     vector<ConfigLoader::pass> passes = vector<ConfigLoader::pass>();
@@ -67,14 +42,13 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 
         json data = json::parse(content);
 
-        //std::cout<<data.dump()<<endl;
         for (auto& [key, value] : data.items()) 
         {
             if (key == "global_config") continue;
 
             ConfigLoader::pass pass;
             if (value.contains("name"))
-                pass.Type = getPassTypeFromName(value["name"]);
+                pass.Type = Utils::GetPassTypeFromName(value["name"]);
             
             if (value.contains("strength"))
                 pass.Strength = value["strength"];

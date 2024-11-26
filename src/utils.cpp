@@ -3,6 +3,7 @@
 #include <string>
 #include <random>
 
+#include "ConfigLoader.h"
 #include "Logger.h"
 #include "Utils.h"
 #include "Printer.h"
@@ -11,33 +12,20 @@ using namespace std;
 
 random_device Utils::rd;
 
-float Utils::GetRandomFloat(const float min, const float max)
+int Utils::StrToInt(const string& str)
 {
-    mt19937 gen(rd());
+    int result;
 
-    uniform_real_distribution<float> dist(min, max);
-
-    return dist(gen);
-}
-
-string Utils::RemoveComments(const string& str)
-{
-    string result = str;
-
-    result = regex_replace(result, std::regex("//[^\n]*"), "");
-    result = regex_replace(result, std::regex("/\\*[\\s\\S]*?\\*/"), "");
-
-    return result;
-}
-
-unsigned long Utils::HashString(const string& str)
-{
-    unsigned int hash = 5381;
-    for (char c : str)
+    try
     {
-        hash = (hash * 33) ^ c;
+        result = stoi(str);
     }
-    return hash;
+    catch (const invalid_argument& e) 
+    {
+        result = -1;
+        Logger::PrintErr(string("Failed to convert '") + str + string("' to an int. (") + e.what() + string(")"));
+    }
+    return result;
 }
 
 int Utils::StrToColorID(const string& str)
@@ -78,18 +66,57 @@ int Utils::StrToColorID(const string& str)
     }
 }
 
-int Utils::StrToInt(const string& str)
+unsigned long Utils::HashString(const string& str)
 {
-    int result;
+    unsigned int hash = 5381;
+    for (char c : str)
+    {
+        hash = (hash * 33) ^ c;
+    }
+    return hash;
+}
 
-    try
+float Utils::GetRandomFloat(const float min, const float max)
+{
+    mt19937 gen(rd());
+
+    uniform_real_distribution<float> dist(min, max);
+
+    return dist(gen);
+}
+
+ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
+{
+    ConfigLoader::PassType type = ConfigLoader::Undefined;
+
+    unsigned long hash = Utils::HashString(name);
+
+    type = ConfigLoader::Undefined;
+
+    switch(hash)
     {
-        result = stoi(str);
+        case 3091456344:  // 'horizontal distort'
+            type = ConfigLoader::HorizontalDistort;
+            break;
+
+        case 2811326735:  // 'discard'
+            type = ConfigLoader::Discard;
+            break;
+
+        default:
+            Logger::PrintErr("Unknown pass type: '" + name + "'.");
+            break;
     }
-    catch (const invalid_argument& e) 
-    {
-        result = -1;
-        Logger::PrintErr(string("Failed to convert '") + str + string("' to an int. (") + e.what() + string(")"));
-    }
+
+    return type;
+}
+
+string Utils::RemoveComments(const string& str)
+{
+    string result = str;
+
+    result = regex_replace(result, std::regex("//[^\n]*"), "");
+    result = regex_replace(result, std::regex("/\\*[\\s\\S]*?\\*/"), "");
+
     return result;
 }

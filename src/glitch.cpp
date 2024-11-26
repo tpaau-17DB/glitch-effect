@@ -15,7 +15,10 @@
 
 using namespace std;
 
+
+// when this variable is `true`, the program should exit immediately
 bool exitRequested = false;
+
 
 void handleSignal(int signal) 
 {
@@ -26,6 +29,7 @@ void handleSignal(int signal)
     }
 }
 
+
 int main(int argc, char *argv[])
 {
     signal(SIGINT, handleSignal);
@@ -34,6 +38,7 @@ int main(int argc, char *argv[])
 
     int sleeptimeMS = 40;
 
+    // get command line arguments and handle them
     argstruct args = ArgInterpreter::GetArgs(argc, argv);
     if (args.HelpRequested)
     {
@@ -48,25 +53,29 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    ConfigLoader::GlobalConfig globalConfig; 
-    vector<ConfigLoader::pass> passes;
+    // obtain the path of the config file
+    string confPath;
     if (args.ConfigSpecified)
     {
-        passes = ConfigLoader::GetPassesFromJSON(args.ConfigPath);
-        globalConfig = ConfigLoader::GetGlobalConfig(args.ConfigPath);
+        confPath = args.ConfigPath;
     }
     else
     {
         Logger::PrintDebug("Config file not specified.");
-        string confPath = FileLoader::LookForConfigFiles();
-
-        if (confPath != "none")
-        {
-            passes = ConfigLoader::GetPassesFromJSON(confPath);
-            globalConfig = ConfigLoader::GetGlobalConfig(confPath);
-        }
+        confPath = FileLoader::LookForConfigFiles();
     }
 
+    // load the config file
+    ConfigLoader::GlobalConfig globalConfig; 
+    vector<ConfigLoader::pass> passes;
+    if (confPath != "" && confPath != "none")
+    {
+       
+        passes = ConfigLoader::GetPassesFromJSON(confPath);
+        globalConfig = ConfigLoader::GetGlobalConfig(confPath);
+    }
+
+    // check if passes were loaded correctly and if not, proceed with default pass 
     if (passes.size() == 0)
     {
         Logger::PrintLog("Falling back to default pass.");
@@ -78,12 +87,12 @@ int main(int argc, char *argv[])
         passes.push_back(pass);
     }
 
+    // apply the config file if loade correctly
     if (globalConfig.LoadedCorrectly)
     {
         if (!args.VerbositySet)
         {
             Logger::SetVerbosity((int)globalConfig.LoggerVerbosity);
-            Logger::PrintDebug("Verbosity set to: " + to_string(globalConfig.LoggerVerbosity));
         }
         sleeptimeMS = globalConfig.SleeptimeMS;
     }
@@ -99,27 +108,29 @@ int main(int argc, char *argv[])
         Logger::ReleaseLogBuffer();
         return 1;
     }
-    
+   
+    // initialize printer and buffer
     Printer::Init(sleeptimeMS, args.OffsetX, args.OffsetY);
     Printer::SetColors(Printer::Color(args.ForegroundColor), Printer::Color(args.BackgroundColor));
-
     AsciiBuffer buffer = AsciiBuffer(lines);
-  
+ 
     int exitCode;
+    int ch;
     while (!exitRequested)
     {
+        // apply the passes and check if there were any errors
         exitCode = buffer.ApplyPasses(passes);
-
         if (exitCode != 0)
         {
             Logger::PrintErr("Errors occured while applying passes. See errors above.");
             break;
         }
 
+        // print the distorted image
         Printer::Print(buffer, false);
         buffer.ResetDistorted();
-        
-	int ch = getch();
+       
+	ch = getch();
 	if (ch == 'q')
         {
             Logger::PrintDebug("Exit requested by user.");
@@ -127,10 +138,9 @@ int main(int argc, char *argv[])
         }
 
         refresh();
-
         usleep(1000 * sleeptimeMS);
     }
-    
+   
     Printer::Stop();
     Logger::ReleaseLogBuffer();
     return 0;

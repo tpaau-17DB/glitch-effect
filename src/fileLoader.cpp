@@ -46,7 +46,6 @@ vector<string> FileLoader::GetLines(const string &path)
     if (file.is_open())
     {
         string line;
-
         while (getline(file, line))
         {
             lines.push_back(line);
