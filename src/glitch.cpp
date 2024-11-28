@@ -82,8 +82,12 @@ int main(int argc, char *argv[])
 
         ConfigLoader::pass pass = ConfigLoader::pass();
         pass.Type = ConfigLoader::HorizontalDistort;
-        pass.Intensity = 35;
+        pass.Intensity = 10;
         pass.Strength = 7;
+        passes.push_back(pass);
+
+        pass.Intensity = 25;
+        pass.Strength = 1;
         passes.push_back(pass);
     }
 
