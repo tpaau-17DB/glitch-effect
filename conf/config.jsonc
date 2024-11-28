@@ -19,7 +19,7 @@
     You can name the passes however you want, just keep in mind
     that duplicates will be ignored.
     */
-    /*"pass1": 
+    "pass1": 
     {
         // The name of the pass, basically defines how pass will behave
         //
