@@ -149,6 +149,32 @@ void AsciiBuffer::HorizontalDistort(const int intensity, const int strength)
     maxDistortedLineLength += (2 * strength);
 }
 
+void AsciiBuffer::ShuffleCharacters(const int intensity)
+{
+    ensureDistortedLinesNotEmpty();
+
+    int dst;
+    unsigned short length;
+    for (string &str : distortedLines)
+    {
+        length = (unsigned short)str.length();
+        for (int src = 0; src < length; src++)
+        {
+            if (str[src] == ' ' || Utils::GetRandomShort(0, 100) >= intensity) continue;
+            dst = Utils::GetRandomShort(0, length);
+            if (str[dst] == '\0' || str[src] == '\0') continue;
+
+            if (src == dst || str[dst] == ' ') continue;
+
+            char srcC = str[src];
+            char dstC = str[dst];
+
+            str[src] = dstC;
+            str[dst] = srcC;
+        }
+    }
+}
+
 
 // Others
 int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
@@ -179,8 +205,12 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
                 Logger::PrintErr("Undefined pass type!");
                 return 1;
 
+            case ConfigLoader::CharacterShuffle:
+                ShuffleCharacters(pass.Intensity);
+                break;
+
             default:
-                Logger::PrintErr("Undefined pass type!");
+                Logger::PrintErr("Unknown pass type!");
                 return 1;
         }
     }

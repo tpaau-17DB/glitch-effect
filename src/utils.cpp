@@ -79,9 +79,14 @@ unsigned long Utils::HashString(const string& str)
 float Utils::GetRandomFloat(const float min, const float max)
 {
     mt19937 gen(rd());
-
     uniform_real_distribution<float> dist(min, max);
+    return dist(gen);
+}
 
+unsigned short Utils::GetRandomShort(const unsigned short min, const unsigned short max)
+{
+    mt19937 gen(rd());
+    uniform_int_distribution<unsigned short> dist(min, max);
     return dist(gen);
 }
 
@@ -101,6 +106,10 @@ ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
 
         case 2811326735:  // 'discard'
             type = ConfigLoader::Discard;
+            break;
+
+        case 409254235:  // 'character shuffle'
+            type = ConfigLoader::CharacterShuffle;
             break;
 
         default:

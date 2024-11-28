@@ -30,6 +30,7 @@ class AsciiBuffer
 
         // Filters
         void HorizontalDistort(const int intensity, const int strength);
+        void ShuffleCharacters(const int intensity);
 
         // Other
         int ApplyPasses(std::vector<ConfigLoader::pass> passes);

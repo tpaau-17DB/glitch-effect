@@ -10,6 +10,7 @@ class ConfigLoader
     public:
         enum PassType
         {
+            CharacterShuffle,
             HorizontalDistort,
             Discard,
             Undefined,

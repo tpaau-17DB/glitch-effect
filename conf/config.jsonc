@@ -19,13 +19,14 @@
     You can name the passes however you want, just keep in mind
     that duplicates will be ignored.
     */
-    "pass1": 
+    /*"pass1": 
     {
         // The name of the pass, basically defines how pass will behave
         //
         // Possible options are:
         //      * 'horizontal distort' - distort lines horizontally
         //      * 'discard' - discards the lines (empty screen)
+        //     * 'character shuffle' - shuffles characters. Be careful with this filter, it can be heavy on the CPU!
         //
         "name": "horizontal distort",
 
@@ -55,4 +56,11 @@
         "name": "discard",
         "intensity": 10
     }
+    /*,
+    "pass4":
+    {
+        "name": "character shuffle",
+        "intensity": 1
+    }
+    */
 }
