@@ -19,7 +19,6 @@ using namespace std;
 // when this variable is `true`, the program should exit immediately
 bool exitRequested = false;
 
-
 void handleSignal(int signal) 
 {
     if (signal == SIGINT) 
@@ -91,7 +90,7 @@ int main(int argc, char *argv[])
         passes.push_back(pass);
     }
 
-    // apply the config file if loade correctly
+    // apply the config file if loaded correctly
     if (globalConfig.LoadedCorrectly)
     {
         if (!args.VerbositySet)
@@ -126,7 +125,7 @@ int main(int argc, char *argv[])
         exitCode = buffer.ApplyPasses(passes);
         if (exitCode != 0)
         {
-            Logger::PrintErr("Errors occured while applying passes. See errors above.");
+            Logger::PrintErr("Errors occurred while applying passes. See errors above.");
             break;
         }
 

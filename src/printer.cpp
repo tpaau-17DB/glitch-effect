@@ -106,7 +106,7 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
     }
     else
     {
-        Logger::PrintErr("Currenntly no support for chromatic aberration effect!");
+        Logger::PrintErr("Currently no support for chromatic aberration effect!");
         return;
     }
 

@@ -66,7 +66,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
     }
     catch(exception& e)
     {
-        Logger::PrintErr("Error occured while loading a file: '" + path + "': " + e.what());
+        Logger::PrintErr("Error occurred while loading a file: '" + path + "': " + e.what());
         return passes;
     }
 
@@ -111,7 +111,7 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
     }
     catch(exception& e)
     {
-        Logger::PrintErr("Error occured while loading a file: '" + path + "': " + e.what());
+        Logger::PrintErr("Error occurred while loading a file: '" + path + "': " + e.what());
         return globalConfig;
     }
 

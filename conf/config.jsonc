@@ -46,13 +46,14 @@
     "another-pass": 
     {
         // In every pass only required parameters are listed
+        // Extravageous params are ignored
         "name": "horizontal distort",
         "strength": 16,
         "intensity": 3
     },
     "yet-another-pass": 
     {
-        // This pass for example does not need strength, bacause is just clears the screen
+        // This pass does not need the strength parameter
         "name": "discard",
         "intensity": 10
     }
