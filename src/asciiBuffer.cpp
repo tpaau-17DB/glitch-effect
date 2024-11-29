@@ -157,12 +157,11 @@ void AsciiBuffer::ShuffleCharacters(const int intensity)
     unsigned short length;
     for (string &str : distortedLines)
     {
-        length = (unsigned short)str.length();
+        length = (unsigned short)str.length() - 1;
         for (int src = 0; src < length; src++)
         {
             if (str[src] == ' ' || Utils::GetRandomShort(0, 100) >= intensity) continue;
             dst = Utils::GetRandomShort(0, length);
-            if (str[dst] == '\0' || str[src] == '\0') continue;
 
             if (src == dst || str[dst] == ' ') continue;
 
