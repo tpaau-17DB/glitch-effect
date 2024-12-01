@@ -50,8 +50,7 @@
         "name": "horizontal distort",
         "strength": 16,
         "intensity": 3
-    },
-    /*
+    }/*,
     "yet-another-pass": 
     {
         // This pass does not need the strength parameter
