@@ -51,13 +51,13 @@
         "strength": 16,
         "intensity": 3
     },
+    /*
     "yet-another-pass": 
     {
         // This pass does not need the strength parameter
         "name": "discard",
         "intensity": 10
-    }
-    /*,
+    },
     "pass4":
     {
         "name": "character shuffle",
