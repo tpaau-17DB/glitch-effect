@@ -109,8 +109,9 @@ int main(int argc, char *argv[])
     {
         asciiPath = args.AsciiPath; 
     }
-    else if (globalConfig.DefaultAsciiPath != "///notspecified///")
+    else if (globalConfig.DefaultAsciiPath != "///notspecified///" && globalConfig.LoadedCorrectly)
     {
+        Logger::PrintDebug("Using ascii file path specified in '" + confPath + "'.");
         asciiPath = globalConfig.DefaultAsciiPath;
     }
     else
