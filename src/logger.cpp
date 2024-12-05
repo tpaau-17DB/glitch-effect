@@ -1,5 +1,3 @@
-#include "Logger.h"
-
 #include <iostream>
 #include <ncurses.h>
 #include <cstdio>
@@ -7,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
+
+#include "Logger.h"
 
 using namespace std;
 

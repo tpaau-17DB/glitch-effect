@@ -37,7 +37,6 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 
     int arg;
     int option_index = 0;
-    bool ascii_specified = false;
 
     while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
     {
@@ -153,14 +152,8 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     if (optind < argc)
     {
         args.AsciiPath = argv[optind];
-        ascii_specified = true;
+        args.AsciiPathSpecified = true;
         Logger::PrintDebug(string("Ascii file path set to '") + args.AsciiPath + string("'."));
-    }
-
-    if (!ascii_specified)
-    {
-        Logger::PrintErr("Ascii file was not specified!");
-        args.ExitRequested = true;
     }
 
     return args;

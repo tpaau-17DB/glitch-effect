@@ -18,6 +18,7 @@ struct argstruct
     int BackgroundColor = Printer::NONE;
 
     bool ExitRequested = false;
+    bool AsciiPathSpecified = false;
     bool ConfigSpecified = false;
     bool HelpRequested = false;
     bool VerbositySet = false;

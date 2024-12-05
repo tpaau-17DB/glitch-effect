@@ -11,6 +11,10 @@
         // Sets the verbosity of logger
         // This setting is overridden if you use the '-v' flag.
         "logger_verbosity": 1
+
+        // Default ascii file path
+        // The program will default to this file unless ascii path is specified.
+        // "default_ascii_path": "~/.config/glitch-effect/default-ascii.txt"
     },
 
     /*
@@ -26,7 +30,7 @@
         // Possible options are:
         //      * 'horizontal distort' - distort lines horizontally
         //      * 'discard' - discards the lines (empty screen)
-        //     * 'character shuffle' - shuffles characters. Be careful with this filter, it can be heavy on the CPU!
+        //      * 'character shuffle' - shuffles characters. Be careful with this filter, it can be heavy on the CPU!
         //
         "name": "horizontal distort",
 

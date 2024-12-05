@@ -99,8 +99,15 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
         if (data.contains("global_config"))
         {
             json globalData = data["global_config"];
-            globalConfig.SleeptimeMS = globalData["sleeptime_ms"];
-            globalConfig.LoggerVerbosity = globalData["logger_verbosity"];
+
+            if (globalData.contains("sleeptime_ms"))
+                globalConfig.SleeptimeMS = globalData["sleeptime_ms"];
+
+            if (globalData.contains("logger_verbosity"))
+                globalConfig.LoggerVerbosity = globalData["logger_verbosity"];
+
+            if (globalData.contains("default_ascii_path"))
+                globalConfig.DefaultAsciiPath = globalData["default_ascii_path"];
         }
         else
         {

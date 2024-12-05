@@ -33,8 +33,10 @@ string FileLoader::ExpandPath(const string& path)
     }
 }
 
-vector<string> FileLoader::GetLines(const string &path)
+vector<string> FileLoader::GetLines(string &path)
 {
+    path = ExpandPath(path);
+
     vector<string> lines;
     ifstream file(path);
 

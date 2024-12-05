@@ -104,7 +104,23 @@ int main(int argc, char *argv[])
         Logger::PrintLog("Using default config.");
     }
 
-    const vector<string> lines = FileLoader::GetLines(args.AsciiPath);
+    string asciiPath;
+    if (args.AsciiPathSpecified)
+    {
+        asciiPath = args.AsciiPath; 
+    }
+    else if (globalConfig.DefaultAsciiPath != "///notspecified///")
+    {
+        asciiPath = globalConfig.DefaultAsciiPath;
+    }
+    else
+    {
+        Logger::PrintErr("Ascii file path was not specified!");
+        Logger::ReleaseLogBuffer();
+        return 1;
+    }
+
+    const vector<string> lines = FileLoader::GetLines(asciiPath);
     if (lines.size() == 0)
     {
         Logger::PrintDebug("Nothing to display. Quitting...");
@@ -143,7 +159,7 @@ int main(int argc, char *argv[])
         refresh();
         usleep(1000 * sleeptimeMS);
     }
-   
+
     Printer::Stop();
     Logger::ReleaseLogBuffer();
     return 0;
