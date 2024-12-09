@@ -4,6 +4,7 @@ Simple cli glitch effect running on ncurses.
 
 ## Dependencies
 The following dependencies are required to build and run the program:
+
     * make
     * g++
     * ncurses
