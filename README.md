@@ -31,7 +31,7 @@ make install
 
 
 After installation, copy the configuration file from the repository to `~/.config/glitch-effect/`.
-This step is not required, but recommended as glitch falls back to the default, built-in configuration if needed.
+This step is not required, but recommended as the program falls back to the default, built-in configuration if needed.
 
 
 Run `copy-config.sh` to automatically copy the config files to the target directory.
