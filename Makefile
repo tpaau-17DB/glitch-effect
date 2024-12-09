@@ -47,4 +47,3 @@ uninstall:
 	sudo rm -f $(TARGET_DIR)/$(TARGET)
 
 .PHONY: all clean install uninstall pre-build build
-

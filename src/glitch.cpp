@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
         }
 
         // print the distorted image
-        Printer::Print(buffer, false);
+        Printer::Print(buffer, true);
         buffer.ResetDistorted();
        
 	ch = getch();
