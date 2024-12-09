@@ -47,7 +47,7 @@ glitch -h
 ```
 
 Even though the program does not require a config file, it still needs a text file to display.
-Such files are provided in the repository in the `ascii/` directory.
+Such files are provided in the repository in the `ascii` directory.
 
 
 If you encounter any issues, you can pass `-v 0` to make sure that all logs are displayed for more debugging info.
