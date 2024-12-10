@@ -10,7 +10,7 @@
 
         // Sets the verbosity of logger
         // This setting is overridden if you use the '-v' flag.
-        "logger_verbosity": 0,
+        "logger_verbosity": 1,
 
         // enable chromatic aberration
         // This effect can have some impact on the CPU
