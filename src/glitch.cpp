@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
    
     // initialize printer and buffer
     Printer::Init(sleeptimeMS, args.OffsetX, args.OffsetY);
-    Printer::SetColors(Printer::Color(args.ForegroundColor), Printer::Color(args.BackgroundColor));
+    Printer::SetDefaultColors(Printer::Color(args.ForegroundColor), Printer::Color(args.BackgroundColor));
     AsciiBuffer buffer = AsciiBuffer(lines);
  
     int exitCode;
@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
         }
 
         // print the distorted image
-        Printer::Print(buffer, true);
+        Printer::Print(buffer, args.UseChromaticAberration);
         buffer.ResetDistorted();
        
 	ch = getch();

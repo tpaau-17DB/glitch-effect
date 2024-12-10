@@ -18,6 +18,7 @@ void PrintUsage()
     cout<<"  -v <int>: Set log verbosity\n";
     cout<<"  --foreground <color>: Set foreground color\n";
     cout<<"  --background <color>: Set background color\n";
+    cout<<"  --chromatic-aberration: Use chromatic aberration\n";
     cout<<"  --nocolor: enables nocolor option in Logger\n";
 }
 
@@ -30,7 +31,8 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
         {"help", no_argument, nullptr, '1'},
         {"foreground", required_argument, nullptr, '2'},
         {"background", required_argument, nullptr, '3'},
-        {"nocolor", no_argument, nullptr, '4'},
+        {"chromatic-aberration", no_argument, nullptr, '4'},
+        {"nocolor", no_argument, nullptr, '5'},
         {0, 0, 0, 0}
 
     };
@@ -93,7 +95,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 PrintUsage();
                 return args;
 
-            case '2':
+            case '2': // --foreground
                 if (optarg)
                 {
                     int val = Utils::StrToColorID(optarg);
@@ -109,7 +111,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 }
                 break;
 
-            case '3':
+            case '3':  // --background
                 if (optarg)
                 {
                     int val = Utils::StrToColorID(optarg);
@@ -142,7 +144,12 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 }
                 break;
 
-            case '4':
+            case '4': // --chromatic-aberration
+                args.UseChromaticAberration = true;
+                Logger::PrintDebug("Chromatic aberration enabled.");
+                break;
+
+            case '5': // --nocolor
                 Logger::SetNoColor(true);
                 Logger::PrintDebug("Disabled color in Logger.");
                 break;

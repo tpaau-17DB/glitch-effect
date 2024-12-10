@@ -9,7 +9,10 @@
 struct argstruct
 {
     std::string ConfigPath = "";
+    bool ConfigSpecified = false;
+
     std::string AsciiPath;
+    bool AsciiPathSpecified = false;
 
     int OffsetX;
     int OffsetY;
@@ -17,11 +20,12 @@ struct argstruct
     int ForegroundColor = Printer::NONE;
     int BackgroundColor = Printer::NONE;
 
-    bool ExitRequested = false;
-    bool AsciiPathSpecified = false;
-    bool ConfigSpecified = false;
-    bool HelpRequested = false;
     bool VerbositySet = false;
+
+    bool UseChromaticAberration = false;
+
+    bool HelpRequested = false;
+    bool ExitRequested = false;
 };
 
 class ArgInterpreter

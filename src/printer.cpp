@@ -17,6 +17,9 @@ int Printer::sleeptimeMS = 40;
 int Printer::offsetX = 0;
 int Printer::offsetY = 0;
 
+Printer::Color Printer::fgColor = Printer::NONE;
+Printer::Color Printer::bgColor = Printer::NONE;
+
 bool Printer::autocenter = true;
 
 void Printer::Init(const int sleeptimeMS, const int offsetX, const int offsetY)
@@ -33,6 +36,7 @@ void Printer::Init(const int sleeptimeMS, const int offsetX, const int offsetY)
     noecho();
     nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
+
     start_color();
     use_default_colors();
     curs_set(0);
@@ -52,15 +56,17 @@ void Printer::Stop()
 }
 
 // SETTERS
-void Printer::SetColors(const Printer::Color fg, const Printer::Color bg)
+void Printer::SetDefaultColors(const Printer::Color fg, const Printer::Color bg)
 {
-    init_pair(1, fg, bg);
+    fgColor = fg;
+    bgColor = bg;
 }
 
 
 // PRINTING FUNCTIONS
 void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
 {
+    init_pair(1, fgColor, bgColor);
     int maxX, maxY;
     vector<string>* lines = buffer.GetDistortedLinesPtr();
 
@@ -106,8 +112,9 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
     }
     else
     {
-        init_pair(2, COLOR_RED, NONE);
-        init_pair(3, COLOR_BLUE, NONE);
+        init_pair(2, COLOR_RED, bgColor);
+        init_pair(3, COLOR_BLUE, bgColor);
+
         int size;
         int pair;
         bool passed;

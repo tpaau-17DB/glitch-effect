@@ -27,7 +27,7 @@ class Printer
         static void Stop();
 
         // SETTERS
-        static void SetColors(const Color fg, const Color bg);
+        static void SetDefaultColors(const Color fg, const Color bg);
 
         // PRINTING
         static void Print(AsciiBuffer &buffer, const bool chromaticAberration);
@@ -38,6 +38,9 @@ class Printer
         static int sleeptimeMS;
         static int offsetX;
         static int offsetY;
+
+        static Color fgColor;
+        static Color bgColor;
 
         static bool autocenter;
 };
