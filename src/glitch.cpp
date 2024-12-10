@@ -32,7 +32,6 @@ void handleSignal(int signal)
 int main(int argc, char *argv[])
 {
     signal(SIGINT, handleSignal);
-    Logger::SetUseLogAccumulation(true);
     srand(time(nullptr));
 
     int sleeptimeMS = 40;

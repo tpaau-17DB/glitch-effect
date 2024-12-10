@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <fstream>
 
 #include "Logger.h"
 
@@ -21,48 +22,51 @@ const string Logger::RESET = "\033[0m";
 
 // Init
 vector<Logger::BufferedLog> Logger::logBuffer = vector<Logger::BufferedLog>();
+unsigned int Logger::maxLogBufferSize = 100;
 
 string Logger::dateTimeFormat = "%H:%M:%S";
+bool Logger::dateTimeEnabled = false;
+
+string Logger::logFilePath = "";
+bool Logger::fileLoggingEnabled;
 
 Logger::LogLevel Logger::logLevel = Logger::Standard;
-
 bool Logger::overrideFiltering = false;
+
 bool Logger::ncursesMode = false;
+
 bool Logger::nocolor = false;
-bool Logger::dateTimeEnabled = false;
-bool Logger::useLogAccumulation = false;
 
 
 // Setters
-void Logger::SetVerbosity(const Logger::LogLevel logLevel) 
+void Logger::SetVerbosity(const LogLevel verbosity) 
 {
-    Logger::logLevel = logLevel;
+    logLevel = verbosity;
 }
 
 void Logger::SetVerbosity(const int verbosity)
 {
-    bool cond = verbosity >= 0 && verbosity <= 3;
-    if (!cond)
+    if (!(verbosity >= 0 && verbosity <= 3))
     {
-        Logger::PrintErr("Verbosity value must be between 0 and 3!");
+        PrintErr("Verbosity value must be between 0 and 3!");
         return;
     }
-    Logger::logLevel = Logger::LogLevel(verbosity);
+    logLevel = LogLevel(verbosity);
 }
 
-void Logger::SetOverrideFiltering(const bool overrideFiltering)
+void Logger::SetOverrideFiltering(const bool enabled)
 {
-    Logger::overrideFiltering = overrideFiltering;
+    overrideFiltering = enabled;
 }
 
-void Logger::SetNCursesMode(const bool mode)
+void Logger::SetNCursesMode(const bool enabled)
 {
-    Logger::ncursesMode = mode;
+    ncursesMode = enabled;
 }
 
-void Logger::SetNoColor(const bool nocolor)
+void Logger::SetNoColor(const bool enabled)
 {
-    Logger::nocolor = nocolor;
+    nocolor = enabled;
 }
 
 void Logger::SetShowDatetime(const bool enabled)
@@ -75,110 +79,121 @@ void Logger::SetDatetimeFormat(const string format)
     if (isValidDatetimeFormat(format))
         dateTimeFormat = format;
     else
-        Logger::PrintErr("Invalid datetime format specified: '" + format + "'.");
+        PrintErr("Invalid datetime format specified: '" + format + "'.");
 }
 
-void Logger::SetUseLogAccumulation(const bool useLogAccumulation)
+void Logger::SetLogFilePath(const string& path)
 {
-    Logger::useLogAccumulation = useLogAccumulation;
+    if (overwriteFile(path, "[OUTPUT START]\n") == 0)
+    {
+        logFilePath = path;
+    }
+    else
+    {
+        PrintErr("File path cannot be set. Error opening file.");
+    }
+}
+
+void Logger::ToggleFileLogging(const bool enabled)
+{
+    fileLoggingEnabled = enabled;
 }
 
 
 // Getters
 Logger::LogLevel Logger::GetVerbosity()
 {
-    return Logger::logLevel;
+    return logLevel;
 }
-
-bool Logger::GetLogBufferingEnabled()
-{
-    return useLogAccumulation;
-}
-
 
 // Log methods
 void Logger::PrintDebug(const string& message)
 {
-    Logger::print(message, 0, false);
+    print(message, 0, false);
 }
 
 void Logger::PrintDebug(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 0, overrideFiltering);
+    print(message, 0, overrideFiltering);
 }
 
 void Logger::PrintLog(const string& message)
 {
-    Logger::print(message, 1, false);
+    print(message, 1, false);
 }
 
 void Logger::PrintLog(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 1, overrideFiltering);
+    print(message, 1, overrideFiltering);
 }
 
 void Logger::PrintWarn(const string& message)
 {
-    Logger::print(message, 2, false);
+    print(message, 2, false);
 }
 
 void Logger::PrintWarn(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 2, overrideFiltering);
+    print(message, 2, overrideFiltering);
 }
 
 void Logger::PrintErr(const string& message)
 {
-    Logger::print(message, 3, false);
+    print(message, 3, false);
 }
 
 void Logger::PrintErr(const string& message, const bool overrideFiltering)
 {
-    Logger::print(message, 3, overrideFiltering);
+    print(message, 3, overrideFiltering);
 }
 
 // Other public methods
-void Logger::ClearLogBufer()
-{
-    logBuffer = vector<Logger::BufferedLog>();
 
-    Logger::BufferedLog bufferedLog;
-
-    bufferedLog.Message = "CLEARED BUFFER";
-    bufferedLog.LogLevel = 0;
-    bufferedLog.OverrideFiltering = true;
-
-    logBuffer.push_back(bufferedLog);
-}
 
 void Logger::ReleaseLogBuffer()
 {
     if (logBuffer.size() == 0)
         return;
 
-    ostringstream stream;
-
+    ostringstream logs;
     if (ncursesMode) endwin();
 
-    if (dateTimeEnabled)
+    for (const BufferedLog& log : logBuffer)
     {
-        for (const Logger::BufferedLog& log : logBuffer)
+        if (logLevel > log.LogLevel && !overrideFiltering && !log.OverrideFiltering) continue;
+        if (log.IsRaw)
         {
-            if (logLevel > log.LogLevel && !Logger::overrideFiltering && !log.OverrideFiltering) continue;
-            stream<<getHeader(log.LogLevel)<<getDatetimeHeader(log.Date)<<log.Message<<"\n";
+            logs<<log.Message<<"\n";
         }
-    }
-    else
-    {
-        for (const Logger::BufferedLog& log : logBuffer)
+        else
         {
-            if (logLevel > log.LogLevel && !Logger::overrideFiltering && !log.OverrideFiltering) continue;
-            stream<<getHeader(log.LogLevel)<<log.Message<<"\n";
+            if (dateTimeEnabled)
+                logs<<getHeader(log.LogLevel)<<getDatetimeHeader(log.Date)<<log.Message<<"\n";
+            else
+                logs<<getHeader(log.LogLevel)<<log.Message<<"\n";
         }
     }
 
-    printf("%s", stream.str().c_str());
-    fflush(stdout);
+    cout<<logs.str();
+    if (fileLoggingEnabled)
+    {
+        appendToFile(logFilePath, logs.str());
+    }
+
+    clearLogBufer();
+}
+
+void Logger::WriteToBuffer(const string& str)
+{
+    BufferedLog log;
+    log.Message = str;
+    log.IsRaw = true;
+    logBuffer.push_back(log);
+}
+
+void Logger::WriteLogToBuffer(const BufferedLog& log)
+{
+    logBuffer.push_back(log);
 }
 
 
@@ -215,48 +230,31 @@ string Logger::getHeader(const int id)
 }
 
 void Logger::print(const string &message, const int prior, const bool overrideFiltering)
-{   
-    if (useLogAccumulation)
-    {
-        Logger::BufferedLog bufferedLog;
-        bufferedLog.Message = message;
-        bufferedLog.LogLevel = prior;
-        bufferedLog.Date = time(0);
+{
+    BufferedLog bufferedLog;
+    bufferedLog.Message = message;
+    bufferedLog.LogLevel = prior;
+    bufferedLog.Date = time(0);
+    logBuffer.push_back(bufferedLog);
 
-        logBuffer.push_back(bufferedLog);
-    }
-    else
+    if (logBuffer.size() >= maxLogBufferSize)
     {
-        if (prior < logLevel && !overrideFiltering && !Logger::overrideFiltering) return;
-        string header = getHeader(prior);
-        if (ncursesMode)
-        {
-            endwin();
-
-            if (dateTimeEnabled)
-            {
-                string dateHeader = getDatetimeHeader(time(0));
-                printf("%s\n", (header + dateHeader + message).c_str());
-            }
-            else
-            {
-                printf("%s\n", (header + message).c_str());
-            }
-            fflush(stdout);
-        }
-        else
-        {
-            if (dateTimeEnabled)
-            {
-                string dateHeader = getDatetimeHeader(time(0));
-                cout<<header<<dateHeader<<message<<endl;
-            }
-            else
-            {
-                cout<<header<<message<<endl;
-            }
-        }
+        ReleaseLogBuffer();
     }
+}
+
+void Logger::clearLogBufer()
+{
+    logBuffer = vector<Logger::BufferedLog>();
+
+    BufferedLog bufferedLog;
+
+    bufferedLog.Message = "[BUFFER CLEARED]";
+    bufferedLog.LogLevel = 0;
+    bufferedLog.OverrideFiltering = true;
+    bufferedLog.Date = time(0);
+
+    logBuffer.push_back(bufferedLog);
 }
 
 string Logger::getDatetimeHeader(time_t t)
@@ -325,7 +323,56 @@ string Logger::logLevelToColor(const unsigned short logLevel)
             return RED;
 
         default:
-            Logger::PrintErr("Unknown logLevel value!");
+            PrintErr("Unknown logLevel value!");
             return "";
+    }
+}
+
+int Logger::overwriteFile(const string& filePath, const string& contents)
+{
+    return writeToFile(filePath, contents, true);
+}
+
+int Logger::appendToFile(const string& filePath, const string& contents)
+{
+    return writeToFile(filePath, contents, false);
+}
+
+int Logger::writeToFile(const string& filePath, const string& contents, const bool overwrite)
+{
+    string expandedPath = expandPath(filePath);
+    ofstream outputFile;
+
+    if (overwrite)
+       outputFile.open(expandedPath);
+    else
+        outputFile.open(expandedPath, ios::app);
+
+    if(!outputFile)
+    {
+        PrintErr("Unable to open file '" + filePath + "' for writing!");
+        ToggleFileLogging(false);
+        return 1;
+    }
+
+    outputFile<<contents;
+    outputFile.flush();
+    outputFile.close();
+
+    return 0;
+}
+
+string Logger::expandPath(const string& path)
+{
+    string fullPath = path;
+
+    if (!fullPath.empty() && fullPath[0] == '~') 
+    {
+        string homeDir = getenv("HOME");
+        return homeDir + fullPath.substr(1);
+    } 
+    else 
+    {
+        return fullPath;
     }
 }
