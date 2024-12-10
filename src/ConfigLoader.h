@@ -18,11 +18,11 @@ class ConfigLoader
 
         struct pass
         {
-             PassType Type;
+             PassType Type = Undefined;
              int Strength = 8;
              int Intensity = 30;
 
-             bool RevCol = false;
+             bool ReverseColor = false;
         };
 
         struct GlobalConfig
@@ -34,8 +34,12 @@ class ConfigLoader
             // "///notspecified///" is the default value, that indicates that
             // default ascii path line was not present in the config file.
             std::string DefaultAsciiPath = "///notspecified///";
+
             int SleeptimeMS = 40;
+
             unsigned short LoggerVerbosity = 1;
+
+            bool UseChromaticAberration = false;
         };
 
         static std::vector<ConfigLoader::pass> GetPassesFromJSON(std::string& path);

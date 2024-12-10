@@ -57,7 +57,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
                 pass.Intensity = value["intensity"];
             
             if (value.contains("invert"))
-                pass.RevCol = value["invert"];
+                pass.ReverseColor = value["invert"];
 
             passes.push_back(pass);
         }
@@ -108,6 +108,9 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
 
             if (globalData.contains("default_ascii_path"))
                 globalConfig.DefaultAsciiPath = globalData["default_ascii_path"];
+
+            if (globalData.contains("chromatic_aberration"))
+                globalConfig.UseChromaticAberration = globalData["chromatic_aberration"];
         }
         else
         {
@@ -116,7 +119,7 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
 
         Logger::PrintDebug("Finished loading config.");
     }
-    catch(exception& e)
+    catch(const exception& e)
     {
         Logger::PrintErr("Error occurred while loading a file: '" + path + "': " + e.what());
         return globalConfig;

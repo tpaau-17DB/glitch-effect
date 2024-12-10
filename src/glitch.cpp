@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
     srand(time(nullptr));
 
     int sleeptimeMS = 40;
+    bool useChromaticAberration = false;
 
     // get command line arguments and handle them
     argstruct args = ArgInterpreter::GetArgs(argc, argv);
@@ -50,6 +51,10 @@ int main(int argc, char *argv[])
         Logger::PrintDebug("ArgInterpreter requested exit.");
         Logger::ReleaseLogBuffer();
         return 1;
+    }
+    else
+    {
+        useChromaticAberration = args.UseChromaticAberration;
     }
 
     // obtain the path of the config file
@@ -98,6 +103,10 @@ int main(int argc, char *argv[])
             Logger::SetVerbosity((int)globalConfig.LoggerVerbosity);
         }
         sleeptimeMS = globalConfig.SleeptimeMS;
+        
+        // Set useChromaticAberration only if it was not set previously using cli args.
+        if (!useChromaticAberration)
+            useChromaticAberration = globalConfig.UseChromaticAberration;
     }
     else
     {
@@ -147,7 +156,7 @@ int main(int argc, char *argv[])
         }
 
         // print the distorted image
-        Printer::Print(buffer, args.UseChromaticAberration);
+        Printer::Print(buffer, useChromaticAberration);
         buffer.ResetDistorted();
        
 	ch = getch();

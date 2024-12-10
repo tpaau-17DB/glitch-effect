@@ -10,7 +10,11 @@
 
         // Sets the verbosity of logger
         // This setting is overridden if you use the '-v' flag.
-        "logger_verbosity": 1
+        "logger_verbosity": 0,
+
+        // enable chromatic aberration
+        // This effect can have some impact on the CPU
+        // "chromatic_aberration": true
 
         // Default ascii file path
         // The program will default to this file unless ascii path is specified.
@@ -25,13 +29,14 @@
     */
     "pass1": 
     {
-        // The name of the pass, basically defines how pass will behave
-        //
-        // Possible options are:
-        //      * 'horizontal distort' - distort lines horizontally
-        //      * 'discard' - discards the lines (empty screen)
-        //      * 'character shuffle' - shuffles characters. Be careful with this filter, it can be heavy on the CPU!
-        //
+        /* The name of the pass, basically defines how pass will behave
+        
+           Possible options are:
+              * 'horizontal distort' - distort lines horizontally
+              * 'discard' - discards the lines (empty screen)
+              * 'character shuffle' - shuffles characters. Be careful with this filter, it can be heavy on the CPU!
+        */
+
         "name": "horizontal distort",
 
         // Higher values cause stronger distortion.
