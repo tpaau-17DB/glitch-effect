@@ -107,6 +107,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.ForegroundColor = val;
+                    args.ForegroundColorSet = true;
                     Logger::PrintDebug(string("Foreground color set to: ") + optarg);
                 }
                 break;
@@ -123,6 +124,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     }
 
                     args.BackgroundColor = val;
+                    args.BackgroundColorSet = true;
                     Logger::PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;

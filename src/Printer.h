@@ -28,9 +28,16 @@ class Printer
 
         // SETTERS
         static void SetDefaultColors(const Color fg, const Color bg);
+        static void SetDefaultForegroundColor(const Color color);
+        static void SetDefaultBackgroundColor(const Color color);
 
         // PRINTING
         static void Print(AsciiBuffer &buffer, const bool chromaticAberration);
+
+        // UTILITY
+        static bool IsValidColorID(const int colorID);
+
+        static const std::vector<int> ColorRange;
 
     private:
         static std::string windowTooSmallMessage;

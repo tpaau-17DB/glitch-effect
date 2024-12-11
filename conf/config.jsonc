@@ -10,11 +10,14 @@
 
         // Sets the verbosity of logger
         // This setting is overridden if you use the '-v' flag.
-        "logger_verbosity": 1
+        "logger_verbosity": 1,
 
         // enable chromatic aberration
         // This effect can have some impact on the CPU
         // "chromatic_aberration": true
+
+        "foreground_color": "RED",
+        "background_color": "BLUE"
 
         // Default ascii file path
         // The program will default to this file unless ascii path is specified.

@@ -18,14 +18,14 @@ AsciiBuffer::AsciiBuffer()
 {
     lines = vector<string>();
     distortedLines = vector<string>();
-    Logger::PrintDebug("AsciiBuffer: Instance created.");
+    Logger::PrintDebug("Created AsciiBuffer instance.");
 }
 
 AsciiBuffer::AsciiBuffer(const vector<string> lines)
 {
     this->lines = lines;
     distortedLines = vector<string>();
-    Logger::PrintDebug("AsciiBuffer: Instance created.");
+    Logger::PrintDebug("Created AsciiBuffer instance.");
 
     int maxLength = getMaxLineLengthFromVector(this->lines);
 
@@ -37,7 +37,7 @@ AsciiBuffer::AsciiBuffer(const vector<string> lines)
 // On destroy
 AsciiBuffer::~AsciiBuffer()
 {
-    Logger::PrintDebug("AsciiBuffer: Instance destroyed.");
+    Logger::PrintDebug("AsciiBuffer instance was destroyed.");
 }
 
 
@@ -235,7 +235,6 @@ void AsciiBuffer::ensureDistortedLinesNotEmpty()
 {
     if (distortedLines.size() == 0)
     {
-        Logger::PrintDebug("AsciiBuffer: Distorted lines buffer is empty. Copying lines to distortedLines.");
         distortedLines = lines;
     }
 }

@@ -11,6 +11,7 @@
 #include "Logger.h"
 #include "ConfigLoader.h"
 #include "Utils.h"
+#include "Printer.h"
 
 using namespace std;
 
@@ -76,6 +77,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
 {
     ConfigLoader::GlobalConfig globalConfig;
+    string tmp;
 
     Logger::PrintDebug("Loading a JSON file '" + path + "'.");
 
@@ -111,6 +113,24 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
 
             if (globalData.contains("chromatic_aberration"))
                 globalConfig.UseChromaticAberration = globalData["chromatic_aberration"];
+
+            if (globalData.contains("foreground_color"))
+            {
+                tmp = globalData["foreground_color"];
+                if (Printer::IsValidColorID(Utils::StrToColorID(tmp)))
+                    globalConfig.foregroundColorName = tmp;
+                else
+                    Logger::PrintErr("Invalid color ID: " + tmp);
+            }
+
+            if (globalData.contains("background_color"))
+            {
+                tmp = globalData["background_color"];
+                if (Printer::IsValidColorID(Utils::StrToColorID(tmp)))
+                    globalConfig.backgroundColorName = tmp;
+                else
+                    Logger::PrintErr("Invalid color ID: " + tmp);
+            }
         }
         else
         {

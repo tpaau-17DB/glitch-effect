@@ -17,6 +17,8 @@ struct argstruct
     int OffsetX;
     int OffsetY;
 
+    bool ForegroundColorSet = false;
+    bool BackgroundColorSet = false;
     int ForegroundColor = Printer::NONE;
     int BackgroundColor = Printer::NONE;
 

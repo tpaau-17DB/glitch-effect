@@ -39,11 +39,14 @@ class ConfigLoader
 
             unsigned short LoggerVerbosity = 1;
 
+            std::string foregroundColorName = "NONE";
+            std::string backgroundColorName = "NONE";
+
             bool UseChromaticAberration = false;
         };
 
-        static std::vector<ConfigLoader::pass> GetPassesFromJSON(std::string& path);
-        static ConfigLoader::GlobalConfig GetGlobalConfig(std::string& path);
+        static std::vector<pass> GetPassesFromJSON(std::string& path);
+        static GlobalConfig GetGlobalConfig(std::string& path);
 };
 
 #endif

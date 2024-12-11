@@ -12,6 +12,7 @@
 #include "AsciiBuffer.h"
 #include "Printer.h"
 #include "ConfigLoader.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
     else
     {
         useChromaticAberration = args.UseChromaticAberration;
+        Printer::SetDefaultColors(Printer::Color(args.ForegroundColor), Printer::Color(args.BackgroundColor));
     }
 
     // obtain the path of the config file
@@ -69,13 +71,13 @@ int main(int argc, char *argv[])
     }
 
     // load the config file
-    ConfigLoader::GlobalConfig globalConfig; 
+    ConfigLoader::GlobalConfig config; 
     vector<ConfigLoader::pass> passes;
     if (confPath != "" && confPath != "none")
     {
        
         passes = ConfigLoader::GetPassesFromJSON(confPath);
-        globalConfig = ConfigLoader::GetGlobalConfig(confPath);
+        config = ConfigLoader::GetGlobalConfig(confPath);
     }
 
     // check if passes were loaded correctly and if not, proceed with default pass 
@@ -95,17 +97,27 @@ int main(int argc, char *argv[])
     }
 
     // apply the config file if loaded correctly
-    if (globalConfig.LoadedCorrectly)
+    if (config.LoadedCorrectly)
     {
         if (!args.VerbositySet)
         {
-            Logger::SetVerbosity((int)globalConfig.LoggerVerbosity);
+            Logger::SetVerbosity((int)config.LoggerVerbosity);
         }
-        sleeptimeMS = globalConfig.SleeptimeMS;
+        sleeptimeMS = config.SleeptimeMS;
         
         // Set useChromaticAberration only if it was not set previously using cli args.
         if (!useChromaticAberration)
-            useChromaticAberration = globalConfig.UseChromaticAberration;
+            useChromaticAberration = config.UseChromaticAberration;
+
+        if (!args.ForegroundColorSet)
+        {
+            Printer::SetDefaultForegroundColor(Printer::Color(Utils::StrToColorID(config.foregroundColorName)));
+        }
+
+        if (!args.BackgroundColorSet)
+        {
+            Printer::SetDefaultBackgroundColor(Printer::Color(Utils::StrToColorID(config.backgroundColorName)));
+        }
     }
     else
     {
@@ -117,10 +129,10 @@ int main(int argc, char *argv[])
     {
         asciiPath = args.AsciiPath; 
     }
-    else if (globalConfig.DefaultAsciiPath != "///notspecified///" && globalConfig.LoadedCorrectly)
+    else if (config.DefaultAsciiPath != "///notspecified///" && config.LoadedCorrectly)
     {
         Logger::PrintDebug("Using ascii file path specified in '" + confPath + "'.");
-        asciiPath = globalConfig.DefaultAsciiPath;
+        asciiPath = config.DefaultAsciiPath;
     }
     else
     {
@@ -139,7 +151,6 @@ int main(int argc, char *argv[])
    
     // initialize printer and buffer
     Printer::Init(sleeptimeMS, args.OffsetX, args.OffsetY);
-    Printer::SetDefaultColors(Printer::Color(args.ForegroundColor), Printer::Color(args.BackgroundColor));
     AsciiBuffer buffer = AsciiBuffer(lines);
  
     int exitCode;

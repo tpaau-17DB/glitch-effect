@@ -20,6 +20,8 @@ int Printer::offsetY = 0;
 Printer::Color Printer::fgColor = Printer::NONE;
 Printer::Color Printer::bgColor = Printer::NONE;
 
+const vector<int> Printer::ColorRange = {-1, 7}; 
+
 bool Printer::autocenter = true;
 
 void Printer::Init(const int sleeptimeMS, const int offsetX, const int offsetY)
@@ -62,6 +64,24 @@ void Printer::SetDefaultColors(const Printer::Color fg, const Printer::Color bg)
     bgColor = bg;
 }
 
+void Printer::SetDefaultForegroundColor(const Color color)
+{
+    fgColor = color;
+}
+
+void Printer::SetDefaultBackgroundColor(const Color color)
+{
+    bgColor = color;
+}
+
+
+// UTILITY
+bool Printer::IsValidColorID(const int colorID)
+{
+    if (colorID >= ColorRange[0] && colorID <= ColorRange[1])
+        return true;
+    return false;
+}
 
 // PRINTING FUNCTIONS
 void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
