@@ -20,23 +20,12 @@ void PrintUsage()
     cout<<"  --background <color>: Set background color\n";
     cout<<"  --chromatic-aberration: Use chromatic aberration\n";
     cout<<"  --nocolor: enables nocolor option in Logger\n";
+    cout<<"  --list-colors: lists possible colors\n";
 }
-
-/*void PrintPossibleColors()*/
-/*{*/
-/*    cout<<"Possible colors:\n";*/
-/*    cout<<"  * black\n";*/
-/*    cout<<"  * red\n";*/
-/*    cout<<"  * green\n";*/
-/*    cout<<"  * yellow\n";*/
-/*    cout<<"  * blue\n";*/
-/*    cout<<"  * magenta\n";*/
-/*    cout<<"  * cyan\n";*/
-/*    cout<<"  * white\n";*/
-/*}*/
 
 void PrintPossibleColors()
 {
+
     cout << "Possible colors:\n";
     cout << "  * \033[30mblack\033[0m\n";
     cout << "  * \033[31mred\033[0m\n";
@@ -46,6 +35,7 @@ void PrintPossibleColors()
     cout << "  * \033[35mmagenta\033[0m\n";
     cout << "  * \033[36mcyan\033[0m\n";
     cout << "  * \033[37mwhite\033[0m\n";
+
 }
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
@@ -59,6 +49,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
         {"background", required_argument, nullptr, '3'},
         {"chromatic-aberration", no_argument, nullptr, '4'},
         {"nocolor", no_argument, nullptr, '5'},
+        {"list-colors", no_argument, nullptr, '6'},
         {0, 0, 0, 0}
 
     };
@@ -184,6 +175,11 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case '5': // --nocolor
                 Logger::SetNoColor(true);
                 Logger::PrintDebug("Disabled color in Logger.");
+                break;
+
+            case '6':
+                PrintPossibleColors();
+                args.ExitRequested = true;
                 break;
         }
     }
