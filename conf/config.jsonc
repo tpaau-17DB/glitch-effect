@@ -16,7 +16,12 @@
         // This effect can have some impact on the CPU
         // "chromatic_aberration": true
 
+
+        // You can list
+        // color of the text
         "foreground_color": "RED",
+
+        // color of the background
         "background_color": "BLUE"
 
         // Default ascii file path

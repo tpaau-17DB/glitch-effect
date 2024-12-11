@@ -22,6 +22,32 @@ void PrintUsage()
     cout<<"  --nocolor: enables nocolor option in Logger\n";
 }
 
+/*void PrintPossibleColors()*/
+/*{*/
+/*    cout<<"Possible colors:\n";*/
+/*    cout<<"  * black\n";*/
+/*    cout<<"  * red\n";*/
+/*    cout<<"  * green\n";*/
+/*    cout<<"  * yellow\n";*/
+/*    cout<<"  * blue\n";*/
+/*    cout<<"  * magenta\n";*/
+/*    cout<<"  * cyan\n";*/
+/*    cout<<"  * white\n";*/
+/*}*/
+
+void PrintPossibleColors()
+{
+    cout << "Possible colors:\n";
+    cout << "  * \033[30mblack\033[0m\n";
+    cout << "  * \033[31mred\033[0m\n";
+    cout << "  * \033[32mgreen\033[0m\n";
+    cout << "  * \033[33myellow\033[0m\n";
+    cout << "  * \033[34mblue\033[0m\n";
+    cout << "  * \033[35mmagenta\033[0m\n";
+    cout << "  * \033[36mcyan\033[0m\n";
+    cout << "  * \033[37mwhite\033[0m\n";
+}
+
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 {
     argstruct args = argstruct();
@@ -103,6 +129,8 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     if (val == -2)
                     {
                         args.ExitRequested = true;
+                        cout<<"Invalid color value!\n";
+                        PrintPossibleColors();
                         return args;
                     }
 
@@ -120,6 +148,8 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     if (val == -2)
                     {
                         args.ExitRequested = true;
+                        cout<<"Invalid color value!\n";
+                        PrintPossibleColors();
                         return args;
                     }
 
