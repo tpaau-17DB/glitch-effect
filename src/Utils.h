@@ -18,9 +18,6 @@ class Utils
         static unsigned short GetRandomShort(const unsigned short min, const unsigned short max);
         static ConfigLoader::PassType GetPassTypeFromName(const std::string& name);
         static std::string RemoveComments(const std::string& str);
-
-    private:
-        static std::random_device rd;
 };
 
 #endif

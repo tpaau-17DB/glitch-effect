@@ -34,17 +34,6 @@ class AsciiBuffer
 
         // Other
         int ApplyPasses(std::vector<ConfigLoader::pass> passes);
-
-    private:
-        int maxDistortedLineLength;
-        int maxLineLength;
-
-        std::vector<std::string> lines;
-        std::vector<std::string> distortedLines;
-        static const std::string ESCAPE;
-
-        void ensureDistortedLinesNotEmpty();
-        int getMaxLineLengthFromVector(std::vector<std::string>& lines);
 };
 
 #endif

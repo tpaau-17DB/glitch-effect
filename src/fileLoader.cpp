@@ -9,7 +9,7 @@
 using namespace std;
 using namespace filesystem;
 
-const string FileLoader::configPaths[] = 
+const string configPaths[] = 
 {
     "~/.config/glitch-effect/config",
     "~/.config/glitch-effect/config.jsonc",
@@ -64,7 +64,7 @@ vector<string> FileLoader::GetLines(string &path)
 
 bool FileLoader::CheckIfFileExists(const string &path)
 {
-    string fullPath = FileLoader::ExpandPath(path); 
+    string fullPath = ExpandPath(path); 
     return filesystem::exists(fullPath);
 }
 
@@ -72,7 +72,7 @@ string FileLoader::LookForConfigFiles()
 {
     Logger::PrintDebug("Looking for config files in common directories.");
 
-    for (const string &path : FileLoader::configPaths)
+    for (const string &path : configPaths)
     {
         if (CheckIfFileExists(path))
         {

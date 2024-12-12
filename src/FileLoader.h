@@ -13,15 +13,6 @@ class FileLoader
         static bool CheckIfFileExists(const std::string &path);
         static std::string LookForConfigFiles();
         static std::string ExpandPath(const std::string &path);
-
-    private:
-        /*
-         * Paths where the config file could be stored
-         * The first entry has the most importance and will be checked first
-         * The lats entry has the least importance and will be checked last
-        */
-        static const std::string configPaths[];
-        
 };
 
 #endif

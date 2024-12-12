@@ -38,18 +38,6 @@ class Printer
         static bool IsValidColorID(const int colorID);
 
         static const std::vector<int> ColorRange;
-
-    private:
-        static std::string windowTooSmallMessage;
-
-        static int sleeptimeMS;
-        static int offsetX;
-        static int offsetY;
-
-        static Color fgColor;
-        static Color bgColor;
-
-        static bool autocenter;
 };
 
 #endif

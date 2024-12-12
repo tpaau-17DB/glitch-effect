@@ -10,7 +10,7 @@
 
 using namespace std;
 
-random_device Utils::rd;
+random_device rd;
 
 int Utils::StrToInt(const string& str)
 {

@@ -11,24 +11,24 @@
 using namespace std;
 
 
-string Printer::windowTooSmallMessage = "It's a little bit claustrophobic in here...";
+string windowTooSmallMessage = "It's a little bit claustrophobic in here...";
 
-int Printer::sleeptimeMS = 40;
-int Printer::offsetX = 0;
-int Printer::offsetY = 0;
+int sleeptimeMS = 40;
+int offsetX = 0;
+int offsetY = 0;
 
-Printer::Color Printer::fgColor = Printer::NONE;
-Printer::Color Printer::bgColor = Printer::NONE;
+Printer::Color fgColor = Printer::NONE;
+Printer::Color bgColor = Printer::NONE;
 
 const vector<int> Printer::ColorRange = {-1, 7}; 
 
-bool Printer::autocenter = true;
+bool autocenter = true;
 
-void Printer::Init(const int sleeptimeMS, const int offsetX, const int offsetY)
+void Printer::Init(const int setSleeptimeMS, const int setOffsetX, const int setOffsetY)
 {
-    Printer::sleeptimeMS = sleeptimeMS;
-    Printer::offsetX = offsetX;
-    Printer::offsetY = offsetY;
+    sleeptimeMS = setSleeptimeMS;
+    offsetX = setOffsetX;
+    offsetY = setOffsetY;
     
     autocenter = (offsetX == 0 && offsetY == 0);
 
