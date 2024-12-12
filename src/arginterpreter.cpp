@@ -21,6 +21,10 @@ void PrintUsage()
     cout<<"  --chromatic-aberration: Use chromatic aberration\n";
     cout<<"  --nocolor: enables nocolor option in Logger\n";
     cout<<"  --list-colors: lists possible colors\n";
+    cout<<"\n";
+    cout<<"Runtime options:\n";
+    cout<<"  p: pause the program\n";
+    cout<<"  q: quit the program\n";
 }
 
 void PrintPossibleColors()
