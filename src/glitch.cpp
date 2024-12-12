@@ -20,6 +20,8 @@ using namespace std;
 // when this variable is `true`, the program should exit immediately
 bool exitRequested = false;
 
+
+
 void handleSignal(int signal) 
 {
     if (signal == SIGINT) 
@@ -152,14 +154,40 @@ int main(int argc, char *argv[])
     // initialize printer and buffer
     Printer::Init(sleeptimeMS, args.OffsetX, args.OffsetY);
     AsciiBuffer buffer = AsciiBuffer(lines);
- 
-    int exitCode;
+
+    bool isPaused = false;
+    // last key pressed in the loop
+    char lastKey;
     int ch;
     while (!exitRequested)
     {
+        ch = getch();
+        switch (ch)
+        {
+            case 'q':
+                Printer::Stop();
+                Logger::ReleaseLogBuffer();
+                return 0;
+
+            case 'p':
+                if (lastKey != 'p')
+                    isPaused = !isPaused;
+                lastKey = 'p';
+                break;
+
+            default:
+                lastKey = '\0';
+                break;
+        }
+
+        if (isPaused)
+        {
+            usleep(100000);
+            continue;
+        }
+
         // apply the passes and check if there were any errors
-        exitCode = buffer.ApplyPasses(passes);
-        if (exitCode != 0)
+        if (buffer.ApplyPasses(passes) != 0)
         {
             Logger::PrintErr("Errors occurred while applying passes. See errors above.");
             break;
@@ -168,13 +196,6 @@ int main(int argc, char *argv[])
         // print the distorted image
         Printer::Print(buffer, useChromaticAberration);
         buffer.ResetDistorted();
-       
-	ch = getch();
-	if (ch == 'q')
-        {
-            Logger::PrintDebug("Exit requested by user.");
-            break;
-        }
 
         refresh();
         usleep(1000 * sleeptimeMS);
