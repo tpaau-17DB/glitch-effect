@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 
         if (isPaused)
         {
-            usleep(100000);
+            usleep(1000);
             continue;
         }
 
