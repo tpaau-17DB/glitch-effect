@@ -126,8 +126,19 @@ int main(int argc, char *argv[])
         Logger::PrintLog("Using default config.");
     }
 
+    bool inputPiped;
     string asciiPath;
-    if (args.AsciiPathSpecified)
+    vector<string> lines;
+    if (!isatty(STDIN_FILENO))
+    {
+        string line;
+        while (getline(cin, line)) 
+        {
+            lines.push_back(line);
+        }
+        inputPiped = true;
+    }
+    else if (args.AsciiPathSpecified)
     {
         asciiPath = args.AsciiPath; 
     }
@@ -138,15 +149,17 @@ int main(int argc, char *argv[])
     }
     else
     {
-        Logger::PrintErr("Ascii file path was not specified!");
+        Logger::PrintErr("No input to display.");
         Logger::ReleaseLogBuffer();
         return 1;
     }
 
-    const vector<string> lines = FileLoader::GetLines(asciiPath);
+    if (!inputPiped)
+        lines = FileLoader::GetLines(asciiPath);
+
     if (lines.size() == 0)
     {
-        Logger::PrintDebug("Nothing to display. Quitting...");
+        Logger::PrintDebug("Vector empty, nothing to display.");
         Logger::ReleaseLogBuffer();
         return 1;
     }
@@ -159,9 +172,12 @@ int main(int argc, char *argv[])
     // last key pressed in the loop
     char lastKey;
     int ch;
+    string line;
     while (!exitRequested)
     {
-        ch = getch();
+        if (!inputPiped)
+            ch = getch();
+
         switch (ch)
         {
             case 'q':
