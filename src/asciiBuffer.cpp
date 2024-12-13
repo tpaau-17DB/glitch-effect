@@ -170,16 +170,16 @@ void AsciiBuffer::ShuffleCharacters(const int intensity)
     ensureDistortedLinesNotEmpty();
 
     int dst;
-    unsigned short length;
+    int length;
     for (string &str : distortedLines)
     {
-        length = (unsigned short)str.length() - 1;
+        length = str.length() - 1;
         for (int src = 0; src < length; src++)
         {
             if (str[src] == ' ' || Utils::GetRandomPrecalculatedShort() >= intensity) continue;
             dst = (Utils::GetRandomPrecalculatedShort());
 
-            if (dst >= length || str[dst] == ' ') continue;
+            if (dst >= length || dst < 0 || str[dst] == ' ') continue;
 
             char srcC = str[src];
             char dstC = str[dst];
