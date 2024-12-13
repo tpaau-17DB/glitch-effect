@@ -2,6 +2,7 @@
 #include <regex>
 #include <string>
 #include <random>
+#include <vector>
 
 #include "ConfigLoader.h"
 #include "Logger.h"
@@ -11,6 +12,20 @@
 using namespace std;
 
 random_device rd;
+
+bool isPrecalculated;
+unsigned int currentPrecalculated;
+vector<unsigned short> precalculatedShorts;
+
+void precalculateShorts()
+{
+    for (int i = 0; i < 100; i++)
+    {
+        precalculatedShorts.push_back(Utils::GetRandomShort(0, 100));
+    }
+    isPrecalculated = true;
+    Logger::PrintDebug("Random shorts precalculated.");
+}
 
 int Utils::StrToInt(const string& str)
 {
@@ -88,6 +103,18 @@ unsigned short Utils::GetRandomShort(const unsigned short min, const unsigned sh
     mt19937 gen(rd());
     uniform_int_distribution<unsigned short> dist(min, max);
     return dist(gen);
+}
+
+unsigned short Utils::GetRandomPrecalculatedShort()
+{
+    if (!isPrecalculated)
+        precalculateShorts();
+    
+    currentPrecalculated++;
+    if (currentPrecalculated >= precalculatedShorts.size())
+        currentPrecalculated = 0;
+
+    return precalculatedShorts[currentPrecalculated];
 }
 
 ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)

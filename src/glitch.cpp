@@ -46,13 +46,13 @@ int main(int argc, char *argv[])
     {
         Logger::PrintDebug("Help requested by user.");
         Logger::ReleaseLogBuffer();
-        return 0;
+        exit(EXIT_SUCCESS);
     }
     else if (args.ExitRequested)
     {
         Logger::PrintDebug("ArgInterpreter requested exit.");
         Logger::ReleaseLogBuffer();
-        return 1;
+        exit(EXIT_FAILURE);
     }
     else
     {
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     {
         Logger::PrintErr("No input to display.");
         Logger::ReleaseLogBuffer();
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     if (!inputPiped)
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
     {
         Logger::PrintDebug("Vector empty, nothing to display.");
         Logger::ReleaseLogBuffer();
-        return 1;
+        exit(EXIT_FAILURE);
     }
    
     // initialize printer and buffer
@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
             case 'q':
                 Printer::Stop();
                 Logger::ReleaseLogBuffer();
-                return 0;
+                exit(EXIT_SUCCESS);
 
             case 'p':
                 if (lastKey != 'p')
@@ -219,5 +219,5 @@ int main(int argc, char *argv[])
 
     Printer::Stop();
     Logger::ReleaseLogBuffer();
-    return 0;
+    exit(EXIT_SUCCESS);
 }

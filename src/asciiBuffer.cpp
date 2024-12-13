@@ -176,10 +176,10 @@ void AsciiBuffer::ShuffleCharacters(const int intensity)
         length = (unsigned short)str.length() - 1;
         for (int src = 0; src < length; src++)
         {
-            if (str[src] == ' ' || Utils::GetRandomShort(0, 100) >= intensity) continue;
-            dst = Utils::GetRandomShort(0, length);
+            if (str[src] == ' ' || Utils::GetRandomPrecalculatedShort() >= intensity) continue;
+            dst = (Utils::GetRandomPrecalculatedShort());
 
-            if (src == dst || str[dst] == ' ') continue;
+            if (dst >= length || str[dst] == ' ') continue;
 
             char srcC = str[src];
             char dstC = str[dst];
