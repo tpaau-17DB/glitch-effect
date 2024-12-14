@@ -173,13 +173,13 @@ void AsciiBuffer::ShuffleCharacters(const int intensity)
     int length;
     for (string &str : distortedLines)
     {
-        length = str.length() - 1;
+        length = str.length();
         for (int src = 0; src < length; src++)
         {
             if (str[src] == ' ' || Utils::GetRandomPrecalculatedShort() >= intensity) continue;
-            dst = (Utils::GetRandomPrecalculatedShort());
+            dst = (Utils::GetRandomPrecalculatedShort() % length);
 
-            if (dst >= length || dst < 0 || str[dst] == ' ') continue;
+            if (str[dst] == ' ') continue;
 
             char srcC = str[src];
             char dstC = str[dst];
