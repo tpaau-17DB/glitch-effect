@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <vector>
 #include <string>
 #include <cstdlib>
@@ -154,8 +155,32 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    int fd;
     if (!inputPiped)
         lines = FileLoader::GetLines(asciiPath);
+    else
+    {
+        // set stdin to /dev/tty so user can still use keyboard shortcuts,
+        // even when some input was piped (program's stdin was set to the piped
+        // program stdout)
+        fd = open("/dev/tty", O_RDONLY);
+        if (fd == -1) 
+        {
+            Logger::PrintErr("Failed to open /dev/tty, user input might not work as exected!");
+        }
+
+        if (close(0) == -1) 
+        {
+            Logger::PrintErr("Failed to close stdin, user input might not work as expected!");
+            close(fd);
+        }
+
+        if (dup2(fd, 0) == -1) 
+        {
+            Logger::PrintErr("Failed to redirect stdin to /dev/tty, user input might not work as expected!");
+            close(fd);
+        }
+    }
 
     if (lines.size() == 0)
     {
@@ -175,8 +200,7 @@ int main(int argc, char *argv[])
     string line;
     while (!exitRequested)
     {
-        if (!inputPiped)
-            ch = getch();
+        ch = getch();
 
         switch (ch)
         {
@@ -217,6 +241,7 @@ int main(int argc, char *argv[])
         usleep(1000 * sleeptimeMS);
     }
 
+    close(fd);
     Printer::Stop();
     Logger::ReleaseLogBuffer();
     exit(EXIT_SUCCESS);
