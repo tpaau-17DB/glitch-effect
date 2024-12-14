@@ -50,4 +50,11 @@ Even though the program does not require a config file, it still needs a text fi
 Such files are provided in the repository in the `ascii` directory.
 
 
+Alternatively, you can pipe command output to the glitch and display that:
+```
+head -n 4 | base64 | glitch
+```
+Note: this feature is still work in progress and may not work as expected.
+
+
 If you encounter any issues, you can pass `-v 0` to make sure that all logs are displayed for more debugging info.
