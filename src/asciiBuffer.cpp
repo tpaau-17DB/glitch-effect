@@ -18,6 +18,7 @@ vector<string> distortedLines;
 int maxLineLength;
 int maxDistortedLineLength;
 
+
 // Internals
 int getMaxLineLengthFromVector(vector<string>& lines)
 {
@@ -40,6 +41,7 @@ void ensureDistortedLinesNotEmpty()
     }
 }
 
+
 // On create
 AsciiBuffer::AsciiBuffer()
 {
@@ -50,7 +52,7 @@ AsciiBuffer::AsciiBuffer()
 
 AsciiBuffer::AsciiBuffer(const vector<string> newLines)
 {
-    lines = newLines;
+    lines = Utils::RemoveANSICodes(newLines);
     distortedLines = vector<string>();
     Logger::PrintDebug("Created AsciiBuffer instance.");
 
@@ -69,14 +71,9 @@ AsciiBuffer::~AsciiBuffer()
 
 
 // Setters
-void AsciiBuffer::AddLine(const string line)
-{
-    lines.push_back(line);
-}
-
 void AsciiBuffer::OverwriteLines(const vector<string> newLines)
 {
-    lines = newLines;
+    lines = Utils::RemoveANSICodes(newLines);
 
     int maxLength = getMaxLineLengthFromVector(lines);
 

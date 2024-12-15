@@ -3,6 +3,7 @@
 #include <string>
 #include <random>
 #include <vector>
+#include <regex>
 
 #include "ConfigLoader.h"
 #include "Logger.h"
@@ -16,6 +17,8 @@ random_device rd;
 bool isPrecalculated;
 unsigned int currentPrecalculated;
 vector<unsigned short> precalculatedShorts;
+
+regex ANSICodesRegex("\033\\[[0-9;]*[mKHFfLs]?");
 
 void precalculateShorts()
 {
@@ -145,6 +148,19 @@ ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
     }
 
     return type;
+}
+
+vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
+{
+    vector<string> filteredLines = vector<string>();
+
+    for (unsigned int i = 0; i < lines.size(); i++)
+    {
+        string filtered = regex_replace(lines[i], ANSICodesRegex, "");
+        Logger::PrintDebug(filtered);
+        filteredLines.push_back(filtered);
+    }
+    return filteredLines;
 }
 
 string Utils::RemoveComments(const string& str)

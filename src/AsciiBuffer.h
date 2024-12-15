@@ -15,7 +15,6 @@ class AsciiBuffer
 
         // Setters
         void AddLine(const std::string line);
-        void AddLines(const std::vector<std::string> lines);
         void OverwriteLines(const std::vector<std::string> lines);
         void ClearAll();
         void ResetDistorted();
