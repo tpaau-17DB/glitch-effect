@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
         Logger::PrintLog("Using default config.");
     }
 
-    bool inputPiped;
+    bool inputPiped = false;
     string asciiPath;
     vector<string> lines;
     if (!isatty(STDIN_FILENO))
