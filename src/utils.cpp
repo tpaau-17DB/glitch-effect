@@ -157,7 +157,6 @@ vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
     for (unsigned int i = 0; i < lines.size(); i++)
     {
         string filtered = regex_replace(lines[i], ANSICodesRegex, "");
-        Logger::PrintDebug(filtered);
         filteredLines.push_back(filtered);
     }
     return filteredLines;
