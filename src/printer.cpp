@@ -135,6 +135,7 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
         init_pair(2, COLOR_RED, bgColor);
         init_pair(3, COLOR_BLUE, bgColor);
 
+        string buf;
         int size;
         int pair;
         bool passed;
@@ -165,15 +166,21 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
 
                     if (passed)
                     {
+                        move(y + i, x + j - buf.size());
+                        printw("%s", buf.c_str());
+                        buf = "";
                         attron(COLOR_PAIR(pair));
+                    }
+                    else
+                    {
+                        buf += line[j];
                     }
                 }
 
-                move(y + i, x + j);
-                printw("%c", line[j]);
-
                 if (passed)
                 {
+                    move(y + i, x + j);
+                    printw("%c", line[j]);
                     attroff(COLOR_PAIR(pair));
                 }
             }
