@@ -35,6 +35,8 @@ void handleSignal(int signal)
 
 int main(int argc, char *argv[])
 {
+    setlocale(LC_ALL, "en_US.UTF-8");
+
     signal(SIGINT, handleSignal);
     srand(time(nullptr));
 

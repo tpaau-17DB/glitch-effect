@@ -36,8 +36,8 @@ void Printer::Init(const int setSleeptimeMS, const int setOffsetX, const int set
     initscr();
     cbreak();
     noecho();
-    nodelay(stdscr, TRUE);
-    keypad(stdscr, TRUE);
+    nodelay(stdscr, true);
+    keypad(stdscr, true);
 
     start_color();
     use_default_colors();
