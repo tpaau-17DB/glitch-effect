@@ -80,7 +80,6 @@ int main(int argc, char *argv[])
     vector<ConfigLoader::pass> passes;
     if (confPath != "" && confPath != "none")
     {
-       
         passes = ConfigLoader::GetPassesFromJSON(confPath);
         config = ConfigLoader::GetGlobalConfig(confPath);
     }
@@ -170,14 +169,12 @@ int main(int argc, char *argv[])
         {
             Logger::PrintErr("Failed to open /dev/tty, user input might not work as exected!");
         }
-
-        if (close(0) == -1) 
+        else if (close(0) == -1) 
         {
             Logger::PrintErr("Failed to close stdin, user input might not work as expected!");
             close(fd);
-        }
-
-        if (dup2(fd, 0) == -1) 
+        } 
+        else if (dup2(fd, 0) == -1) 
         {
             Logger::PrintErr("Failed to redirect stdin to /dev/tty, user input might not work as expected!");
             close(fd);

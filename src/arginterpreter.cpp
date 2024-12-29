@@ -181,7 +181,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 Logger::PrintDebug("Disabled color in Logger.");
                 break;
 
-            case '6':
+            case '6': // --list-colors
                 PrintPossibleColors();
                 args.ExitRequested = true;
                 break;
