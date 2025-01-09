@@ -1,14 +1,14 @@
 # glitch-effect
 This is a relatively small, fun little project I made mostly by myself.
 
-I started the project because I wanted to learn some C++, and a terminal
+I started the project because I wanted to learn some `C++`, and a terminal
 glitch effect seemed like a way to go.
-Anyway, the project is a CLI app running on ncurses that takes some text
+Anyway, the project is a CLI app running on `ncurses` that takes some text
 as an input, and then displays distorted and animated version of that text.
 
 `glitch` has a highly customizable pipeline that allows configuration with
 json files. You can specify `passes`, that act as distortion layers that
-can be stacked on each other (for examples see `config.jsonc`).
+can be stacked on each other (for examples see `conf/config.jsonc`).
 
 
 ## Dependencies
