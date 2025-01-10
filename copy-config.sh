@@ -12,17 +12,19 @@ copy_files()
 mkdir -p "$target_path"
 
 if [ -d "$target_path" ] && [ "$(ls -A "$target_path")" ]; then
-  read -p "$target_path exists and is not empty. Do you wish to overwrite it? (y/n): " choice
-  case "$choice" in
-    [Yy]* )
-      echo "You chose to overwrite the file."
-      copy_files
-    ;;
-    [Nn]* )
-      echo "${target_path} was not overwritten."
-      exit 0
-  esac
+    read -p "$target_path exists and is not empty.
+Do you wish to overwrite it? [Y/n]: " choice
+    choice="${choice:-Y}"
+    case "$choice" in
+        [Yy]* )
+            echo "You chose to overwrite the file."
+            copy_files
+        ;;
+        [Nn]* )
+            echo "${target_path} was not overwritten."
+            exit 0
+    esac
 else
-  echo "OK: ${target_path} is empty"
-  copy_files
+    echo "OK: ${target_path} is empty"
+    copy_files
 fi
