@@ -103,8 +103,8 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
         clear();
         move(maxY / 2, maxX / 2 - windowTooSmallMessage.length() / 2);
         printw("%s" , windowTooSmallMessage.c_str());
-	refresh();
-	usleep(100000);
+        refresh();
+        usleep(100000);
         return;
     }
 
@@ -112,19 +112,20 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
     attron(COLOR_PAIR(1));
     bkgd(COLOR_PAIR(1));
 
-    int i = 0;
     int x = offsetX;
     int y = offsetY;
+
+    if (autocenter)
+    {
+        x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
+        y = 0.5 * (maxY - lines->size());
+    }
+
     if (!chromaticAberration)
     {
+        int i = 0;
         for (const string &line : *lines)
         {
-            if (autocenter)
-            {
-                x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
-                y = 0.5 * (maxY - lines->size());
-            }
-
             move(y + i, x);
             printw("%s", line.c_str());
             i++;
@@ -139,14 +140,9 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
         int size;
         int pair;
         bool passed;
+        int i = 0;
         for (const string &line : *lines)
         {
-            if (autocenter)
-            {
-                x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
-                y = 0.5 * (maxY - lines->size());
-            }
-
             size = line.size() - 1;
             for (int j = 0; j < size; j++)
             {

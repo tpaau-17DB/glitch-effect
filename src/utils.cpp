@@ -50,33 +50,48 @@ int Utils::StrToColorID(const string& str)
 {
     unsigned long hash = HashString(str);
 
+    Logger::PrintDebug("\n");
+    
+    Logger::PrintDebug("none: " + to_string(HashString("none")));
+    Logger::PrintDebug("black: " + to_string(HashString("black")));
+    Logger::PrintDebug("red: " + to_string(HashString("red")));
+    Logger::PrintDebug("green: " + to_string(HashString("green")));
+    Logger::PrintDebug("yellow: " + to_string(HashString("yellow")));
+    Logger::PrintDebug("blue: " + to_string(HashString("blue")));
+    Logger::PrintDebug("magenta: " + to_string(HashString("magenta")));
+    Logger::PrintDebug("cyan: " + to_string(HashString("cyan")));
+    Logger::PrintDebug("white: " + to_string(HashString("white")));
+
+    Logger::PrintDebug("\n");
+
+
     switch(hash)
     {
-        case 2088914255:
+        case 2087865487:
             return Printer::NONE;
 
-        case 210193794:
+        case 175804258:
             return Printer::BLACK;
 
-        case 193463958:
+        case 193432438:
             return Printer::RED;
 
-        case 209230046:
+        case 172398782:
             return Printer::GREEN;
 
-        case 3455011137:
+        case 2241670145:
             return Printer::YELLOW;
 
-        case 2088778555:
+        case 2087736443:
             return Printer::BLUE;
 
-        case 2448879856:
+        case 1065710736:
             return Printer::MAGENTA;
 
-        case 2088904208:
+        case 2087790096:
             return Printer::CYAN;
 
-        case 22811510:
+        case 191284034:
             return Printer::WHITE;
 
         default:
