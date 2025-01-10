@@ -149,12 +149,17 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
                 passed = false;
                 if (line[j] != ' ')
                 {
-                    if ((j > 0 && line[j - 1] == ' '))
+                    if (j > 0 && line[j - 1] == ' ')
                     {
                         passed = true;
                         pair = 2;
                     }
-                    else if (j < size && line [j + 1] == ' ') 
+                    else if (j < size && line[j + 1] == ' ')
+                    {
+                        passed = true;
+                        pair = 3;
+                    }
+                    else if ((long unsigned int)j == line.length() - 2)
                     {
                         passed = true;
                         pair = 3;
@@ -162,7 +167,7 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
 
                     if (passed)
                     {
-                        move(y + i, x + j - buf.size());
+                        move(y + i, x + j - buf.length());
                         printw("%s", buf.c_str());
                         buf = "";
                         attron(COLOR_PAIR(pair));
