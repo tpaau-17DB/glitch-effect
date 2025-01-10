@@ -1,7 +1,7 @@
 # glitch-effect
 This is a relatively small, fun little project I made mostly by myself.
 
-I started the project because I wanted to learn some `C++`, and a terminal
+I started the project because I wanted to learn some `C++` and a terminal
 glitch effect seemed like a way to go.
 Anyway, the project is a CLI app running on `ncurses` that takes some text
 as an input, and then displays distorted and animated version of that text.
