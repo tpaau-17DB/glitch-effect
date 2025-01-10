@@ -29,8 +29,8 @@ class ConfigLoader
             bool LoadedCorrectly = false;
 
             // VARIABLES
-            // "///notspecified///" is the default value, that indicates that
-            // default ascii path line was not present in the config file.
+            // "///notspecified///" is the default value that indicates that
+            // default ascii path specified in the config file.
             std::string DefaultAsciiPath = "///notspecified///";
 
             int SleeptimeMS = 40;

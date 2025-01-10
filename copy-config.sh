@@ -23,6 +23,7 @@ Do you wish to overwrite it? [Y/n]: " choice
         [Nn]* )
             echo "${target_path} was not overwritten."
             exit 0
+        ;;
     esac
 else
     echo "OK: ${target_path} is empty"
