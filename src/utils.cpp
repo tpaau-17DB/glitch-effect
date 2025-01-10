@@ -50,21 +50,6 @@ int Utils::StrToColorID(const string& str)
 {
     unsigned long hash = HashString(str);
 
-    Logger::PrintDebug("\n");
-    
-    Logger::PrintDebug("none: " + to_string(HashString("none")));
-    Logger::PrintDebug("black: " + to_string(HashString("black")));
-    Logger::PrintDebug("red: " + to_string(HashString("red")));
-    Logger::PrintDebug("green: " + to_string(HashString("green")));
-    Logger::PrintDebug("yellow: " + to_string(HashString("yellow")));
-    Logger::PrintDebug("blue: " + to_string(HashString("blue")));
-    Logger::PrintDebug("magenta: " + to_string(HashString("magenta")));
-    Logger::PrintDebug("cyan: " + to_string(HashString("cyan")));
-    Logger::PrintDebug("white: " + to_string(HashString("white")));
-
-    Logger::PrintDebug("\n");
-
-
     switch(hash)
     {
         case 2087865487:
