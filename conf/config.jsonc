@@ -36,12 +36,12 @@
     */
     "pass1": 
     {
-        /* The name of the pass, it basically defines how pass will behave
-        
-           Possible options are:
-              * 'horizontal distort' - distort lines horizontally
-              * 'discard' - discards the lines (empty screen)
-              * 'character shuffle' - shuffles characters. I optimized it as much as I could.
+        /*
+        The name of the pass, it basically defines how pass will behave
+        Possible options are:
+          * 'horizontal distort' - distort lines horizontally
+          * 'discard' - discards the lines (empty screen)
+          * 'character shuffle' - shuffles characters. I optimized it as much as I could.
         */
 
         "name": "horizontal distort",
@@ -54,7 +54,7 @@
         For example, one in five lines will get distorted
         if intensity is set to 20.
         */
-        "intensity": 20, //%
+        "intensity": 20 //%
     },
     "another-pass": 
     {
@@ -63,7 +63,8 @@
         "name": "horizontal distort",
         "strength": 16,
         "intensity": 3
-    }/*,
+    }
+    /*,
     "yet-another-pass": 
     {
         // This pass does not need the strength parameter
