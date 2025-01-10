@@ -9,40 +9,39 @@
         "sleeptime_ms": 40,
 
         // Sets the verbosity of logger
-        // This setting is overridden if you use the '-v' flag.
+        // You can override this if you use the '-v' flag.
         "logger_verbosity": 1
 
         // enable chromatic aberration
-        // This effect can have some impact on the CPU
+        // chromatic aberration is not a pass due to technical difficulties
         // "chromatic_aberration": true
 
-
-        // You can list all available colors using the --list-colors argument.
         // color of the text
-        // "foreground_color": "RED",
+        // You can list all available colors using the --list-colors argument.
+        // "foreground_color": "red",
 
         // color of the background
-        // "background_color": "BLUE"
+        // "background_color": "blue"
 
-        // Default ascii file path
-        // The program will default to this file unless ascii path is specified.
+        // Default text file to display
+        // The program will default to this file unless a file path is specified.
         // "default_ascii_path": "~/.config/glitch-effect/default-ascii.txt"
     },
 
     /*
-    Passes modify the way your ASCII file is distorted.
+    Passes modify the way your text file is distorted.
     They can be stacked one each other to create unique effects.
-    You can name the passes however you want, just keep in mind
-    that duplicates will be ignored.
+    You can name the passes however you want,
+    just keep in mind that duplicates will get ignored.
     */
     "pass1": 
     {
-        /* The name of the pass, basically defines how pass will behave
+        /* The name of the pass, it basically defines how pass will behave
         
            Possible options are:
               * 'horizontal distort' - distort lines horizontally
               * 'discard' - discards the lines (empty screen)
-              * 'character shuffle' - shuffles characters. It used to chop your CPU, but now it work.
+              * 'character shuffle' - shuffles characters. I optimized it as much as I could.
         */
 
         "name": "horizontal distort",
@@ -56,14 +55,11 @@
         if intensity is set to 20.
         */
         "intensity": 20, //%
-
-        // Currently unused.
-        "invert": true
     },
     "another-pass": 
     {
-        // In every pass only required parameters are listed
-        // Extravageous params are ignored
+        // Only required parameters should be provided
+        // Extra params are ignored
         "name": "horizontal distort",
         "strength": 16,
         "intensity": 3

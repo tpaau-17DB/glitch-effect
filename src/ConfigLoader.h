@@ -21,8 +21,6 @@ class ConfigLoader
              PassType Type = Undefined;
              int Strength = 8;
              int Intensity = 30;
-
-             bool ReverseColor = false;
         };
 
         struct GlobalConfig
