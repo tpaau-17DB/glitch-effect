@@ -24,6 +24,11 @@ Do you wish to overwrite it? [Y/n]: " choice
             echo "${target_path} was not overwritten."
             exit 0
         ;;
+        * )
+            echo "Invalid input. Please answer with 'y' or 'n'."
+            exit 1
+        ;;
+
     esac
 else
     echo "OK: ${target_path} is empty"
