@@ -9,20 +9,37 @@
 using namespace std;
 using namespace filesystem;
 
+
 const string configPaths[] = 
 {
-    "~/.config/glitch-effect/config",
+    FileLoader::GetXDG_CONFIG_HOME() + "/config.jsonc",
+    FileLoader::GetXDG_CONFIG_HOME() + "/config.json",
+    FileLoader::GetXDG_CONFIG_HOME() + "/config",
     "~/.config/glitch-effect/config.jsonc",
-    "./config",
-    "./config.jsonc",
+    "~/.config/glitch-effect/config.json",
+    "~/.config/glitch-effect/config",
+    "config.jsonc",
+    "config.json",
+    "config",
 };
+
+
+string FileLoader::GetXDG_CONFIG_HOME()
+{
+    const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
+    if (xdgConfigHome != nullptr) 
+    {
+        return string(xdgConfigHome);
+    }
+    return "";
+}
 
 
 string FileLoader::ExpandPath(const string& path)
 {
     string fullPath = path;
 
-    if (!fullPath.empty() && fullPath[0] == '~') 
+    if (!fullPath.empty() && fullPath[0] == '~')
     {
         string homeDir = getenv("HOME");
         return homeDir + fullPath.substr(1);

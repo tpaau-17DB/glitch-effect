@@ -48,17 +48,15 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
             if (key == "global_config") continue;
 
             ConfigLoader::pass pass;
+
             if (value.contains("name"))
                 pass.Type = Utils::GetPassTypeFromName(value["name"]);
-            
+
             if (value.contains("strength"))
                 pass.Strength = value["strength"];
 
             if (value.contains("intensity"))
                 pass.Intensity = value["intensity"];
-            
-            if (value.contains("invert"))
-                pass.ReverseColor = value["invert"];
 
             passes.push_back(pass);
         }

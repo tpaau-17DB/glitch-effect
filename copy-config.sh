@@ -5,7 +5,7 @@ target_path="$HOME/.config/glitch-effect/"
 
 copy_files()
 {
-  echo "Copying ${source_path} to ${target_path}"
+  echo "Copying '${source_path}' to '${target_path}'"
   cp $source_path $target_path
 }
 
