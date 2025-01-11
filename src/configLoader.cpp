@@ -39,9 +39,9 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
         buffer << f.rdbuf();
         string content = buffer.str();
 
-        content = Utils::RemoveComments(content);
+        /*content = Utils::RemoveComments(content);*/
 
-        json data = json::parse(content);
+        json data = json::parse(content, nullptr, true, true);
 
         for (auto& [key, value] : data.items()) 
         {
@@ -92,9 +92,9 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
         buffer << f.rdbuf();
         string content = buffer.str();
 
-        content = Utils::RemoveComments(content);
+        /*content = Utils::RemoveComments(content);*/
 
-        json data = json::parse(content);
+        json data = json::parse(content, nullptr, true, true);
 
         if (data.contains("global_config"))
         {

@@ -13,7 +13,10 @@ TO_REMOVE=(
     "missing"
     "stamp-h1"
     "configure~"
+    "configure"
     "compile"
+    "src/.deps/"
+    "src/.dirstamp"
 )
 
 echo "Cleaning up..."

@@ -161,13 +161,3 @@ vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
     }
     return filteredLines;
 }
-
-string Utils::RemoveComments(const string& str)
-{
-    string result = str;
-
-    result = regex_replace(result, std::regex("//[^\n]*"), "");
-    result = regex_replace(result, std::regex("/\\*[\\s\\S]*?\\*/"), "");
-
-    return result;
-}

@@ -22,7 +22,6 @@ using namespace std;
 bool exitRequested = false;
 
 
-
 void handleSignal(int signal) 
 {
     if (signal == SIGINT) 
