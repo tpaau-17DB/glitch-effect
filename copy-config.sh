@@ -3,6 +3,8 @@
 source_path="conf/*"
 target_path="$HOME/.config/glitch-effect/"
 
+echo "Copying config files..."
+
 copy_files()
 {
   echo "Copying '${source_path}' to '${target_path}'"
@@ -12,7 +14,7 @@ copy_files()
 mkdir -p "$target_path"
 
 if [ -d "$target_path" ] && [ "$(ls -A "$target_path")" ]; then
-    read -p "$target_path exists and is not empty.
+    read -p "The directory $target_path exists and is not empty.
 Do you wish to overwrite it? [Y/n]: " choice
     choice="${choice:-Y}"
     case "$choice" in

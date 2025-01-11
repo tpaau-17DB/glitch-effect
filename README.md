@@ -20,28 +20,42 @@ The following dependencies are required to build and run the program:
 * nlohmann-json
 
 
-## Compiling
-To ensure all required dependencies are installed, run the script provided in the repository:
+## Installation
+To check the dependencies, compile an link the program, run: 
 ```
-./check-dependencies.sh
-```
-
-To compile the source code, use the makefile:
-```
-make
+autoreconf --install \
+&& ./configure \
+&& make
 ```
 
-To compile and install the program, run:
+To install the program, execute:
 ```
-make install
+sudo make install
 ```
+
+Optionally, you can clean up all the junk files:
+```
+./cleanup.sh
+```
+
 
 After installation, copy the configuration file from the repository to `~/.config/glitch-effect/`.
-This step is not required, but recommended as the program falls back to the default, built-in configuration if needed.
+This step is not required, but recommended as the program falls back to the default,
+built-in configuration if needed.
 
 Run `copy-config.sh` to automatically copy the config files to the target directory.
 ```
 ./copy-config.sh
+```
+
+Or just do everything at once:
+```
+autoreconf --install \
+&& ./configure \
+&& make \
+&& sudo make install \
+&& ./cleanup.sh \
+&& ./copy-config.sh
 ```
 
 
