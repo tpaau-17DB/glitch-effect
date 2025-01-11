@@ -3,9 +3,11 @@
 *.lo
 *.la
 *.so
-*.dll
 *.dylib
+
 *.tmp
+*.swp
+*~
 
 bin/
 build/
@@ -15,4 +17,12 @@ test/
 autom4te.cache/
 aclocal.m4
 config.log
-config
+config.status
+config.cache
+
+config/
+configure
+
+.deps/
+*.Po
+*.dirstamp
