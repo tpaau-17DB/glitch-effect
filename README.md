@@ -57,6 +57,11 @@ autoreconf --install \
 && ./copy-config.sh
 ```
 
+Also, if you are on Arch Linux, you can just run:
+```
+makepkg -si
+```
+
 
 ## Usage
 To see the available options, run:
