@@ -76,10 +76,13 @@ glitch -h
 Even though the program does not require a config file, it still needs a text file to display.
 Such files are provided in the repository in the `ascii/` directory.
 
+---
 
 Alternatively, you can **pipe command output** to the `glitch` and display that:
 ```
 head -n 4 | base64 | glitch
 ```
+
+---
 
 If you encounter any issues, pass the `-v 0` argument for more debugging info.
