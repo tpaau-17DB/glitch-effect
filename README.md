@@ -33,12 +33,12 @@ To install the program, run:
 sudo make install
 ```
 
-Optionally, you can clean up all the junk files:
+After the installation, you can clean up all the junk files:
 ```
 ./cleanup.sh
 ```
 
-After installation, copy the configuration file from the repository to `~/.config/glitch-effect/`.
+Then, copy the configuration file from the repository to `~/.config/glitch-effect/`.
 This step is not required, but recommended as the program falls back to the default,
 built-in configuration if needed.
 
@@ -46,6 +46,8 @@ Run `copy-config.sh` to automatically copy all the config files to `~/.config/gl
 ```
 ./copy-config.sh
 ```
+
+---
 
 Or just do everything at once:
 ```
@@ -56,6 +58,8 @@ autoreconf --install \
 && ./cleanup.sh \
 && ./copy-config.sh
 ```
+
+---
 
 Also, if you are on Arch Linux, you can just run:
 ```
