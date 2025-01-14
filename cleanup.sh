@@ -17,6 +17,7 @@ TO_REMOVE=(
     "compile"
     "src/.deps/"
     "src/.dirstamp"
+    "Makefile.in"
 )
 
 echo "Cleaning up..."

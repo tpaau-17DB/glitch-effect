@@ -64,7 +64,7 @@
         "name": "horizontal distort",
         "strength": 16,
         "intensity": 3
-    },
+    }
     /*,
     "pass3": 
     {
