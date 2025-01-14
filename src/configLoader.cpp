@@ -23,7 +23,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 
     path = FileLoader::ExpandPath(path);
 
-    Logger::PrintDebug("Loading a JSON file '" + path + "'.");
+    Logger::PrintDebug("Loading JSON file '" + path + "'.");
 
     try
     {
@@ -38,8 +38,6 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
         stringstream buffer;
         buffer << f.rdbuf();
         string content = buffer.str();
-
-        /*content = Utils::RemoveComments(content);*/
 
         json data = json::parse(content, nullptr, true, true);
 
@@ -77,7 +75,7 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
     ConfigLoader::GlobalConfig globalConfig;
     string tmp;
 
-    Logger::PrintDebug("Loading a JSON file '" + path + "'.");
+    Logger::PrintDebug("Loading JSON file '" + path + "'.");
 
     try
     {
@@ -91,8 +89,6 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
         stringstream buffer;
         buffer << f.rdbuf();
         string content = buffer.str();
-
-        /*content = Utils::RemoveComments(content);*/
 
         json data = json::parse(content, nullptr, true, true);
 

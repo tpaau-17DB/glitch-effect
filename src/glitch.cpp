@@ -59,7 +59,9 @@ int main(int argc, char *argv[])
     else
     {
         useChromaticAberration = args.UseChromaticAberration;
-        Printer::SetDefaultColors(Printer::Color(args.ForegroundColor), Printer::Color(args.BackgroundColor));
+        Printer::SetDefaultColors(
+                Printer::Color(args.ForegroundColor),
+                Printer::Color(args.BackgroundColor));
     }
 
     // obtain the path of the config file
@@ -108,18 +110,22 @@ int main(int argc, char *argv[])
         }
         sleeptimeMS = config.SleeptimeMS;
         
-        // Set useChromaticAberration only if it was not set previously using cli args.
+        // Set this only if it was not set previously using cli interface 
         if (!useChromaticAberration)
             useChromaticAberration = config.UseChromaticAberration;
 
         if (!args.ForegroundColorSet)
         {
-            Printer::SetDefaultForegroundColor(Printer::Color(Utils::StrToColorID(config.foregroundColorName)));
+            Printer::SetDefaultForegroundColor(
+                    Printer::Color(
+                        Utils::StrToColorID(config.foregroundColorName)));
         }
 
         if (!args.BackgroundColorSet)
         {
-            Printer::SetDefaultBackgroundColor(Printer::Color(Utils::StrToColorID(config.backgroundColorName)));
+            Printer::SetDefaultBackgroundColor(
+                    Printer::Color(
+                        Utils::StrToColorID(config.backgroundColorName)));
         }
     }
     else
@@ -143,7 +149,7 @@ int main(int argc, char *argv[])
     {
         asciiPath = args.AsciiPath; 
     }
-    else if (config.DefaultAsciiPath != "///notspecified///" && config.LoadedCorrectly)
+    else if (config.DefaultAsciiPath != "" && config.LoadedCorrectly)
     {
         Logger::PrintDebug("Using ascii file path specified in '" + confPath + "'.");
         asciiPath = config.DefaultAsciiPath;
@@ -161,8 +167,7 @@ int main(int argc, char *argv[])
     else
     {
         // set stdin to /dev/tty so user can still use keyboard shortcuts,
-        // even when some input was piped (program's stdin was set to the piped
-        // program stdout)
+        // even when some input was piped
         fd = open("/dev/tty", O_RDONLY);
         if (fd == -1) 
         {
@@ -227,7 +232,7 @@ int main(int argc, char *argv[])
         // apply the passes and check if there were any errors
         if (buffer.ApplyPasses(passes) != 0)
         {
-            Logger::PrintErr("Errors occurred while applying passes. See errors above.");
+            Logger::PrintErr("Errors occurred while applying passes.");
             break;
         }
 

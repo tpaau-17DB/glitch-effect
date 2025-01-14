@@ -9,7 +9,7 @@
 class FileLoader
 {
     public:
-        static std::string GetXDG_CONFIG_HOME();
+        static std::string GetEnvVar(const std::string& var);
         static std::vector<std::string> GetLines(std::string &path);
         static bool CheckIfFileExists(const std::string &path);
         static std::string LookForConfigFiles();

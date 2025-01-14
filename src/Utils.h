@@ -17,7 +17,7 @@ class Utils
         static unsigned long HashString(const std::string& str);
 
         static float GetRandomFloat(const float min, const float max);
-        static unsigned short GetRandomShort(const unsigned short min, const unsigned short max);
+        static unsigned short GetRandomInt(const int min, const int max);
         static unsigned short GetRandomPrecalculatedShort();
 
         static ConfigLoader::PassType GetPassTypeFromName(const std::string& name);

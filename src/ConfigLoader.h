@@ -13,6 +13,7 @@ class ConfigLoader
             CharacterShuffle,
             HorizontalDistort,
             Discard,
+            HorizontalOffset,
             Undefined,
         };
 
@@ -29,9 +30,8 @@ class ConfigLoader
             bool LoadedCorrectly = false;
 
             // VARIABLES
-            // "///notspecified///" is the default value that indicates that
             // default ascii path specified in the config file.
-            std::string DefaultAsciiPath = "///notspecified///";
+            std::string DefaultAsciiPath = "";
 
             int SleeptimeMS = 40;
 

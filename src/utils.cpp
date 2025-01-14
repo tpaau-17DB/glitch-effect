@@ -24,7 +24,7 @@ void precalculateShorts()
 {
     for (int i = 0; i < 100; i++)
     {
-        precalculatedShorts.push_back(Utils::GetRandomShort(0, 100));
+        precalculatedShorts.push_back(Utils::GetRandomInt(0, 100));
     }
     isPrecalculated = true;
     Logger::PrintDebug("Random shorts precalculated.");
@@ -50,6 +50,7 @@ int Utils::StrToColorID(const string& str)
 {
     unsigned long hash = HashString(str);
 
+    // this is terrible and I need to fix this at some point
     switch(hash)
     {
         case 2087865487:
@@ -101,10 +102,10 @@ float Utils::GetRandomFloat(const float min, const float max)
     return dist(gen);
 }
 
-unsigned short Utils::GetRandomShort(const unsigned short min, const unsigned short max)
+unsigned short Utils::GetRandomInt(const int min, const int max)
 {
     mt19937 gen(rd());
-    uniform_int_distribution<unsigned short> dist(min, max);
+    uniform_int_distribution<int> dist(min, max);
     return dist(gen);
 }
 
@@ -120,6 +121,7 @@ unsigned short Utils::GetRandomPrecalculatedShort()
     return precalculatedShorts[currentPrecalculated];
 }
 
+// Used for converting strings to enums
 ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
 {
     ConfigLoader::PassType type = ConfigLoader::Undefined;
@@ -142,6 +144,10 @@ ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
             type = ConfigLoader::CharacterShuffle;
             break;
 
+        case 2330439209: // 'rand offset x'
+            type = ConfigLoader::HorizontalOffset;
+            break;
+
         default:
             Logger::PrintErr("Unknown pass type: '" + name + "'.");
             break;
@@ -150,6 +156,7 @@ ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
     return type;
 }
 
+// No support for ANSI codes yet :P
 vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
 {
     vector<string> filteredLines = vector<string>();

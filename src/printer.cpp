@@ -98,7 +98,8 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
         offsetY = 0;
     }
 
-    if (buffer.GetMaxDistortedLineLength() > maxX - offsetX || int(lines->size()) > maxY - offsetY)
+    if (buffer.GetMaxDistortedLineLength() > maxX - offsetX
+            || buffer.GetMaxDistortedLineSize() > maxY - offsetY)
     {
         clear();
         move(maxY / 2, maxX / 2 - windowTooSmallMessage.length() / 2);

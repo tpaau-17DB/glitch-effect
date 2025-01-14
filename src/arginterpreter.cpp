@@ -29,7 +29,6 @@ void PrintUsage()
 
 void PrintPossibleColors()
 {
-
     cout << "Possible colors:\n";
     cout << "  * \033[30mblack\033[0m\n";
     cout << "  * \033[31mred\033[0m\n";

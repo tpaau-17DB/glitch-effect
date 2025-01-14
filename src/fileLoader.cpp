@@ -12,9 +12,9 @@ using namespace filesystem;
 
 const string configPaths[] = 
 {
-    FileLoader::GetXDG_CONFIG_HOME() + "/config.jsonc",
-    FileLoader::GetXDG_CONFIG_HOME() + "/config.json",
-    FileLoader::GetXDG_CONFIG_HOME() + "/config",
+    FileLoader::GetEnvVar("XDG_CONFIG_HOME") + "/config.jsonc",
+    FileLoader::GetEnvVar("XDG_CONFIG_HOME") + "/config.json",
+    FileLoader::GetEnvVar("XDG_CONFIG_HOME") + "/config",
     "~/.config/glitch-effect/config.jsonc",
     "~/.config/glitch-effect/config.json",
     "~/.config/glitch-effect/config",
@@ -23,17 +23,16 @@ const string configPaths[] =
     "config",
 };
 
-
-string FileLoader::GetXDG_CONFIG_HOME()
+string FileLoader::GetEnvVar(const string& var)
 {
-    const char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
-    if (xdgConfigHome != nullptr) 
+    const char* varVal = getenv(var.c_str());
+    if (varVal != nullptr) 
     {
-        return string(xdgConfigHome);
+        return string(varVal);
     }
+    Logger::PrintErr("Failed to get environment variable: " + var);
     return "";
 }
-
 
 string FileLoader::ExpandPath(const string& path)
 {

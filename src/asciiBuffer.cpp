@@ -18,6 +18,7 @@ vector<string> distortedLines;
 int maxLineLength;
 int maxDistortedLineLength;
 
+int maxDistortedLineSize;
 
 // Internals
 int getMaxLineLengthFromVector(vector<string>& lines)
@@ -94,6 +95,7 @@ void AsciiBuffer::ResetDistorted()
 {
     distortedLines = lines;
     maxDistortedLineLength = maxLineLength;
+    maxDistortedLineSize = lines.size();
 }
 
 
@@ -106,6 +108,11 @@ int AsciiBuffer::GetMaxLineLength()
 int AsciiBuffer::GetMaxDistortedLineLength()
 {
     return maxDistortedLineLength;
+}
+
+int AsciiBuffer::GetMaxDistortedLineSize()
+{
+    return maxDistortedLineSize;
 }
 
 int AsciiBuffer::GetLineCount()
@@ -130,65 +137,71 @@ vector<string>* AsciiBuffer::GetDistortedLinesPtr()
 
 
 // Filters
-void AsciiBuffer::HorizontalDistort(const int intensity, const int strength)
+
+// Add a random horizontal offset to the entire image
+void AsciiBuffer::RandOffsetX(const int intensity, const int strength)
 {
-    ensureDistortedLinesNotEmpty();
-    
-    int num;
-    string spaces;
+    if (Utils::GetRandomInt(0, 100) >= intensity)
+        return;
 
-    for (string &str : distortedLines)
+    string spaces = string(Utils::GetRandomInt(0, strength * 2), ' ');
+
+    for (string& line : distortedLines)
     {
-        num = strength;
-
-        int reverseEffect = rand() % 2;
-
-        if (Utils::GetRandomFloat(0, 100) < intensity)
-        {
-            if (!reverseEffect)
-            {
-                num += rand() % strength + 1;
-            }
-            else
-            {
-                num -= rand() % strength + 1;
-            }
-        }
-
-        spaces = string(num, ' ');
-        str = spaces + str + spaces;
+        line = spaces + line + spaces;
     }
 
     maxDistortedLineLength += (2 * strength);
 }
 
+// Add a random horizontal offset to individual lines
+void AsciiBuffer::HorizontalDistort(const int intensity, const int strength)
+{
+    string spaces;
+    int distortion;
+
+    for (string &line : distortedLines)
+    {
+        if (Utils::GetRandomInt(0, 100) < intensity)
+            distortion = Utils::GetRandomInt(0, strength * 2);
+        else
+            distortion = strength;
+
+        spaces = string(distortion, ' ');
+        line = spaces + line + spaces;
+    }
+
+    maxDistortedLineLength += (2 * strength);
+}
+
+// Shuffle images' characters randomly
+// This is the performance version, utilizing precomputed pseudorandom numbers
 void AsciiBuffer::ShuffleCharacters(const int intensity)
 {
-    ensureDistortedLinesNotEmpty();
-
     int dst;
     int length;
-    for (string &str : distortedLines)
+    for (string &line : distortedLines)
     {
-        length = str.length();
+        length = line.length();
         for (int src = 0; src < length; src++)
         {
-            if (str[src] == ' ' || Utils::GetRandomPrecalculatedShort() >= intensity) continue;
+            if (line[src] == ' ' || Utils::GetRandomPrecalculatedShort() >= intensity)
+                continue;
             dst = (Utils::GetRandomPrecalculatedShort() % length);
 
-            if (str[dst] == ' ') continue;
+            if (line[dst] == ' ') continue;
 
-            char srcC = str[src];
-            char dstC = str[dst];
+            char srcC = line[src];
+            char dstC = line[dst];
 
-            str[src] = dstC;
-            str[dst] = srcC;
+            line[src] = dstC;
+            line[dst] = srcC;
         }
     }
 }
 
 
-// Others
+// Apply the passes to the buffer
 int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
 {
     if (passes.size() == 0)
@@ -197,6 +210,7 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
         return 1;
     }
 
+    ensureDistortedLinesNotEmpty();
     for (ConfigLoader::pass& pass : passes)
     {
         switch(pass.Type)
@@ -206,6 +220,7 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
                 break;
 
             case ConfigLoader::Discard:
+                // This would not be efficient to implement as a separate function
                 if (Utils::GetRandomFloat(0, 100) < pass.Intensity)
                 {
                     distortedLines = vector<string>();
@@ -213,13 +228,17 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
                 }
                 break;
 
-            case ConfigLoader::Undefined:
-                Logger::PrintErr("Undefined pass type!");
-                return 1;
-
             case ConfigLoader::CharacterShuffle:
                 ShuffleCharacters(pass.Intensity);
                 break;
+
+            case ConfigLoader::HorizontalOffset:
+                AsciiBuffer::RandOffsetX(pass.Intensity, pass.Strength);
+                break;
+
+            case ConfigLoader::Undefined:
+                Logger::PrintErr("Undefined pass type!");
+                return 1;
 
             default:
                 Logger::PrintErr("Unknown pass type!");

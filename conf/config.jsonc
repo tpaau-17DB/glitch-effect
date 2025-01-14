@@ -42,6 +42,7 @@
           * 'horizontal distort' - distort lines horizontally
           * 'discard' - discards the lines (empty screen)
           * 'character shuffle' - shuffles characters. I optimized it as much as I could.
+          * 'rand offset x' - adds a random offset to the entire image
         */
 
         "name": "horizontal distort",
@@ -63,18 +64,13 @@
         "name": "horizontal distort",
         "strength": 16,
         "intensity": 3
-    }
+    },
     /*,
-    "yet-another-pass": 
+    "pass3": 
     {
         // This pass does not need the strength parameter
         "name": "discard",
         "intensity": 10
     },
-    "pass4":
-    {
-        "name": "character shuffle",
-        "intensity": 1
-    }
     */
 }
