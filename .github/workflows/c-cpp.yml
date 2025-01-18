@@ -3,6 +3,8 @@ name: C/C++ CI
 on:
   push:
     branches: [ "main" ]
+  push:
+    branches: [ "tmp" ]
   pull_request:
     branches: [ "main" ]
 
