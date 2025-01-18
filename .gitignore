@@ -16,12 +16,8 @@ test/
 
 autom4te.cache/
 aclocal.m4
-config.log
-config.status
-config.cache
 
 config/
-configure
 
 .deps/
 *.Po

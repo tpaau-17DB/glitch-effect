@@ -14,8 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: run autoreconf
-      run: autoreconf --install
-    - name: Make sure all is good
       run: ./configure
     - name: Build with make
       run: make
