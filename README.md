@@ -23,8 +23,7 @@ The following dependencies are required to build and run the program:
 ## Installation
 To check if all dependencies are installed and build the program, run: 
 ```
-autoreconf --install \
-&& ./configure \
+./configure \
 && make
 ```
 
@@ -35,35 +34,26 @@ sudo make install
 
 After the installation, you can clean up all the junk files:
 ```
-./cleanup.sh
+./cleanup
 ```
 
 Then, copy the configuration file from the repository to `~/.config/glitch-effect/`.
 This step is not required, but recommended as the program falls back to the default,
 built-in configuration if needed.
 
-Run `copy-config.sh` to automatically copy all the config files to `~/.config/glitch-effect/`.
+Run `copy-config` to automatically copy all the config files to `~/.config/glitch-effect/`.
 ```
-./copy-config.sh
+./copy-config
 ```
 
 ---
 
 Or just do everything at once:
 ```
-autoreconf --install \
-&& ./configure \
+./configure \
 && make \
 && sudo make install \
-&& ./cleanup.sh \
-&& ./copy-config.sh
-```
-
----
-
-Also, if you are on Arch Linux, you can just run:
-```
-makepkg -si
+&& ./copy-config
 ```
 
 

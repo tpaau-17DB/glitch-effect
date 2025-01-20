@@ -1,17 +1,20 @@
 #!/bin/bash
 
 TO_REMOVE=(
-    "aclocal.m4"
-    "autom4te.cache"
-    "stamp-h1"
+    "config.log"
+    "config.status"
     "configure~"
+    "autom4te.cache"
+    "Makefile"
     "src/.deps/"
     "src/.dirstamp"
 )
 
-echo "Cleaning up..."
+echo -n "Cleaning up... "
 
 rm -rf "${TO_REMOVE[@]}"
 
 rm -rf *.o *.a *.lo *.la *.so glitch bin
 rm -rf src/*.o
+
+echo "done."
