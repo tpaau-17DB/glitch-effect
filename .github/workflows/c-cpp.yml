@@ -2,7 +2,7 @@ name: C/C++ CI
 
 on:
   push:
-    branches: 
+    branches:
       - "main"
       - "tmp"
   pull_request:
@@ -15,15 +15,13 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-    - name: run autoreconf
-      run: autoreconf --install
-    - name: Make sure all is good
+    - name: Configure
       run: ./configure
     - name: Build with make
       run: make
-    - name: (Optional) Install the package
+    - name: Install the package
       run: make install
-    - name: (Optional) Post-installation cleanup
+    - name: Post-installation cleanup
       run: ./cleanup.sh
-    - name: (Optional) Copy config files
+    - name: Copy config files
       run: ./copy-config.sh

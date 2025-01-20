@@ -1,0 +1,20 @@
+#!/bin/bash
+
+TO_REMOVE=(
+    "config.log"
+    "config.status"
+    "configure~"
+    "autom4te.cache"
+    "Makefile"
+    "src/.deps/"
+    "src/.dirstamp"
+)
+
+echo -n "Cleaning up... "
+
+rm -rf "${TO_REMOVE[@]}"
+
+rm -rf *.o *.a *.lo *.la *.so glitch bin
+rm -rf src/*.o
+
+echo "done."
