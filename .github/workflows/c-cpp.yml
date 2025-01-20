@@ -15,6 +15,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+    - name: Install deps
+      run : sudo apt-get install automake
     - name: Configure
       run: ./configure
     - name: Build with make
