@@ -3,6 +3,7 @@
 TO_REMOVE=(
     "config.log"
     "config.status"
+    "config.h"
     "configure~"
     "autom4te.cache"
     "Makefile"

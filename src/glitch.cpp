@@ -26,7 +26,7 @@ void handleSignal(int signal)
 {
     if (signal == SIGINT) 
     {
-        Logger::PrintDebug("Exit requested by user.");
+        Logger::PrintDebug("SIGINT recieved.");
         exitRequested = true;
     }
 }
@@ -208,6 +208,7 @@ int main(int argc, char *argv[])
         switch (ch)
         {
             case 'q':
+                Logger::PrintDebug("Key 'q' pressed, quitting.");
                 Printer::Stop();
                 Logger::ReleaseLogBuffer();
                 exit(EXIT_SUCCESS);
