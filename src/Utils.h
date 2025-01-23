@@ -24,7 +24,7 @@ class Utils
 
         static std::vector<std::string> RemoveANSICodes(const std::vector<std::string>& lines);
 
-        static std::string RemoveComments(const std::string& str);
+        static std::string Lower(std::string str);
 };
 
 #endif

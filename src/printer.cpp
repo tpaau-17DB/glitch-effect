@@ -14,23 +14,15 @@ using namespace std;
 string windowTooSmallMessage = "It's a little bit claustrophobic in here...";
 
 int sleeptimeMS = 40;
-int offsetX = 0;
-int offsetY = 0;
 
 Printer::Color fgColor = Printer::NONE;
 Printer::Color bgColor = Printer::NONE;
 
 const vector<int> Printer::ColorRange = {-1, 7}; 
 
-bool autocenter = true;
-
-void Printer::Init(const int setSleeptimeMS, const int setOffsetX, const int setOffsetY)
+void Printer::Init(const int setSleeptimeMS)
 {
     sleeptimeMS = setSleeptimeMS;
-    offsetX = setOffsetX;
-    offsetY = setOffsetY;
-    
-    autocenter = (offsetX == 0 && offsetY == 0);
 
     setlocale(LC_ALL, "C.UTF-8");
     initscr();
@@ -88,15 +80,11 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
 {
     init_pair(1, fgColor, bgColor);
     int maxX, maxY;
+    int offsetX = 0;
+    int offsetY = 0;
     vector<string>* lines = buffer.GetDistortedLinesPtr();
 
     getmaxyx(stdscr, maxY, maxX);
-
-    if (autocenter)
-    {
-        offsetX = 0;
-        offsetY = 0;
-    }
 
     if (buffer.GetMaxDistortedLineLength() > maxX - offsetX
             || buffer.GetMaxDistortedLineSize() > maxY - offsetY)
@@ -116,11 +104,8 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
     int x = offsetX;
     int y = offsetY;
 
-    if (autocenter)
-    {
-        x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
-        y = 0.5 * (maxY - lines->size());
-    }
+    x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
+    y = 0.5 * (maxY - lines->size());
 
     if (!chromaticAberration)
     {

@@ -66,8 +66,9 @@ int main(int argc, char *argv[])
 
     // obtain the path of the config file
     string confPath;
-    if (args.ConfigSpecified)
+    if (args.ConfigPath != "")
     {
+        Logger::PrintDebug("Using config file '" + args.ConfigPath + "'.");
         confPath = args.ConfigPath;
     }
     else
@@ -145,7 +146,7 @@ int main(int argc, char *argv[])
         }
         inputPiped = true;
     }
-    else if (args.AsciiPathSpecified)
+    else if (args.AsciiPath != "")
     {
         asciiPath = args.AsciiPath; 
     }
@@ -166,7 +167,7 @@ int main(int argc, char *argv[])
         lines = FileLoader::GetLines(asciiPath);
     else
     {
-        // set stdin to /dev/tty so user can still use keyboard shortcuts,
+        // set stdin to /dev/tty so program will receive user input,
         // even when some input was piped
         fd = open("/dev/tty", O_RDONLY);
         if (fd == -1) 
@@ -193,7 +194,7 @@ int main(int argc, char *argv[])
     }
    
     // initialize printer and buffer
-    Printer::Init(sleeptimeMS, args.OffsetX, args.OffsetY);
+    Printer::Init(sleeptimeMS);
     AsciiBuffer buffer = AsciiBuffer(lines);
 
     bool isPaused = false;

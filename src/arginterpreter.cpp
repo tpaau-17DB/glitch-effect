@@ -5,29 +5,29 @@
 #include "ArgInterpreter.h"
 #include "Logger.h"
 #include "Utils.h"
+#include "METADATA.h"
 
 using namespace std;
 
-void PrintUsage()
+void printUsage()
 {
     cout<<"Usage: glitch [options] [ascii path]\n";
     cout<<"  --help, -h: Display this help message\n";
-    cout<<"  -x <int>: Manually set X offset, disables autocenter\n";
-    cout<<"  -y <int>: Manually set Y offset, disables autocenter\n";
-    cout<<"  -c <path> Set the config file\n";
-    cout<<"  -v <int>: Set log verbosity\n";
+    cout<<"  --version, -v: Print version\n";
+    cout<<"  --list-colors: lists possible colors\n";
     cout<<"  --foreground <color>: Set foreground color\n";
     cout<<"  --background <color>: Set background color\n";
     cout<<"  --chromatic-aberration: Use chromatic aberration\n";
-    cout<<"  --nocolor: enables nocolor option in Logger\n";
-    cout<<"  --list-colors: lists possible colors\n";
+    cout<<"  -c <path> Set the config file\n";
+    cout<<"  --verbosity <int>: Set logger verbosity\n";
+    cout<<"  --nocolor: enables logger nocolor option\n";
     cout<<"\n";
     cout<<"Runtime options:\n";
     cout<<"  p: pause the program\n";
     cout<<"  q: quit the program\n";
 }
 
-void PrintPossibleColors()
+void printPossibleColors()
 {
     cout << "Possible colors:\n";
     cout << "  * \033[30mblack\033[0m\n";
@@ -38,84 +38,71 @@ void PrintPossibleColors()
     cout << "  * \033[35mmagenta\033[0m\n";
     cout << "  * \033[36mcyan\033[0m\n";
     cout << "  * \033[37mwhite\033[0m\n";
+}
 
+void printVersion()
+{
+    cout<<GLITCH_NAME<<" v"<<GLITCH_VERSION<<"\n";
 }
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
 {
     argstruct args = argstruct();
-    
     static struct option long_options[] = 
     {
         {"help", no_argument, nullptr, '1'},
-        {"foreground", required_argument, nullptr, '2'},
-        {"background", required_argument, nullptr, '3'},
-        {"chromatic-aberration", no_argument, nullptr, '4'},
-        {"nocolor", no_argument, nullptr, '5'},
-        {"list-colors", no_argument, nullptr, '6'},
+        {"version", no_argument, nullptr, '2'},
+        {"list-colors", no_argument, nullptr, '3'},
+        {"foreground", required_argument, nullptr, '4'},
+        {"background", required_argument, nullptr, '5'},
+        {"chromatic-aberration", no_argument, nullptr, '6'},
+        {"nocolor", no_argument, nullptr, '7'},
+        {"verbosity", required_argument, nullptr, '8'},
         {0, 0, 0, 0}
-
     };
 
     int arg;
     int option_index = 0;
-
-    while ((arg = getopt_long(argc, argv, "c:v:x:y:h", long_options, &option_index)) != -1)
+    opterr = 0;
+    while ((arg = getopt_long(argc, argv, "hvc:", long_options, &option_index)) != -1)
     {
         switch (arg)
         {
             case 'h':
                 args.HelpRequested = true;
-                PrintUsage();
+                printUsage();
                 return args;
 
             case 'c':
                 if (optarg)
                 {
                     args.ConfigPath = optarg;
-                    args.ConfigSpecified = true;
-                    Logger::PrintDebug(string("Config path set to '") + optarg + string("'."));
+                    Logger::PrintDebug(string("Config path set to '")
+                            +optarg + string("'."));
                 }
                 break;
 
-            case 'x':
-                if (optarg)
-                {
-                    int val = Utils::StrToInt(optarg);
-
-                    if (val == -1)
-                    {
-                        args.ExitRequested = true;
-                        return args;
-                    }
-
-                    args.OffsetX = val;
-                    Logger::PrintDebug(string("Offset X set to: ") + optarg);
-                }
-                break;
-
-            case 'y':
-                if (optarg)
-                {
-                    int val = Utils::StrToInt(optarg);
-
-                    if (val == -1)
-                    {
-                        args.ExitRequested = true;
-                        return args;
-                    }
-
-                    args.OffsetY = val;
-                    Logger::PrintDebug(string("Offset Y set to: ") + optarg);
-                }
+            case 'v':
+                printVersion();
+                args.ExitRequested = true;
                 break;
 
             case '1':
                 args.HelpRequested = true;
-                PrintUsage();
+                printUsage();
                 return args;
 
-            case '2': // --foreground
+            case '2': // --version
+                printVersion();
+                args.ExitRequested = true;
+                break;
+
+            case '3': // --list-colors
+                printPossibleColors();
+                args.ExitRequested = true;
+                break;
+
+            case '4': // --foreground
                 if (optarg)
                 {
                     int val = Utils::StrToColorID(optarg);
@@ -124,7 +111,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     {
                         args.ExitRequested = true;
                         cout<<"Invalid color value!\n";
-                        PrintPossibleColors();
+                        printPossibleColors();
                         return args;
                     }
 
@@ -134,7 +121,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 }
                 break;
 
-            case '3':  // --background
+            case '5':  // --background
                 if (optarg)
                 {
                     int val = Utils::StrToColorID(optarg);
@@ -143,7 +130,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     {
                         args.ExitRequested = true;
                         cout<<"Invalid color value!\n";
-                        PrintPossibleColors();
+                        printPossibleColors();
                         return args;
                     }
 
@@ -153,7 +140,18 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 }
                 break;
 
-                case 'v':
+
+            case '6': // --chromatic-aberration
+                args.UseChromaticAberration = true;
+                Logger::PrintDebug("Chromatic aberration enabled.");
+                break;
+
+            case '7': // --nocolor
+                Logger::SetNoColor(true);
+                Logger::PrintDebug("Disabled color in Logger.");
+                break;
+
+            case '8':
                 if (optarg)
                 {
                     int val = Utils::StrToInt(optarg);
@@ -170,27 +168,17 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 }
                 break;
 
-            case '4': // --chromatic-aberration
-                args.UseChromaticAberration = true;
-                Logger::PrintDebug("Chromatic aberration enabled.");
-                break;
-
-            case '5': // --nocolor
-                Logger::SetNoColor(true);
-                Logger::PrintDebug("Disabled color in Logger.");
-                break;
-
-            case '6': // --list-colors
-                PrintPossibleColors();
+            default:
+                Logger::PrintErr("Invalid option.");
+                printUsage();
                 args.ExitRequested = true;
-                break;
+                return args;
         }
     }
 
     if (optind < argc)
     {
         args.AsciiPath = argv[optind];
-        args.AsciiPathSpecified = true;
         Logger::PrintDebug(string("Ascii file path set to '") + args.AsciiPath + string("'."));
     }
 

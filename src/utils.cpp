@@ -48,7 +48,7 @@ int Utils::StrToInt(const string& str)
 
 int Utils::StrToColorID(const string& str)
 {
-    unsigned long hash = HashString(str);
+    unsigned long hash = HashString(Lower(str));
 
     // this is terrible and I need to fix this at some point
     switch(hash)
@@ -167,4 +167,11 @@ vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
         filteredLines.push_back(filtered);
     }
     return filteredLines;
+}
+
+
+string Utils::Lower(string str)
+{
+    transform(str.begin(), str.end(), str.begin(), ::tolower);
+    return str;
 }

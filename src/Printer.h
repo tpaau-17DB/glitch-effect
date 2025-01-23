@@ -23,7 +23,7 @@ class Printer
         };
 
         // START & STOP
-        static void Init(const int sleeptimeMS, const int offsetX, const int offsetY);
+        static void Init(const int sleeptimeMS);
         static void Stop();
 
         // SETTERS

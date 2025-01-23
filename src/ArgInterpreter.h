@@ -9,13 +9,8 @@
 struct argstruct
 {
     std::string ConfigPath = "";
-    bool ConfigSpecified = false;
 
-    std::string AsciiPath;
-    bool AsciiPathSpecified = false;
-
-    int OffsetX;
-    int OffsetY;
+    std::string AsciiPath = "";
 
     bool ForegroundColorSet = false;
     bool BackgroundColorSet = false;
