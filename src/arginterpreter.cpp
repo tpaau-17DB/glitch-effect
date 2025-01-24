@@ -77,7 +77,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                 if (optarg)
                 {
                     args.ConfigPath = optarg;
-                    Logger::PrintDebug(string("Config path set to '")
+                    PrintDebug(string("Config path set to '")
                             +optarg + string("'."));
                 }
                 break;
@@ -110,14 +110,14 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     if (val == -2)
                     {
                         args.ExitRequested = true;
-                        cout<<"Invalid color value!\n";
+                        PrintErr("Invalid color value!\n");
                         printPossibleColors();
                         return args;
                     }
 
                     args.ForegroundColor = val;
                     args.ForegroundColorSet = true;
-                    Logger::PrintDebug(string("Foreground color set to: ") + optarg);
+                    PrintDebug(string("Foreground color set to: ") + optarg);
                 }
                 break;
 
@@ -129,26 +129,26 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                     if (val == -2)
                     {
                         args.ExitRequested = true;
-                        cout<<"Invalid color value!\n";
+                        PrintErr("Invalid color value!\n");
                         printPossibleColors();
                         return args;
                     }
 
                     args.BackgroundColor = val;
                     args.BackgroundColorSet = true;
-                    Logger::PrintDebug(string("Background color set to: ") + optarg);
+                    PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;
 
 
             case '6': // --chromatic-aberration
                 args.UseChromaticAberration = true;
-                Logger::PrintDebug("Chromatic aberration enabled.");
+                PrintDebug("Chromatic aberration enabled.");
                 break;
 
             case '7': // --nocolor
-                Logger::SetNoColor(true);
-                Logger::PrintDebug("Disabled color in Logger.");
+                ToggleLogColor(true);
+                PrintDebug("Disabled color in Logger.");
                 break;
 
             case '8':
@@ -162,14 +162,14 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
                         return args;
                     }
 
-                    Logger::SetVerbosity(Logger::LogLevel(val));
+                    SetLoggerVerbosity(LogLevel(val));
                     args.VerbositySet = true;
-                    Logger::PrintDebug(string("Verbosity set to: ") + to_string(Logger::GetVerbosity()));
+                    PrintDebug(string("Verbosity set to: ") + to_string(GetLoggerVerbosity()));
                 }
                 break;
 
             default:
-                Logger::PrintErr("Invalid option.");
+                PrintErr("Invalid option.");
                 printUsage();
                 args.ExitRequested = true;
                 return args;
@@ -179,7 +179,7 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
     if (optind < argc)
     {
         args.AsciiPath = argv[optind];
-        Logger::PrintDebug(string("Ascii file path set to '") + args.AsciiPath + string("'."));
+        PrintDebug(string("Ascii file path set to '") + args.AsciiPath + string("'."));
     }
 
     return args;

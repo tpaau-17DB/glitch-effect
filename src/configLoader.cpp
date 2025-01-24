@@ -23,7 +23,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 
     path = FileLoader::ExpandPath(path);
 
-    Logger::PrintDebug("Loading JSON file '" + path + "'.");
+    PrintDebug("Loading JSON file '" + path + "'.");
 
     try
     {
@@ -31,7 +31,7 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 
         if (!f.is_open()) 
         {
-            Logger::PrintErr("Could not open the file!");
+            PrintErr("Could not open the file!");
             return passes;
         }
 
@@ -59,11 +59,11 @@ vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
             passes.push_back(pass);
         }
 
-        Logger::PrintDebug(to_string(passes.size()) + string(" passes loaded."));
+        PrintDebug(to_string(passes.size()) + string(" passes loaded."));
     }
     catch(exception& e)
     {
-        Logger::PrintErr("Error occurred while loading a file: '" + path + "': " + e.what());
+        PrintErr("Error occurred while loading a file: '" + path + "': " + e.what());
         return passes;
     }
 
@@ -75,14 +75,14 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
     ConfigLoader::GlobalConfig globalConfig;
     string tmp;
 
-    Logger::PrintDebug("Loading JSON file '" + path + "'.");
+    PrintDebug("Loading JSON file '" + path + "'.");
 
     try
     {
         ifstream f(path);
         if (!f.is_open()) 
         {
-            Logger::PrintErr("Could not open the file!");
+            PrintErr("Could not open the file!");
             return globalConfig;
         }
 
@@ -114,7 +114,7 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
                 if (Printer::IsValidColorID(Utils::StrToColorID(tmp)))
                     globalConfig.foregroundColorName = tmp;
                 else
-                    Logger::PrintErr("Invalid color ID: " + tmp);
+                    PrintErr("Invalid color ID: " + tmp);
             }
 
             if (globalData.contains("background_color"))
@@ -123,19 +123,19 @@ ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
                 if (Printer::IsValidColorID(Utils::StrToColorID(tmp)))
                     globalConfig.backgroundColorName = tmp;
                 else
-                    Logger::PrintErr("Invalid color ID: " + tmp);
+                    PrintErr("Invalid color ID: " + tmp);
             }
         }
         else
         {
-            Logger::PrintLog("No 'global_config' object in JSON file '" + path + "'.");        
+            PrintLog("No 'global_config' object in JSON file '" + path + "'.");        
         }
 
-        Logger::PrintDebug("Finished loading config.");
+        PrintDebug("Finished loading config.");
     }
     catch(const exception& e)
     {
-        Logger::PrintErr("Error occurred while loading a file: '" + path + "': " + e.what());
+        PrintErr("Error occurred while loading a file: '" + path + "': " + e.what());
         return globalConfig;
     }
 

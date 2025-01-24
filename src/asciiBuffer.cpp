@@ -48,14 +48,14 @@ AsciiBuffer::AsciiBuffer()
 {
     lines = vector<string>();
     distortedLines = vector<string>();
-    Logger::PrintDebug("Created AsciiBuffer instance.");
+    PrintDebug("Created AsciiBuffer instance.");
 }
 
 AsciiBuffer::AsciiBuffer(const vector<string> newLines)
 {
     lines = Utils::RemoveANSICodes(newLines);
     distortedLines = vector<string>();
-    Logger::PrintDebug("Created AsciiBuffer instance.");
+    PrintDebug("Created AsciiBuffer instance.");
 
     int maxLength = getMaxLineLengthFromVector(lines);
 
@@ -67,7 +67,7 @@ AsciiBuffer::AsciiBuffer(const vector<string> newLines)
 // On destroy
 AsciiBuffer::~AsciiBuffer()
 {
-    Logger::PrintDebug("AsciiBuffer instance was destroyed.");
+    PrintDebug("AsciiBuffer instance was destroyed.");
 }
 
 
@@ -206,7 +206,7 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
 {
     if (passes.size() == 0)
     {
-        Logger::PrintErr("Passes list was empty!");
+        PrintErr("Passes list was empty!");
         return 1;
     }
 
@@ -237,11 +237,11 @@ int AsciiBuffer::ApplyPasses(std::vector<ConfigLoader::pass> passes)
                 break;
 
             case ConfigLoader::Undefined:
-                Logger::PrintErr("Undefined pass type!");
+                PrintErr("Undefined pass type!");
                 return 1;
 
             default:
-                Logger::PrintErr("Unknown pass type!");
+                PrintErr("Unknown pass type!");
                 return 1;
         }
     }

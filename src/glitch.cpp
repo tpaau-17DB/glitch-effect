@@ -7,7 +7,6 @@
 #include <csignal>
 #include <ncurses.h>
 
-#include "Logger.h"
 #include "FileLoader.h"
 #include "ArgInterpreter.h"
 #include "AsciiBuffer.h"
@@ -26,7 +25,7 @@ void handleSignal(int signal)
 {
     if (signal == SIGINT) 
     {
-        Logger::PrintDebug("SIGINT recieved.");
+        PrintDebug("SIGINT recieved.");
         exitRequested = true;
     }
 }
@@ -46,15 +45,13 @@ int main(int argc, char *argv[])
     argstruct args = ArgInterpreter::GetArgs(argc, argv);
     if (args.HelpRequested)
     {
-        Logger::PrintDebug("Help requested by user.");
-        Logger::ReleaseLogBuffer();
+        PrintDebug("Help requested by user.");
         exit(EXIT_SUCCESS);
     }
     else if (args.ExitRequested)
     {
-        Logger::PrintDebug("ArgInterpreter requested exit.");
-        Logger::ReleaseLogBuffer();
-        exit(EXIT_FAILURE);
+        PrintDebug("ArgInterpreter requested exit.");
+        exit(EXIT_SUCCESS);
     }
     else
     {
@@ -68,12 +65,11 @@ int main(int argc, char *argv[])
     string confPath;
     if (args.ConfigPath != "")
     {
-        Logger::PrintDebug("Using config file '" + args.ConfigPath + "'.");
+        PrintDebug("Using config file '" + args.ConfigPath + "'.");
         confPath = args.ConfigPath;
     }
     else
     {
-        Logger::PrintDebug("Config file not specified.");
         confPath = FileLoader::LookForConfigFiles();
     }
 
@@ -89,7 +85,7 @@ int main(int argc, char *argv[])
     // check if passes were loaded correctly and if not, proceed with default pass 
     if (passes.size() == 0)
     {
-        Logger::PrintLog("Falling back to default pass.");
+        PrintLog("Falling back to default pass.");
 
         ConfigLoader::pass pass = ConfigLoader::pass();
         pass.Type = ConfigLoader::HorizontalDistort;
@@ -107,7 +103,7 @@ int main(int argc, char *argv[])
     {
         if (!args.VerbositySet)
         {
-            Logger::SetVerbosity((int)config.LoggerVerbosity);
+            SetLoggerVerbosity((int)config.LoggerVerbosity);
         }
         sleeptimeMS = config.SleeptimeMS;
         
@@ -131,7 +127,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        Logger::PrintLog("Using default config.");
+        PrintLog("Using default config.");
     }
 
     bool inputPiped = false;
@@ -152,13 +148,12 @@ int main(int argc, char *argv[])
     }
     else if (config.DefaultAsciiPath != "" && config.LoadedCorrectly)
     {
-        Logger::PrintDebug("Using ascii file path specified in '" + confPath + "'.");
+        PrintDebug("Using ascii file path specified in '" + confPath + "'.");
         asciiPath = config.DefaultAsciiPath;
     }
     else
     {
-        Logger::PrintErr("No input to display.");
-        Logger::ReleaseLogBuffer();
+        PrintCrit("No input to display.");
         exit(EXIT_FAILURE);
     }
 
@@ -172,24 +167,23 @@ int main(int argc, char *argv[])
         fd = open("/dev/tty", O_RDONLY);
         if (fd == -1) 
         {
-            Logger::PrintErr("Failed to open /dev/tty, user input might not work as exected!");
+            PrintErr("Failed to open /dev/tty, user input might not work as exected!");
         }
         else if (close(0) == -1) 
         {
-            Logger::PrintErr("Failed to close stdin, user input might not work as expected!");
+            PrintErr("Failed to close stdin, user input might not work as expected!");
             close(fd);
         } 
         else if (dup2(fd, 0) == -1) 
         {
-            Logger::PrintErr("Failed to redirect stdin to /dev/tty, user input might not work as expected!");
+            PrintErr("Failed to redirect stdin to /dev/tty, user input might not work as expected!");
             close(fd);
         }
     }
 
     if (lines.size() == 0)
     {
-        Logger::PrintDebug("Vector empty, nothing to display.");
-        Logger::ReleaseLogBuffer();
+        PrintCrit("Vector empty, nothing to display.");
         exit(EXIT_FAILURE);
     }
    
@@ -209,9 +203,9 @@ int main(int argc, char *argv[])
         switch (ch)
         {
             case 'q':
-                Logger::PrintDebug("Key 'q' pressed, quitting.");
+                PrintDebug("Key 'q' pressed, quitting.");
+                clog.flush();
                 Printer::Stop();
-                Logger::ReleaseLogBuffer();
                 exit(EXIT_SUCCESS);
 
             case 'p':
@@ -234,7 +228,7 @@ int main(int argc, char *argv[])
         // apply the passes and check if there were any errors
         if (buffer.ApplyPasses(passes) != 0)
         {
-            Logger::PrintErr("Errors occurred while applying passes.");
+            PrintErr("Errors occurred while applying passes.");
             break;
         }
 
@@ -248,6 +242,5 @@ int main(int argc, char *argv[])
 
     close(fd);
     Printer::Stop();
-    Logger::ReleaseLogBuffer();
     exit(EXIT_SUCCESS);
 }

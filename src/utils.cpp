@@ -27,7 +27,7 @@ void precalculateShorts()
         precalculatedShorts.push_back(Utils::GetRandomInt(0, 100));
     }
     isPrecalculated = true;
-    Logger::PrintDebug("Random shorts precalculated.");
+    PrintDebug("Random shorts precalculated.");
 }
 
 int Utils::StrToInt(const string& str)
@@ -41,7 +41,7 @@ int Utils::StrToInt(const string& str)
     catch (const invalid_argument& e) 
     {
         result = -1;
-        Logger::PrintErr(string("Failed to convert '") + str + string("' to an int. (") + e.what() + string(")"));
+        PrintErr(string("Failed to convert '") + str + string("' to an int. (") + e.what() + string(")"));
     }
     return result;
 }
@@ -149,7 +149,7 @@ ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
             break;
 
         default:
-            Logger::PrintErr("Unknown pass type: '" + name + "'.");
+            PrintErr("Unknown pass type: '" + name + "'.");
             break;
     }
 
@@ -168,7 +168,6 @@ vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
     }
     return filteredLines;
 }
-
 
 string Utils::Lower(string str)
 {

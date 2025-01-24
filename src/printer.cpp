@@ -20,9 +20,14 @@ Printer::Color bgColor = Printer::NONE;
 
 const vector<int> Printer::ColorRange = {-1, 7}; 
 
+ostringstream customLogStream;
+
 void Printer::Init(const int setSleeptimeMS)
 {
     sleeptimeMS = setSleeptimeMS;
+
+    SetLogOutputStream(&customLogStream);
+    ToggleUseCustomOutputStream(true);
 
     setlocale(LC_ALL, "C.UTF-8");
     initscr();
@@ -34,19 +39,18 @@ void Printer::Init(const int setSleeptimeMS)
     start_color();
     use_default_colors();
     curs_set(0);
-
-    Logger::SetNCursesMode(true);
 }
 
 void Printer::Stop()
 {
-    Logger::PrintDebug("Stopping ncurses.");
+    PrintDebug("Stopping ncurses.");
     clear();
     curs_set(1);
     reset_prog_mode();
     endwin();
 
-    Logger::SetNCursesMode(false);
+    FlushLogStream();
+    ToggleUseCustomOutputStream(false);
 }
 
 // SETTERS

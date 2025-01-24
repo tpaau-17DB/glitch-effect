@@ -29,11 +29,11 @@ const string configPaths[] =
 string FileLoader::GetEnvVar(const string& var)
 {
     const char* varVal = getenv(var.c_str());
-    if (varVal != nullptr) 
+    if (varVal != nullptr)
     {
         return string(varVal);
     }
-    Logger::PrintErr("Failed to get environment variable: " + var);
+    PrintWarn("Failed to get environment variable: " + var);
     return "";
 }
 
@@ -61,7 +61,7 @@ vector<string> FileLoader::GetLines(string &path)
 
     if (!file.good())  // u good?
     {
-        Logger::PrintErr("File error! File path: '" + path + "'");
+        PrintErr("File error! File path: '" + path + "'");
     }
 
     if (file.is_open())
@@ -75,7 +75,7 @@ vector<string> FileLoader::GetLines(string &path)
     }
     else
     {
-	Logger::PrintErr("Unable to open file: '" + path + "'");
+	PrintErr("Unable to open file: '" + path + "'");
     }
 
     return lines;
@@ -89,17 +89,17 @@ bool FileLoader::CheckIfFileExists(const string &path)
 
 string FileLoader::LookForConfigFiles()
 {
-    Logger::PrintDebug("Looking for config files in common directories.");
+    PrintDebug("Looking for config files in common directories.");
 
     for (const string &path : configPaths)
     {
         if (CheckIfFileExists(path))
         {
-            Logger::PrintDebug(string("Config file found at: '") + path + string("'."));
+            PrintDebug(string("Config file found at: '") + path + string("'."));
             return path;
         }
     }
 
-    Logger::PrintLog("No config files found.");
+    PrintLog("No config files found.");
     return "none";
 }
