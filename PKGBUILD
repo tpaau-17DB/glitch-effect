@@ -1,7 +1,7 @@
 # Maintainer: Your Name <youremail@domain.com>
 pkgname=glitch-effect
-pkgver=1.0.0
-pkgrel=1
+pkgver=1.0.1
+pkgrel=2
 epoch=0
 pkgdesc="A command-line glitch effect running on ncurses."
 arch=('x86_64')
@@ -21,11 +21,10 @@ install=
 changelog=
 source=("https://github.com/tpaau-17DB/glitch-effect/archive/refs/tags/$pkgver.tar.gz")
 noextract=()
-md5sums=('f26c5ad72d97db2a4605716ee597bc0b')
+md5sums=('e99b4660e44065cd677970110de51bd5')
 
 build() {
     cd "$pkgname-$pkgver"
-    autoreconf --install
 	./configure
 	make
 }
@@ -38,5 +37,5 @@ check() {
 package() {
     cd "$pkgname-$pkgver"
     sudo make install
-    ./copy-config.sh
+    ./copy-config
 }
