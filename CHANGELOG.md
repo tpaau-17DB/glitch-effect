@@ -4,3 +4,4 @@
 * Fix a bug where the file loader searched for the config file in incorrect
 paths when the `XDG_CONFIG_HOME` variable was empty.
 * Update the version of logger
+* Fix the automake build system
