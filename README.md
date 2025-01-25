@@ -58,8 +58,14 @@ Or just do everything at once:
 
 ---
 
-Its also recommended to verify that `glitch` has been installed correctly by
-running:
+Alternatively, if you are using Arch Linux, you can just run:
+```
+makepkg -si
+```
+
+---
+
+Its also recommended to verify that `glitch` has been installed correctly:
 ```
 glitch --version
 ```
