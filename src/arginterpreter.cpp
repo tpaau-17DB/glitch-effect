@@ -42,7 +42,7 @@ void printPossibleColors()
 
 void printVersion()
 {
-    cout<<GLITCH_NAME<<" v"<<GLITCH_VERSION<<"\n";
+    cout<<PROGRAM_NAME<<" v"<<PROGRAM_VERSION<<"\n";
 }
 
 argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
