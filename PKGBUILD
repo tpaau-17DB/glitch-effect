@@ -1,7 +1,7 @@
 # Maintainer: tpaau-17DB tpaau-17db_aur@tutamail.com
 pkgname=glitch-effect
 pkgver=1.0.1
-pkgrel=2
+pkgrel=1
 epoch=0
 pkgdesc="A command-line glitch effect running on ncurses."
 arch=('x86_64')
