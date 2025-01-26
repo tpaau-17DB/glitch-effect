@@ -4,7 +4,7 @@ This is a relatively small, fun little project I made mostly by myself.
 `glitch` is a CLI app running on `ncurses` that takes some text and
 displays distorted, animated version of it.
 
-`glitch` has a highly customizable pipeline that allows configuration with
+It has a highly customizable pipeline that allows configuration with
 `json` files. You can specify **passes**, which act as **distortion layers** that
 can be **stacked on each other**.
 
@@ -30,8 +30,7 @@ To install the program, run:
 sudo make install
 ```
 
-After the installation, you can clean up all the files generated during
-the installation process:
+After that, you can clean up all the files generated during the build process:
 ```
 ./cleanup
 ```
@@ -65,7 +64,7 @@ copy the configuration file to your config directory.
 
 ---
 
-After installation, make sure that `glitch` has been installed correctly:
+Then, make sure that `glitch` has been installed correctly:
 ```
 glitch --version
 ```
@@ -94,7 +93,7 @@ glitch -h
 ```
 
 
-# Configuration
+## Configuration
 `glitch` uses `json` for configuration files. A configuration file
 contains two sections: `global_config` and passes.
 
