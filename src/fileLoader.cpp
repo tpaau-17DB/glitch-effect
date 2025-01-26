@@ -15,9 +15,6 @@ const string configPaths[] =
     "~/.config/glitch-effect/config.jsonc",
     "~/.config/glitch-effect/config.json",
     "~/.config/glitch-effect/config",
-    "config.jsonc",
-    "config.json",
-    "config",
 };
 
 string FileLoader::ExpandPath(const string& path)
