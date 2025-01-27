@@ -6,71 +6,72 @@
     "global_config":
     {
         // Pause between screen refresh in milliseconds.
-        "sleeptime_ms": 40,
+        "sleeptime_ms": 40
 
-        // Sets the verbosity of logger
-        // You can override this if you use the '-v' flag.
-        "logger_verbosity": 1
+        /*
+         Sets the verbosity of logger
+         You can override this if you use the '-v' flag.
+         "logger_verbosity": 1
 
-        // enable chromatic aberration
-        // chromatic aberration is not a pass due to technical difficulties
-        // "chromatic_aberration": true
+         Enable chromatic aberration effect.
+         Chromatic aberration is not a pass just to make things simpler :)
+         "chromatic_aberration": true
 
-        // color of the text
-        // You can list all available colors using the --list-colors argument.
-        // "foreground_color": "red",
+         This option changes the color of glitch output text.
+         BTW, you can list all available colors using the --list-colors option.
+         "foreground_color": "red",
 
-        // color of the background
-        // "background_color": "blue"
+         The same thing, but changes background color.
+         "background_color": "blue"
 
-        // Default text file to display
-        // The program will default to this file unless a file path is specified.
-        // "default_ascii_path": "~/.config/glitch-effect/default-ascii.txt"
+         Default text file to display
+         The program will default to this file unless a file path is
+         specified.
+         "default_ascii_path": "~/.config/glitch-effect/default-ascii.txt"
+         */
     },
 
     /*
     Passes modify the way your text file is distorted.
     They can be stacked one each other to create unique effects.
-    You can name the passes however you want,
-    just keep in mind that duplicates will get ignored.
+    You can name the passes however you want, just keep in mind that passes
+    with duplicate names will get ignored.
     */
     "pass1": 
     {
         /*
         The name of the pass, it basically defines how pass will behave
         Possible options are:
-          * 'horizontal distort' - distort lines horizontally
+          * 'horizontal_distort' - distort lines horizontally
           * 'discard' - discards the lines (empty screen)
-          * 'character shuffle' - shuffles characters. I optimized it as much as I could.
-          * 'rand offset x' - adds a random offset to the entire image
+          * 'character_shuffle' - shuffles characters.
+          * 'rand_offset_x' - adds a random offset to the entire image
         */
 
-        "name": "horizontal distort",
+        "name": "horizontal_distort",
 
         // Higher values cause stronger distortion.
         "strength": 1,
 
         /*
         The chance of distortion occurring in percent.
-        For example, one in five lines will get distorted
+        For instance, one in five lines will get distorted
         if intensity is set to 20.
         */
-        "intensity": 20 //%
+        "intensity": 20
+
+        /*
+        This makes some passes ignore space characters, for example,
+        character_shuffle pass ignores spaces by default
+        */
+        // "ignore_spaces": false
     },
     "another-pass": 
     {
         // Only required parameters should be provided
         // Extra params are ignored
-        "name": "horizontal distort",
+        "name": "horizontal_distort",
         "strength": 16,
         "intensity": 3
     }
-    /*,
-    "pass3": 
-    {
-        // This pass does not need the strength parameter
-        "name": "discard",
-        "intensity": 10
-    },
-    */
 }

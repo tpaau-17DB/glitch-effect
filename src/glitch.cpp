@@ -42,44 +42,43 @@ int main(int argc, char *argv[])
     bool useChromaticAberration = false;
 
     // get command line arguments and handle them
-    argstruct args = ArgInterpreter::GetArgs(argc, argv);
-    if (args.HelpRequested)
+    argstruct args = getArgs(argc, argv);
+    if (args.helpRequested)
     {
         PrintDebug("Help requested by user.");
         exit(EXIT_SUCCESS);
     }
-    else if (args.ExitRequested)
+    else if (args.exitRequested)
     {
         PrintDebug("ArgInterpreter requested exit.");
         exit(EXIT_SUCCESS);
     }
     else
     {
-        useChromaticAberration = args.UseChromaticAberration;
-        Printer::SetDefaultColors(
-                Printer::Color(args.ForegroundColor),
-                Printer::Color(args.BackgroundColor));
+        useChromaticAberration = args.useChromaticAberration;
+        setForegroundColor(Color(args.foregroundColor));
+        setBackgroundColor(Color(args.foregroundColor));
     }
 
     // obtain the path of the config file
     string confPath;
-    if (args.ConfigPath != "")
+    if (args.configPath != "")
     {
-        PrintDebug("Using config file '" + args.ConfigPath + "'.");
-        confPath = args.ConfigPath;
+        confPath = args.configPath;
     }
     else
     {
-        confPath = FileLoader::LookForConfigFiles();
+        confPath = lookForConfigFile();
     }
 
     // load the config file
-    ConfigLoader::GlobalConfig config; 
-    vector<ConfigLoader::pass> passes;
+    GlobalConfig config; 
+    vector<Pass> passes;
     if (confPath != "" && confPath != "none")
     {
-        passes = ConfigLoader::GetPassesFromJSON(confPath);
-        config = ConfigLoader::GetGlobalConfig(confPath);
+        PrintDebug("Using config file '" + args.configPath + "'.");
+        passes = getPassesFromJSON(confPath);
+        config = getGlobalConfig(confPath);
     }
 
     // check if passes were loaded correctly and if not, proceed with default pass 
@@ -87,42 +86,40 @@ int main(int argc, char *argv[])
     {
         PrintLog("Falling back to default pass.");
 
-        ConfigLoader::pass pass = ConfigLoader::pass();
-        pass.Type = ConfigLoader::HorizontalDistort;
-        pass.Intensity = 10;
-        pass.Strength = 7;
+        Pass pass = Pass();
+        pass.type = HORIZONTAL_DISTORT;
+        pass.intensity = 10;
+        pass.strength = 7;
         passes.push_back(pass);
 
-        pass.Intensity = 25;
-        pass.Strength = 1;
+        pass.intensity = 25;
+        pass.strength = 1;
         passes.push_back(pass);
     }
 
     // apply the config file if loaded correctly
-    if (config.LoadedCorrectly)
+    if (config.loadedCorrectly)
     {
-        if (!args.VerbositySet)
+        if (!args.verbositySet)
         {
-            SetLoggerVerbosity((int)config.LoggerVerbosity);
+            SetLoggerVerbosity((int)config.loggerVerbosity);
         }
-        sleeptimeMS = config.SleeptimeMS;
+        sleeptimeMS = config.sleeptimeMS;
         
         // Set this only if it was not set previously using cli interface 
         if (!useChromaticAberration)
-            useChromaticAberration = config.UseChromaticAberration;
+            useChromaticAberration = config.chromaticAberrationEnabled;
 
-        if (!args.ForegroundColorSet)
+        if (!args.foregroundColorSet)
         {
-            Printer::SetDefaultForegroundColor(
-                    Printer::Color(
-                        Utils::StrToColorID(config.foregroundColorName)));
+            setForegroundColor(
+                Color(strToColorID(config.foregroundColorStr)));
         }
 
-        if (!args.BackgroundColorSet)
+        if (!args.backgroundColorSet)
         {
-            Printer::SetDefaultBackgroundColor(
-                    Printer::Color(
-                        Utils::StrToColorID(config.backgroundColorName)));
+            setBackgroundColor(
+                Color(strToColorID(config.backgroundColorStr)));
         }
     }
     else
@@ -142,14 +139,14 @@ int main(int argc, char *argv[])
         }
         inputPiped = true;
     }
-    else if (args.AsciiPath != "")
+    else if (args.asciiPath != "")
     {
-        asciiPath = args.AsciiPath; 
+        asciiPath = args.asciiPath; 
     }
-    else if (config.DefaultAsciiPath != "" && config.LoadedCorrectly)
+    else if (config.defaultAsciiPath != "" && config.loadedCorrectly)
     {
         PrintDebug("Using ascii file path specified in '" + confPath + "'.");
-        asciiPath = config.DefaultAsciiPath;
+        asciiPath = config.defaultAsciiPath;
     }
     else
     {
@@ -159,7 +156,7 @@ int main(int argc, char *argv[])
 
     int fd;
     if (!inputPiped)
-        lines = FileLoader::GetLines(asciiPath);
+        lines = getLines(asciiPath);
     else
     {
         // set stdin to /dev/tty so program will receive user input,
@@ -188,7 +185,7 @@ int main(int argc, char *argv[])
     }
    
     // initialize printer and buffer
-    Printer::Init(sleeptimeMS);
+    initPrinter(sleeptimeMS);
     AsciiBuffer buffer = AsciiBuffer(lines);
 
     bool isPaused = false;
@@ -205,7 +202,7 @@ int main(int argc, char *argv[])
             case 'q':
                 PrintDebug("Key 'q' pressed, quitting.");
                 clog.flush();
-                Printer::Stop();
+                stopPrinter();
                 exit(EXIT_SUCCESS);
 
             case 'p':
@@ -226,21 +223,21 @@ int main(int argc, char *argv[])
         }
 
         // apply the passes and check if there were any errors
-        if (buffer.ApplyPasses(passes) != 0)
+        if (buffer.applyPasses(passes) != 0)
         {
             PrintErr("Errors occurred while applying passes.");
             break;
         }
 
         // print the distorted image
-        Printer::Print(buffer, useChromaticAberration);
-        buffer.ResetDistorted();
+        printDistortedText(buffer, useChromaticAberration);
+        buffer.resetDistorted();
 
         refresh();
         usleep(1000 * sleeptimeMS);
     }
 
     close(fd);
-    Printer::Stop();
+    stopPrinter();
     exit(EXIT_SUCCESS);
 }

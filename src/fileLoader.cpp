@@ -9,7 +9,6 @@
 using namespace std;
 using namespace filesystem;
 
-
 const string configPaths[] =
 {
     "~/.config/glitch-effect/config.jsonc",
@@ -17,24 +16,24 @@ const string configPaths[] =
     "~/.config/glitch-effect/config",
 };
 
-string FileLoader::ExpandPath(const string& path)
-{
-    string fullPath = path;
+/*string expandPath(const string& path)*/
+/*{*/
+/*    string fullPath = path;*/
+/**/
+/*    if (!fullPath.empty() && fullPath[0] == '~')*/
+/*    {*/
+/*        string homeDir = getenv("HOME");*/
+/*        return homeDir + fullPath.substr(1);*/
+/*    } */
+/*    else */
+/*    {*/
+/*        return fullPath;*/
+/*    }*/
+/*}*/
 
-    if (!fullPath.empty() && fullPath[0] == '~')
-    {
-        string homeDir = getenv("HOME");
-        return homeDir + fullPath.substr(1);
-    } 
-    else 
-    {
-        return fullPath;
-    }
-}
-
-vector<string> FileLoader::GetLines(string &path)
+vector<string> getLines(string &path)
 {
-    path = ExpandPath(path);
+    path = expandPath(path);
 
     vector<string> lines;
     ifstream file(path);
@@ -61,19 +60,19 @@ vector<string> FileLoader::GetLines(string &path)
     return lines;
 }
 
-bool FileLoader::CheckIfFileExists(const string &path)
+bool checkIfFileExists(const string &path)
 {
-    string fullPath = ExpandPath(path); 
+    string fullPath = expandPath(path); 
     return filesystem::exists(fullPath);
 }
 
-string FileLoader::LookForConfigFiles()
+string lookForConfigFile()
 {
     PrintDebug("Looking for config files in common directories.");
 
     for (const string &path : configPaths)
     {
-        if (CheckIfFileExists(path))
+        if (checkIfFileExists(path))
         {
             PrintDebug(string("Config file found at: '") + path + string("'."));
             return path;

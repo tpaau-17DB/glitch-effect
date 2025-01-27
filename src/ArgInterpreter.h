@@ -8,27 +8,23 @@
 
 struct argstruct
 {
-    std::string ConfigPath = "";
+    std::string configPath = "";
 
-    std::string AsciiPath = "";
+    std::string asciiPath = "";
 
-    bool ForegroundColorSet = false;
-    bool BackgroundColorSet = false;
-    int ForegroundColor = Printer::NONE;
-    int BackgroundColor = Printer::NONE;
+    bool foregroundColorSet = false;
+    bool backgroundColorSet = false;
+    int foregroundColor = NONE_COLOR;
+    int backgroundColor = NONE_COLOR;
 
-    bool VerbositySet = false;
+    bool verbositySet = false;
 
-    bool UseChromaticAberration = false;
+    bool useChromaticAberration = false;
 
-    bool HelpRequested = false;
-    bool ExitRequested = false;
+    bool helpRequested = false;
+    bool exitRequested = false;
 };
 
-class ArgInterpreter
-{
-    public:
-        static argstruct GetArgs(int argc, char* argv[]);
-};
+argstruct getArgs(int argc, char* argv[]);
 
 #endif

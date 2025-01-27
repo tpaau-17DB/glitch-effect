@@ -6,14 +6,10 @@
 #include <vector>
 #include <fstream>
 
-class FileLoader
-{
-    public:
-        static std::string GetEnvVar(const std::string& var);
-        static std::vector<std::string> GetLines(std::string &path);
-        static bool CheckIfFileExists(const std::string &path);
-        static std::string LookForConfigFiles();
-        static std::string ExpandPath(const std::string &path);
-};
+std::string getEnvVar(const std::string& var);
+std::vector<std::string> getLines(std::string &path);
+bool checkIfFileExists(const std::string &path);
+std::string lookForConfigFile();
+std::string expandPath(const std::string &path);
 
 #endif

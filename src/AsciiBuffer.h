@@ -14,28 +14,27 @@ class AsciiBuffer
         ~AsciiBuffer();
 
         // Setters
-        void AddLine(const std::string line);
-        void OverwriteLines(const std::vector<std::string> lines);
-        void ClearAll();
-        void ResetDistorted();
+        void addLine(const std::string line);
+        void overwriteLines(const std::vector<std::string> lines);
+        void clearAll();
+        void resetDistorted();
 
         // Getters
-        int GetLineCount();
-        int GetMaxLineLength();
-        int GetMaxDistortedLineLength();
-        int GetMaxDistortedLineSize();
-        std::vector<std::string> GetLines();
-        std::vector<std::string> GetDistortedLines();
-        std::vector<std::string>* GetDistortedLinesPtr();
+        int getLineCount();
+        int getMaxLineLength();
+        int getMaxDistortedLineLength();
+        int getMaxDistortedLineSize();
+        std::vector<std::string> getLines();
+        std::vector<std::string> getDistortedLines();
+        std::vector<std::string>* getDistortedLinesPtr();
 
         // Filters
-        void RandOffsetX(const int intensity, const int srength);
-        void RandOffsetY(const int intensity, const int srength);
-        void HorizontalDistort(const int intensity, const int strength);
-        void ShuffleCharacters(const int intensity);
+        void randOffsetX(const Pass data);
+        void horizontalDistort(const Pass data);
+        void shuffleCharacters(const Pass data);
 
         // Other
-        int ApplyPasses(std::vector<ConfigLoader::pass> passes);
+        int applyPasses(std::vector<Pass> passes);
 };
 
 #endif

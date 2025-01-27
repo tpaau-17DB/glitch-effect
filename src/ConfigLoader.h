@@ -5,46 +5,43 @@
 
 #include "Logger.h"
 
-class ConfigLoader
+enum PassType
 {
-    public:
-        enum PassType
-        {
-            CharacterShuffle,
-            HorizontalDistort,
-            Discard,
-            HorizontalOffset,
-            Undefined,
-        };
-
-        struct pass
-        {
-             PassType Type = Undefined;
-             int Strength = 8;
-             int Intensity = 30;
-        };
-
-        struct GlobalConfig
-        {
-            // METADATA
-            bool LoadedCorrectly = false;
-
-            // VARIABLES
-            // default ascii path specified in the config file.
-            std::string DefaultAsciiPath = "";
-
-            int SleeptimeMS = 40;
-
-            unsigned short LoggerVerbosity = 1;
-
-            std::string foregroundColorName = "NONE";
-            std::string backgroundColorName = "NONE";
-
-            bool UseChromaticAberration = false;
-        };
-
-        static std::vector<pass> GetPassesFromJSON(std::string& path);
-        static GlobalConfig GetGlobalConfig(std::string& path);
+    CHARACTER_SHUFFLE,
+    HORIZONTAL_DISTORT,
+    DISCARD,
+    HORIZONTAL_OFFSET,
+    UNDEFINED,
 };
+
+struct Pass
+{
+     PassType type = UNDEFINED;
+     int strength = 8;
+     int intensity = 30;
+     bool ignoreSpaces = true;
+};
+
+struct GlobalConfig
+{
+    // METADATA
+    bool loadedCorrectly = false;
+
+    // VARIABLES
+    // default ascii path specified in the config file.
+    std::string defaultAsciiPath = "";
+
+    int sleeptimeMS = 40;
+
+    unsigned short loggerVerbosity = 1;
+
+    std::string foregroundColorStr = "NONE";
+    std::string backgroundColorStr = "NONE";
+
+    bool chromaticAberrationEnabled = false;
+};
+
+std::vector<Pass> getPassesFromJSON(std::string& path);
+GlobalConfig getGlobalConfig(std::string& path);
 
 #endif

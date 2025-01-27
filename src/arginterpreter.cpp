@@ -9,6 +9,19 @@
 
 using namespace std;
 
+const struct option LONG_OPTIONS[] = 
+{
+    {"help", no_argument, nullptr, '1'},
+    {"version", no_argument, nullptr, '2'},
+    {"list-colors", no_argument, nullptr, '3'},
+    {"foreground", required_argument, nullptr, '4'},
+    {"background", required_argument, nullptr, '5'},
+    {"chromatic-aberration", no_argument, nullptr, '6'},
+    {"nocolor", no_argument, nullptr, '7'},
+    {"verbosity", required_argument, nullptr, '8'},
+    {0, 0, 0, 0}
+};
+
 void printUsage()
 {
     cout<<"Usage: glitch [options] [ascii path]\n";
@@ -45,78 +58,66 @@ void printVersion()
     cout<<PROGRAM_NAME<<" v"<<PROGRAM_VERSION<<"\n";
 }
 
-argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
+argstruct getArgs(int argc, char* argv[])
 {
     argstruct args = argstruct();
-    static struct option long_options[] = 
-    {
-        {"help", no_argument, nullptr, '1'},
-        {"version", no_argument, nullptr, '2'},
-        {"list-colors", no_argument, nullptr, '3'},
-        {"foreground", required_argument, nullptr, '4'},
-        {"background", required_argument, nullptr, '5'},
-        {"chromatic-aberration", no_argument, nullptr, '6'},
-        {"nocolor", no_argument, nullptr, '7'},
-        {"verbosity", required_argument, nullptr, '8'},
-        {0, 0, 0, 0}
-    };
 
     int arg;
     int option_index = 0;
     opterr = 0;
-    while ((arg = getopt_long(argc, argv, "hvc:", long_options, &option_index)) != -1)
+    while ((arg = getopt_long(argc, argv, "hvc:", LONG_OPTIONS, &option_index)) != -1)
     {
         switch (arg)
         {
             case 'h':
-                args.HelpRequested = true;
+                args.helpRequested = true;
                 printUsage();
                 return args;
 
             case 'c':
                 if (optarg)
                 {
-                    args.ConfigPath = optarg;
+                    args.configPath = optarg;
                     PrintDebug(string("Config path set to '")
-                            +optarg + string("'."));
+                        +optarg + string("'."));
                 }
                 break;
 
             case 'v':
                 printVersion();
-                args.ExitRequested = true;
+                args.exitRequested = true;
                 break;
 
             case '1':
-                args.HelpRequested = true;
+                args.helpRequested = true;
                 printUsage();
                 return args;
 
             case '2': // --version
                 printVersion();
-                args.ExitRequested = true;
+                args.exitRequested = true;
                 break;
 
             case '3': // --list-colors
                 printPossibleColors();
-                args.ExitRequested = true;
+                args.exitRequested = true;
                 break;
 
             case '4': // --foreground
                 if (optarg)
                 {
-                    int val = Utils::StrToColorID(optarg);
+                    int val = strToColorID(optarg);
 
                     if (val == -2)
                     {
-                        args.ExitRequested = true;
+                        args.exitRequested = true;
                         PrintErr("Invalid color value!\n");
                         printPossibleColors();
                         return args;
                     }
 
-                    args.ForegroundColor = val;
-                    args.ForegroundColorSet = true;
+                    args.foregroundColor = val;
+                    args.foregroundColorSet = true;
                     PrintDebug(string("Foreground color set to: ") + optarg);
                 }
                 break;
@@ -124,25 +125,25 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case '5':  // --background
                 if (optarg)
                 {
-                    int val = Utils::StrToColorID(optarg);
+                    int val = strToColorID(optarg);
 
                     if (val == -2)
                     {
-                        args.ExitRequested = true;
+                        args.exitRequested = true;
                         PrintErr("Invalid color value!\n");
                         printPossibleColors();
                         return args;
                     }
 
-                    args.BackgroundColor = val;
-                    args.BackgroundColorSet = true;
+                    args.backgroundColor = val;
+                    args.backgroundColorSet = true;
                     PrintDebug(string("Background color set to: ") + optarg);
                 }
                 break;
 
 
             case '6': // --chromatic-aberration
-                args.UseChromaticAberration = true;
+                args.useChromaticAberration = true;
                 PrintDebug("Chromatic aberration enabled.");
                 break;
 
@@ -154,16 +155,16 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             case '8':
                 if (optarg)
                 {
-                    int val = Utils::StrToInt(optarg);
+                    int val = strToInt(optarg);
 
                     if (val == -1)
                     {
-                        args.ExitRequested = true;
+                        args.exitRequested = true;
                         return args;
                     }
 
                     SetLoggerVerbosity(LogLevel(val));
-                    args.VerbositySet = true;
+                    args.verbositySet = true;
                     PrintDebug(string("Verbosity set to: ") + to_string(GetLoggerVerbosity()));
                 }
                 break;
@@ -171,15 +172,15 @@ argstruct ArgInterpreter::GetArgs(int argc, char* argv[])
             default:
                 PrintErr("Invalid option.");
                 printUsage();
-                args.ExitRequested = true;
+                args.exitRequested = true;
                 return args;
         }
     }
 
     if (optind < argc)
     {
-        args.AsciiPath = argv[optind];
-        PrintDebug(string("Ascii file path set to '") + args.AsciiPath + string("'."));
+        args.asciiPath = argv[optind];
+        PrintDebug(string("Ascii file path set to '") + args.asciiPath + string("'."));
     }
 
     return args;

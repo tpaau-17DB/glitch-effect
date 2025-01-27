@@ -17,19 +17,19 @@ using namespace std;
 
 using json = nlohmann::json;
 
-const unordered_map<string, PassType> STR_TO_PASS =
+const unordered_map<string, ConfigLoader::PassType> str_to_pass =
 {
-    {"horizontal_distort", HORIZONTAL_DISTORT},
-    {"discard", DISCARD},
-    {"character_shuffle", CHARACTER_SHUFFLE},
-    {"rand_offset_x", HORIZONTAL_OFFSET}
+    {"horizontal_distort", ConfigLoader::Discard},
+    {"discard", ConfigLoader::Discard},
+    {"character_shuffle", ConfigLoader::CharacterShuffle},
+    {"rand_offset_x", ConfigLoader::HorizontalOffset}
 };
 
-vector<Pass> getPassesFromJSON(string& path)
+vector<ConfigLoader::pass> ConfigLoader::GetPassesFromJSON(string& path)
 {
-    vector<Pass> passes = vector<Pass>();
+    vector<ConfigLoader::pass> passes = vector<ConfigLoader::pass>();
 
-    path = expandPath(path);
+    path = FileLoader::ExpandPath(path);
 
     PrintDebug("Loading JSON file '" + path + "'.");
 
@@ -53,29 +53,20 @@ vector<Pass> getPassesFromJSON(string& path)
         {
             if (key == "global_config") continue;
 
-            Pass pass;
+            ConfigLoader::pass pass;
 
             if (value.contains("name"))
-            {
-                if (STR_TO_PASS.count(value["name"]))
-                {
-                    pass.type = STR_TO_PASS.at(value["name"]);
-                }
-                else
-                {
-                    PrintErr("Unknown pass " + to_string(value["name"]) + "!");
-                    pass.type = UNDEFINED;
-                }
-            }
+                /*pass.Type = Utils::GetPassTypeFromName(value["name"]);*/
+                pass.Type = str_to_pass(value["name"]) ? str_to_pass.at(value["name"]) : ConfigLoader::Undefined;
 
             if (value.contains("strength"))
-                pass.strength = value["strength"];
+                pass.Strength = value["strength"];
 
             if (value.contains("intensity"))
-                pass.intensity = value["intensity"];
+                pass.Intensity = value["intensity"];
 
             if (value.contains("ignore_spaces"))
-                pass.ignoreSpaces = value["ignore_spaces"];
+                pass.IgnoreSpaces = value["ignore_spaces"];
 
             passes.push_back(pass);
         }
@@ -91,9 +82,9 @@ vector<Pass> getPassesFromJSON(string& path)
     return passes;
 }
 
-GlobalConfig getGlobalConfig(string& path)
+ConfigLoader::GlobalConfig ConfigLoader::GetGlobalConfig(string& path)
 {
-    GlobalConfig globalConfig;
+    ConfigLoader::GlobalConfig globalConfig;
     string tmp;
 
     PrintDebug("Loading JSON file '" + path + "'.");
@@ -118,22 +109,22 @@ GlobalConfig getGlobalConfig(string& path)
             json globalData = data["global_config"];
 
             if (globalData.contains("sleeptime_ms"))
-                globalConfig.sleeptimeMS = globalData["sleeptime_ms"];
+                globalConfig.SleeptimeMS = globalData["sleeptime_ms"];
 
             if (globalData.contains("logger_verbosity"))
-                globalConfig.loggerVerbosity = globalData["logger_verbosity"];
+                globalConfig.LoggerVerbosity = globalData["logger_verbosity"];
 
             if (globalData.contains("default_ascii_path"))
-                globalConfig.defaultAsciiPath = globalData["default_ascii_path"];
+                globalConfig.DefaultAsciiPath = globalData["default_ascii_path"];
 
             if (globalData.contains("chromatic_aberration"))
-                globalConfig.chromaticAberrationEnabled = globalData["chromatic_aberration"];
+                globalConfig.UseChromaticAberration = globalData["chromatic_aberration"];
 
             if (globalData.contains("foreground_color"))
             {
                 tmp = globalData["foreground_color"];
-                if (isValidColorID(strToColorID(tmp)))
-                    globalConfig.foregroundColorStr = tmp;
+                if (Printer::IsValidColorID(Utils::StrToColorID(tmp)))
+                    globalConfig.foregroundColorName = tmp;
                 else
                     PrintErr("Invalid color ID: " + tmp);
             }
@@ -141,8 +132,8 @@ GlobalConfig getGlobalConfig(string& path)
             if (globalData.contains("background_color"))
             {
                 tmp = globalData["background_color"];
-                if (isValidColorID(strToColorID(tmp)))
-                    globalConfig.backgroundColorStr = tmp;
+                if (Printer::IsValidColorID(Utils::StrToColorID(tmp)))
+                    globalConfig.backgroundColorName = tmp;
                 else
                     PrintErr("Invalid color ID: " + tmp);
             }
@@ -160,6 +151,6 @@ GlobalConfig getGlobalConfig(string& path)
         return globalConfig;
     }
 
-    globalConfig.loadedCorrectly = true;
+    globalConfig.LoadedCorrectly = true;
     return globalConfig;
 }

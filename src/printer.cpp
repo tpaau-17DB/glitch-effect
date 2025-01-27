@@ -10,19 +10,18 @@
 
 using namespace std;
 
-
-string windowTooSmallMessage = "It's a little bit claustrophobic in here...";
+const string windowTooSmallMessage = "It's a little bit claustrophobic in here...";
 
 int sleeptimeMS = 40;
 
-Printer::Color fgColor = Printer::NONE;
-Printer::Color bgColor = Printer::NONE;
+Color fgColor = NONE_COLOR;
+Color bgColor = NONE_COLOR;
 
-const vector<int> Printer::ColorRange = {-1, 7}; 
+const vector<int> ColorRange = {-1, 7}; 
 
 ostringstream customLogStream;
 
-void Printer::Init(const int setSleeptimeMS)
+void initPrinter(const int setSleeptimeMS)
 {
     sleeptimeMS = setSleeptimeMS;
 
@@ -41,7 +40,7 @@ void Printer::Init(const int setSleeptimeMS)
     curs_set(0);
 }
 
-void Printer::Stop()
+void stopPrinter()
 {
     PrintDebug("Stopping ncurses.");
     clear();
@@ -54,25 +53,19 @@ void Printer::Stop()
 }
 
 // SETTERS
-void Printer::SetDefaultColors(const Printer::Color fg, const Printer::Color bg)
-{
-    fgColor = fg;
-    bgColor = bg;
-}
-
-void Printer::SetDefaultForegroundColor(const Color color)
+void setForegroundColor(const Color color)
 {
     fgColor = color;
 }
 
-void Printer::SetDefaultBackgroundColor(const Color color)
+void setBackgroundColor(const Color color)
 {
     bgColor = color;
 }
 
 
 // UTILITY
-bool Printer::IsValidColorID(const int colorID)
+bool isValidColorID(const int colorID)
 {
     if (colorID >= ColorRange[0] && colorID <= ColorRange[1])
         return true;
@@ -80,18 +73,18 @@ bool Printer::IsValidColorID(const int colorID)
 }
 
 // PRINTING FUNCTIONS
-void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
+void printDistortedText(AsciiBuffer &buffer, const bool chromaticAberration)
 {
     init_pair(1, fgColor, bgColor);
     int maxX, maxY;
     int offsetX = 0;
     int offsetY = 0;
-    vector<string>* lines = buffer.GetDistortedLinesPtr();
+    vector<string>* lines = buffer.getDistortedLinesPtr();
 
     getmaxyx(stdscr, maxY, maxX);
 
-    if (buffer.GetMaxDistortedLineLength() > maxX - offsetX
-            || buffer.GetMaxDistortedLineSize() > maxY - offsetY)
+    if (buffer.getMaxDistortedLineLength() > maxX - offsetX
+            || buffer.getMaxDistortedLineSize() > maxY - offsetY)
     {
         clear();
         move(maxY / 2, maxX / 2 - windowTooSmallMessage.length() / 2);
@@ -108,7 +101,7 @@ void Printer::Print(AsciiBuffer &buffer, const bool chromaticAberration)
     int x = offsetX;
     int y = offsetY;
 
-    x = 0.5 * (maxX - buffer.GetMaxDistortedLineLength());
+    x = 0.5 * (maxX - buffer.getMaxDistortedLineLength());
     y = 0.5 * (maxY - lines->size());
 
     if (!chromaticAberration)

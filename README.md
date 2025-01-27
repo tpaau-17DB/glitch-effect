@@ -55,7 +55,7 @@ Or just do everything at once:
 
 ---
 
-Alternatively, if you are using Arch Linux, you can just run:
+Also, if you are using Arch Linux, you can just run:
 ```
 makepkg -si
 ```
@@ -64,7 +64,7 @@ copy the configuration file to your config directory.
 
 ---
 
-Then, make sure that `glitch` has been installed correctly:
+After the installation, verify that `glitch` is now available for use.:
 ```
 glitch --version
 ```
@@ -77,7 +77,7 @@ specifically for use with `glitch`.
 
 ---
 
-Alternatively, you can **pipe command output** to the `glitch` and display that:
+Alternatively, you can **pipe command output** to `glitch` and display that:
 ```
 head -n 4 /dev/urandom | base64 | glitch
 ```
@@ -94,14 +94,14 @@ glitch -h
 
 
 ## Configuration
-`glitch` uses `json` for configuration files. A configuration file
-contains two sections: `global_config` and passes.
+`glitch` uses `json` for its configuration files. A configuration file consists 
+of two sections: `global_config` and passes.
 
-* `global_config` contains options that modify the behavior of the entire program.
-For example, default logger verbosity can be set in the `global_config` section.
-Note that some options from the config file will get
-ignored if you use a command-line argument that sets the same option.
-* every other `json` object is treated as a **pass**, a distortion layer
+* `global_config` contains options that modify the behavior of the entire
+program. For example, default logger verbosity can be set in the `global_config`
+section. Note that some options from the config file will get ignored if you
+use a command-line argument that sets the same option.
+* Every other `json` object is treated as a **pass**, a distortion layer
 that defines the way `glitch` displays text input.
 
 Possible paths for a config file are:

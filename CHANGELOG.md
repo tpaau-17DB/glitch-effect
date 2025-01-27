@@ -1,3 +1,8 @@
+# vX.X.X
+* Code cleanup
+* Source code now mostly follows `C++` naming conventions
+* New configuration option to ignore space characters while applying pass
+
 # v1.0.1
 * Slight optimizations
 * New pass: Vertical offset

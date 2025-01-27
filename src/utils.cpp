@@ -1,11 +1,11 @@
 #include <stdexcept>
 #include <regex>
 #include <string>
+#include <unordered_map>
 #include <random>
 #include <vector>
 #include <regex>
 
-#include "ConfigLoader.h"
 #include "Logger.h"
 #include "Utils.h"
 #include "Printer.h"
@@ -16,21 +16,34 @@ random_device rd;
 
 bool isPrecalculated;
 unsigned int currentPrecalculated;
-vector<unsigned short> precalculatedShorts;
+vector<int> precalculatedInts;
 
-regex ANSICodesRegex("\033\\[[0-9;]*[mKHFfLs]?");
+const regex ANSICodesRegex("\033\\[[0-9;]*[mKHFfLs]?");
 
-void precalculateShorts()
+const unordered_map<string, Color> STR_TO_COLOR =
+{
+    {"none", NONE_COLOR},
+    {"black", BLACK},
+    {"blue", BLUE},
+    {"cyan", CYAN},
+    {"green", GREEN},
+    {"magenta", MAGENTA},
+    {"red", RED},
+    {"white", WHITE},
+    {"yellow", YELLOW}
+};
+
+void precalculateInts()
 {
     for (int i = 0; i < 100; i++)
     {
-        precalculatedShorts.push_back(Utils::GetRandomInt(0, 100));
+        precalculatedInts.push_back(getRandomInt(0, 100));
     }
     isPrecalculated = true;
     PrintDebug("Random shorts precalculated.");
 }
 
-int Utils::StrToInt(const string& str)
+int strToInt(const string& str)
 {
     int result;
 
@@ -46,118 +59,47 @@ int Utils::StrToInt(const string& str)
     return result;
 }
 
-int Utils::StrToColorID(const string& str)
+int strToColorID(const string& str)
 {
-    unsigned long hash = HashString(Lower(str));
-
-    // this is terrible and I need to fix this at some point
-    switch(hash)
+    if (STR_TO_COLOR.count(toLower(str)))
     {
-        case 2087865487:
-            return Printer::NONE;
-
-        case 175804258:
-            return Printer::BLACK;
-
-        case 193432438:
-            return Printer::RED;
-
-        case 172398782:
-            return Printer::GREEN;
-
-        case 2241670145:
-            return Printer::YELLOW;
-
-        case 2087736443:
-            return Printer::BLUE;
-
-        case 1065710736:
-            return Printer::MAGENTA;
-
-        case 2087790096:
-            return Printer::CYAN;
-
-        case 191284034:
-            return Printer::WHITE;
-
-        default:
-            return -2;
+        return STR_TO_COLOR.at(toLower(str));
+    }
+    else
+    {
+        PrintErr("Invalid color: '" + str + "'.");
+        return NONE_COLOR;
     }
 }
 
-unsigned long Utils::HashString(const string& str)
-{
-    unsigned int hash = 5381;
-    for (char c : str)
-    {
-        hash = (hash * 33) ^ c;
-    }
-    return hash;
-}
-
-float Utils::GetRandomFloat(const float min, const float max)
+float getRandomFloat(const float min, const float max)
 {
     mt19937 gen(rd());
     uniform_real_distribution<float> dist(min, max);
     return dist(gen);
 }
 
-unsigned short Utils::GetRandomInt(const int min, const int max)
+int getRandomInt(const int min, const int max)
 {
     mt19937 gen(rd());
     uniform_int_distribution<int> dist(min, max);
     return dist(gen);
 }
 
-unsigned short Utils::GetRandomPrecalculatedShort()
+int getRandomPrecalculatedInt()
 {
     if (!isPrecalculated)
-        precalculateShorts();
+        precalculateInts();
     
     currentPrecalculated++;
-    if (currentPrecalculated >= precalculatedShorts.size())
+    if (currentPrecalculated >= precalculatedInts.size())
         currentPrecalculated = 0;
 
-    return precalculatedShorts[currentPrecalculated];
-}
-
-// Used for converting strings to enums
-ConfigLoader::PassType Utils::GetPassTypeFromName(const string& name)
-{
-    ConfigLoader::PassType type = ConfigLoader::Undefined;
-
-    unsigned long hash = Utils::HashString(name);
-
-    type = ConfigLoader::Undefined;
-
-    switch(hash)
-    {
-        case 3091456344:  // 'horizontal distort'
-            type = ConfigLoader::HorizontalDistort;
-            break;
-
-        case 2811326735:  // 'discard'
-            type = ConfigLoader::Discard;
-            break;
-
-        case 409254235:  // 'character shuffle'
-            type = ConfigLoader::CharacterShuffle;
-            break;
-
-        case 2330439209: // 'rand offset x'
-            type = ConfigLoader::HorizontalOffset;
-            break;
-
-        default:
-            PrintErr("Unknown pass type: '" + name + "'.");
-            break;
-    }
-
-    return type;
+    return precalculatedInts[currentPrecalculated];
 }
 
 // No support for ANSI codes yet :P
-vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
+vector<string> removeANSICodes(const vector<string>& lines)
 {
     vector<string> filteredLines = vector<string>();
 
@@ -169,7 +111,7 @@ vector<string> Utils::RemoveANSICodes(const vector<string>& lines)
     return filteredLines;
 }
 
-string Utils::Lower(string str)
+string toLower(string str)
 {
     transform(str.begin(), str.end(), str.begin(), ::tolower);
     return str;

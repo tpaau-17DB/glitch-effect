@@ -6,38 +6,31 @@
 
 #include "AsciiBuffer.h"
 
-class Printer
+enum Color
 {
-    public:
-        enum Color
-        {
-            NONE = -1,
-            BLACK = 0,
-            RED = 1,
-            GREEN = 2,
-            YELLOW = 3,
-            BLUE = 4,
-            MAGENTA = 5,
-            CYAN = 6,
-            WHITE = 7
-        };
-
-        // START & STOP
-        static void Init(const int sleeptimeMS);
-        static void Stop();
-
-        // SETTERS
-        static void SetDefaultColors(const Color fg, const Color bg);
-        static void SetDefaultForegroundColor(const Color color);
-        static void SetDefaultBackgroundColor(const Color color);
-
-        // PRINTING
-        static void Print(AsciiBuffer &buffer, const bool chromaticAberration);
-
-        // UTILITY
-        static bool IsValidColorID(const int colorID);
-
-        static const std::vector<int> ColorRange;
+    NONE_COLOR = -1,
+    BLACK = 0,
+    RED = 1,
+    GREEN = 2,
+    YELLOW = 3,
+    BLUE = 4,
+    MAGENTA = 5,
+    CYAN = 6,
+    WHITE = 7
 };
+
+// START & STOP
+void initPrinter(const int sleeptimeMS);
+void stopPrinter();
+
+// SETTERS
+void setForegroundColor(const Color color);
+void setBackgroundColor(const Color color);
+
+// PRINTING
+void printDistortedText(AsciiBuffer &buffer, const bool chromaticAberration);
+
+// UTILITY
+bool isValidColorID(const int colorID);
 
 #endif
